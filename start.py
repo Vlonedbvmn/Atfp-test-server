@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import os
 
-if lang not in st.session_state:
+if "lang" not in st.session_state:
     st.session_state.lang = "ukr"
 
 
