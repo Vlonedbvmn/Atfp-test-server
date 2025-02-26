@@ -130,7 +130,10 @@ def submit_data(dataframe, date_col, target_col, name, fr):
 # if __name__ == "__main__":
 
 with st.container():
-    st.title("Оберіть з якими даними Ви бажаєте працювати")
+    if st.session_state.lang = "ukr":
+        st.title("Оберіть з якими даними Ви бажаєте працювати")
+    else:
+        st.title("Choose the data you would like to work with")
 
 # Create two columns for buttons
 st.markdown('<div class="button-container">', unsafe_allow_html=True)
@@ -138,10 +141,17 @@ col1, col2, col3, col4 = st.columns(4)
 
 # Button for selecting experimental data
 with col1:
-    st.button(label="Обрати тестувальні", on_click=click_button)
+    if st.session_state.lang = "ukr":
+        st.button(label="Обрати тестувальні", on_click=click_button)
+    else:
+        st.button(label="Choose test data", on_click=click_button)
 st.markdown('</div>', unsafe_allow_html=True)
 # Button for selecting own data
 with col4:
+    if st.session_state.lang = "ukr":
+        st.button(label="Обрати тестувальні", on_click=click_button)
+    else:
+        st.button(label="Choose your own data", on_click=click_button)
     st.button(label="Обрати свої", on_click=click_button2)
 
 # If experimental data button is clicked, show additional options
