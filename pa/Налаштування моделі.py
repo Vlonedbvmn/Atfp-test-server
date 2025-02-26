@@ -1691,6 +1691,7 @@ if st.session_state.df is not None:
                       args=(ds_for_pred, iter, horizon, means[st.session_state.freq]))
     except:
         st.warning('Надано не коректні гіперпараметри', icon="⚠️")
+    st.warning('Зауважте, прогнозування ніколи не буває ідеально точним!', icon="⚠️")
     st.divider()
     if st.session_state.fig is not None:
         if st.session_state.inst_name != "Авто-вибір":
