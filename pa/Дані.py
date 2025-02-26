@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 import gettext
 
 languages = {"English": "en", "Español": "es"}
-# selected_language = st.sidebar.selectbox("Choose your language", list(languages.keys()))
+selected_language = st.sidebar.selectbox("Choose your language", list(languages.keys()))
 lang_code = languages[selected_language]
 
 # Load the appropriate translation (assuming your locale files are in the 'locales' folder)
