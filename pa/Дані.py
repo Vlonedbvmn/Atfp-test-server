@@ -14,7 +14,7 @@ translation = gettext.translation('messages', localedir='locales', languages=[la
 translation.install()
 _ = translation.gettext
 
-# st.write(_("Welcome to my app!"))
+st.write(_("Welcome to my app!"))
 
 
 # Initialize session state variables
