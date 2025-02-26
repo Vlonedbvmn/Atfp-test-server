@@ -149,10 +149,10 @@ st.markdown('</div>', unsafe_allow_html=True)
 # Button for selecting own data
 with col4:
     if st.session_state.lang == "ukr":
-        st.button(label="Обрати тестувальні", on_click=click_button)
+        st.button(label="Обрати свої", on_click=click_button2)
     else:
         st.button(label="Choose your own data", on_click=click_button)
-    st.button(label="Обрати свої", on_click=click_button2)
+    
 
 # If experimental data button is clicked, show additional options
 if st.session_state.clicked:
