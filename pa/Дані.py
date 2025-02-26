@@ -3,6 +3,19 @@ import pandas as pd
 import plotly.figure_factory as ff
 import plotly.express as px
 import plotly.graph_objects as go
+import gettext
+
+languages = {"English": "en", "Español": "es"}
+# selected_language = st.sidebar.selectbox("Choose your language", list(languages.keys()))
+lang_code = languages[selected_language]
+
+# Load the appropriate translation (assuming your locale files are in the 'locales' folder)
+translation = gettext.translation('messages', localedir='locales', languages=[lang_code], fallback=True)
+translation.install()
+_ = translation.gettext
+
+# st.write(_("Welcome to my app!"))
+
 
 # Initialize session state variables
 if 'clicked' not in st.session_state:
