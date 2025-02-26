@@ -50,7 +50,7 @@ st.divider()
 #     streamlit_js_eval(js_expressions="parent.window.location.reload()")
 # st.divider()
 if st.session_state.lang == "ukr":
-    st.subheader("Video tutorial for using the application")
+    st.subheader("Відео інструкція користування застосунком")
 else:
-    
+    st.subheader("Video tutorial for using the application")
 st.video(video_bytes)
