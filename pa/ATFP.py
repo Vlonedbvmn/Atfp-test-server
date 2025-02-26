@@ -34,9 +34,12 @@ def display_df():
 
 st.title("ATFP - AI Timeseries Forecasting Platform")
 
-
-st.subheader(
+if st.session_state.lang == "ukr":
+    st.subheader(
     "Вітаємо! Ви знаходитеся на сторінці проєкту, що представляє собою платформу для дослідників у галузі прогнозування часових рядів із використанням методів машинного навчання. Для початку роботи перейдіть до розділу 'Дані', щоб завантажити дані або обрати із запропонованих наборів даних, для яких Ви будете здійснювати прогнозування.")
+else:
+    st.subheader(
+    "Welcome! You are on the page of a project that represents a platform for researchers in the field of time series forecasting using machine learning methods. To get started, go to the 'Data' section to upload your own data or choose from the available datasets for which you will make forecasts.")
 video_f = open("instruction_2.mp4", "rb")
 video_bytes = video_f.read()
 # st.subheader(" ")
@@ -46,5 +49,8 @@ st.divider()
 # if st.button("Оновити"):
 #     streamlit_js_eval(js_expressions="parent.window.location.reload()")
 # st.divider()
-st.subheader("Відео інструкція користування застосунком")
+if st.session_state.lang == "ukr":
+    st.subheader("Video tutorial for using the application")
+else:
+    
 st.video(video_bytes)
