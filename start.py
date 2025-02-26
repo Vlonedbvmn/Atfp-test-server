@@ -126,7 +126,7 @@ else:
     title="Compare",
     )
 
-    pg = st.navigation({"":[p1, p2], "Для фахівців:":[p3, p4, p7, p5], "Для всіх:":[p6]})
+    pg = st.navigation({"":[p1, p2], "Professional level:":[p3, p4, p7, p5], "Regular:":[p6]})
     pg.run()
 
 # if st.session_state.role == "Новачок":
