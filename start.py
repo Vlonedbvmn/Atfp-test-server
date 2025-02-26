@@ -44,18 +44,20 @@ st.html("""
 
 
 # if st.session_state.role == "Аматор або професіонал":
-if st.session_state.lang == "ukr":
+# if st.session_state.lang == "ukr":
+selected_language = st.sidebar.selectbox("Оберіть мову:", ["Українська", "English"])
+if selected_language == "Українська":
+    st.session_state.lang = "ukr"
     selected_language = st.sidebar.selectbox("Оберіть мову:", ["Українська", "English"])
-    if selected_language == "Українська":
-        st.session_state.lang = "ukr"
-    else:
-        st.session_state.lang = "eng"
 else:
+    st.session_state.lang = "eng"
     selected_language = st.sidebar.selectbox("Choose language:", ["Українська", "English"])
-    if selected_language == "Українська":
-        st.session_state.lang = "ukr"
-    else:
-        st.session_state.lang = "eng"
+# else:
+#     selected_language = st.sidebar.selectbox("Choose language:", ["Українська", "English"])
+#     if selected_language == "Українська":
+#         st.session_state.lang = "ukr"
+#     else:
+#         st.session_state.lang = "eng"
     
 
 # Load the appropriate translation (assuming your locale files are in the 'locales' folder)
