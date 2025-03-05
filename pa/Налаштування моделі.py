@@ -1548,28 +1548,50 @@ if st.session_state.df is not None:
                          menu_icon="no",
                          orientation="horizontal")
 
-    # try:
-    if model == "KAN":
-        st.markdown("## Ви обрали модель KAN")
-        st.markdown(
-            "### KAN — це нейронна мережа, що застосовує апроксимаційну теорему Колмогорова-Арнольда, яка стверджує, що сплайни можуть апроксимувати складніші функції.")
-        st.divider()
-        horizon = st.select_slider(
-            "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
-            options=[i for i in range(1, 151)]
-        )
-        iter = st.select_slider(
-            "Оберіть к-ть ітерацій начання моделі (чим більше, тим довше та точніше):",
-            options=[i for i in range(5, 101)]
-        )
-        inp = st.number_input("Оберіть к-ть попередніх значень з ряду для кроку прогнозу:", step=1, min_value=5,
+    try:
+        if model == "KAN":
+            if st.session_state.lang == "ukr":
+                st.markdown("## Ви обрали модель KAN")
+                st.markdown(
+                "### KAN — це нейронна мережа, що застосовує апроксимаційну теорему Колмогорова-Арнольда, яка стверджує, що сплайни можуть апроксимувати складніші функції.")
+                st.divider()
+                horizon = st.select_slider(
+                "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
+                options=[i for i in range(1, 151)]
+                )
+                iter = st.select_slider(
+                "Оберіть к-ть ітерацій начання моделі (чим більше, тим довше та точніше):",
+                options=[i for i in range(5, 101)]
+                )
+                inp = st.number_input("Оберіть к-ть попередніх значень з ряду для кроку прогнозу:", step=1, min_value=5,
                               max_value=150)
 
-        st.button(label="Підтвердити", key="kan", on_click=submit_data_KAN,
+                st.button(label="Підтвердити", key="kan", on_click=submit_data_KAN,
                   args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
-    # except Exception as ex:
-    #     print(ex)
-    #     st.warning('Надано не коректні гіперпараметри', icon="⚠️")
+            else:
+                st.markdown("## You have selected the KAN model")
+                st.markdown(
+                "### KAN is a neural network that applies the Kolmogorov-Arnold approximation theorem, which states that splines can approximate more complex functions..")
+                st.divider()
+                horizon = st.select_slider(
+                "Select the forecasting horizon (how far ahead the prediction will be made):",
+                options=[i for i in range(1, 151)]
+                )
+                iter = st.select_slider(
+                "Select the number of model initialization iterations (the more, the longer and more accurate):",
+                options=[i for i in range(5, 101)]
+                )
+                inp = st.number_input("Select the number of previous values from the series for the forecast step:", step=1, min_value=5,
+                              max_value=150)
+
+                st.button(label="Submit", key="kan", on_click=submit_data_KAN,
+                  args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
+    except:
+        print(ex)
+        if st.session_state.lang == "ukr":
+            st.warning('Надано не коректні гіперпараметри', icon="⚠️")
+        else:
+            st.warning('Incorrect hyperparameters have been provided', icon="⚠️")
 
     try:
         if model == "NBEATSx":
@@ -1591,7 +1613,10 @@ if st.session_state.df is not None:
             st.button(label="Підтвердити", key="kan", on_click=submit_data_NBx,
                       args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
     except:
-        st.warning('Надано не коректні гіперпараметри', icon="⚠️")
+        if st.session_state.lang == "ukr":
+            st.warning('Надано не коректні гіперпараметри', icon="⚠️")
+        else:
+            st.warning('Incorrect hyperparameters have been provided', icon="⚠️")
     try:
         if model == "TimesNet":
             st.markdown("## Ви обрали модель TimesNet")
@@ -1612,7 +1637,10 @@ if st.session_state.df is not None:
             st.button(label="Підтвердити", key="kan", on_click=submit_data_TN,
                       args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
     except:
-        st.warning('Надано не коректні гіперпараметри', icon="⚠️")
+        if st.session_state.lang == "ukr":
+            st.warning('Надано не коректні гіперпараметри', icon="⚠️")
+        else:
+            st.warning('Incorrect hyperparameters have been provided', icon="⚠️")
     try:
         if model == "TimeMixer":
             st.markdown("## Ви обрали модель TimeMixer")
@@ -1632,7 +1660,10 @@ if st.session_state.df is not None:
             st.button(label="Підтвердити", key="kan", on_click=submit_data_TM,
                       args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
     except:
-        st.warning('Надано не коректні гіперпараметри', icon="⚠️")
+        if st.session_state.lang == "ukr":
+            st.warning('Надано не коректні гіперпараметри', icon="⚠️")
+        else:
+            st.warning('Incorrect hyperparameters have been provided', icon="⚠️")
     try:
         if model == "PatchTST":
             st.markdown("## Ви обрали модель PatchTST")
@@ -1652,7 +1683,10 @@ if st.session_state.df is not None:
             st.button(label="Підтвердити", key="kan", on_click=submit_data_PTST,
                       args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
     except:
-        st.warning('Надано не коректні гіперпараметри', icon="⚠️")
+        if st.session_state.lang == "ukr":
+            st.warning('Надано не коректні гіперпараметри', icon="⚠️")
+        else:
+            st.warning('Incorrect hyperparameters have been provided', icon="⚠️")
     try:
         if model == "SNN":
             st.markdown("## Ви обрали модель SNN")
@@ -1672,7 +1706,10 @@ if st.session_state.df is not None:
             st.button(label="Підтвердити", key="kan", on_click=submit_data_SNN,
                       args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
     except:
-        st.warning('Надано не коректні гіперпараметри', icon="⚠️")
+        if st.session_state.lang == "ukr":
+            st.warning('Надано не коректні гіперпараметри', icon="⚠️")
+        else:
+            st.warning('Incorrect hyperparameters have been provided', icon="⚠️")
     try:
         if model == "Авто-вибір":
             st.markdown("## Ви обрали Авто-вибір")
@@ -1690,23 +1727,40 @@ if st.session_state.df is not None:
             st.button(label="Підтвердити", key="kan", on_click=submit_data_auto,
                       args=(ds_for_pred, iter, horizon, means[st.session_state.freq]))
     except:
-        st.warning('Надано не коректні гіперпараметри', icon="⚠️")
-    st.warning('Будь-які прогнози базуються на доступних даних та ймовірнісних моделях, тому вони не можуть гарантувати абсолютну точність. Реальні результати можуть відрізнятися через непередбачувані фактори та змінні, які неможливо повністю врахувати.', icon="⚠️")
+        if st.session_state.lang == "ukr":
+            st.warning('Надано не коректні гіперпараметри', icon="⚠️")
+        else:
+            st.warning('Incorrect hyperparameters have been provided', icon="⚠️")
+    if st.session_state.lang == "ukr":
+        st.warning('Будь-які прогнози базуються на доступних даних та ймовірнісних моделях, тому вони не можуть гарантувати абсолютну точність. Реальні результати можуть відрізнятися через непередбачувані фактори та змінні, які неможливо повністю врахувати.', icon="⚠️")
+    else:
+        st.warning('Any forecasts are based on available data and probabilistic models, so they cannot guarantee absolute accuracy. Actual results may vary due to unpredictable factors and variables that cannot be fully accounted for.', icon="⚠️")
     st.divider()
     if st.session_state.fig is not None:
         if st.session_state.inst_name != "Авто-вибір":
-            st.markdown(
+            if st.session_state.lang == "ukr":
+                st.markdown(
                 f"## Середньоквадратичне відхилення обраної моделі ({st.session_state.inst_name}): {round(st.session_state.mse, 3)}")
-
-            st.session_state.fig.update_layout(
+                st.session_state.fig.update_layout(
                 xaxis_title='',
                 yaxis_title='Значення'
-            )
-            st.plotly_chart(st.session_state.fig, use_container_width=True)
+                 )
+                st.plotly_chart(st.session_state.fig, use_container_width=True)
+            else:
+                st.markdown(
+                f"## Mean square error (MSE) of the selected model" ({st.session_state.inst_name}): {round(st.session_state.mse, 3)}")
+                st.session_state.fig.update_layout(
+                xaxis_title='',
+                yaxis_title='Values'
+                 )
+                st.plotly_chart(st.session_state.fig, use_container_width=True)
+
+            
         else:
-            st.markdown(
-                f"## Середньоквадратичне відхилення обраної моделі авто-вибором ({st.session_state.inst_name}): {round(st.session_state.mse, 3)}")
-            st.plotly_chart(st.session_state.fig, use_container_width=True)
+            else:
+                st.markdown(
+                f"##  Mean square error (MSE) of the selected model by auto-selection ({st.session_state.inst_name}): {round(st.session_state.mse, 3)}")
+                st.plotly_chart(st.session_state.fig, use_container_width=True)
 
     # st.button("Train", type="primary", on_click=save_performance, args=((model, k)))
     #
@@ -1716,4 +1770,7 @@ if st.session_state.df is not None:
     # if len(st.session_state['score']) != 0:
     #     st.subheader(f"The model has an F1-Score of: {st.session_state['score'][-1]}")
 else:
-    st.warning('Для початки роботи з моделями, оберіть дані', icon="⚠️")
+    if st.session_state.lang == "ukr":
+         st.warning('Для початки роботи з моделями, оберіть дані', icon="⚠️")
+    else:
+         st.warning('To begin working with the models, choose data', icon="⚠️")
