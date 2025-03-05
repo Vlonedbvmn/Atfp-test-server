@@ -156,132 +156,240 @@ with col4:
 
 # If experimental data button is clicked, show additional options
 if st.session_state.clicked:
-    st.markdown(
+    if st.session_state.lang == "ukr":
+        st.markdown(
         "### Ви обрали тестові дані. Це набори даних, призначені для тестування, які дозволяють ознайомитися з функціональними можливостями проєкту та визначити, яка модель буде найбільш відповідною.")
-    st.write("Оберіть тестовий набір даних:")
+        st.write("Оберіть тестовий набір даних:")
+    else:
+        st.markdown(
+        "### You have selected test data. These are datasets designed for testing, which allow you to familiarize yourself with the features of the project and determine which model will be most appropriate.")
+        st.write("Select the test dataset:")
     st.markdown('<div class="data-button-container">', unsafe_allow_html=True)
     c1, c2, c3, c4 = st.columns(4)
-    with c1:
-        t1 = st.button(label="Тестовий набір даних 1")
-    with c2:
-        t2 = st.button(label="Тестовий набір даних 2")
-    with c3:
-        t3 = st.button(label="Тестовий набір даних 3")
-    with c4:
-        t4 = st.button(label="Тестовий набір даних 4 (Тест на аномалії)")
+    if st.session_state.lang == "ukr":
+        with c1:
+            t1 = st.button(label="Тестовий набір даних 1")
+        with c2:
+            t2 = st.button(label="Тестовий набір даних 2")
+        with c3:
+            t3 = st.button(label="Тестовий набір даних 3")
+        with c4:
+            t4 = st.button(label="Тестовий набір даних 4 (Тест на аномалії)")
+    else:
+        with c1:
+            t1 = st.button(label="Test dataset 1")
+        with c2:
+            t2 = st.button(label="Test dataset 2")
+        with c3:
+            t3 = st.button(label="Test dataset 3")
+        with c4:
+            t4 = st.button(label="Test dataset 4 (Anomaly analysis)")
     st.markdown('</div>', unsafe_allow_html=True)
     # Test 1: Load sales.csv and allow submission
     if t1:
         dataframe = pd.read_csv("sales.csv")
-        st.markdown(
-            "### Тестовий набір даних 1 - це штучно згенерозаний датасет, що представляє собою щоденну зміну акцій умовної компанії.")
-        st.markdown(
-            "[Посилання на датасет](https://www.kaggle.com/datasets/sudipmanchare/simulated-sales-data-with-timeseries-features)")
+        if st.session_state.lang == "ukr":
+            st.markdown(
+                "### Тестовий набір даних 1 - це штучно згенерозаний датасет, що представляє собою щоденну зміну акцій умовної компанії.")
+            st.markdown(
+                "[Посилання на датасет](https://www.kaggle.com/datasets/sudipmanchare/simulated-sales-data-with-timeseries-features)")
+        else:
+            st.markdown(
+                "### Test dataset 1 is an artificially generated dataset representing the daily change in the stock prices of a hypothetical company.")
+            st.markdown(
+                "[Dataset link](https://www.kaggle.com/datasets/sudipmanchare/simulated-sales-data-with-timeseries-features)")
         c1, c2 = st.columns([1, 4])
         with c1:
             st.write(dataframe)
         with c2:
             fig = go.Figure()
-
-            # Add actual values
-            fig.add_trace(
-                go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Дані', line=dict(color='blue')))
-
-            # Add title and labels
-            fig.update_layout(
-                title = "Тестовий набір даних 1",
-                xaxis_title='Дата',
-                yaxis_title='Значення',
-                template='plotly_white'
-            )
-            st.plotly_chart(fig, use_container_width=True)
-        st.button(label="Підтвердити", key="submit1", on_click=submit_data,
-              args=(dataframe, "date", "target", "Тестовий набір даних 1", "День"))
-
+            if st.session_state.lang == "ukr":
+                # Add actual values
+                fig.add_trace(
+                    go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Дані', line=dict(color='blue')))
+    
+                # Add title and labels
+                fig.update_layout(
+                    title = "Тестовий набір даних 1",
+                    xaxis_title='Дата',
+                    yaxis_title='Значення',
+                    template='plotly_white'
+                )
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                # Add actual values
+                fig.add_trace(
+                    go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Data', line=dict(color='blue')))
+    
+                # Add title and labels
+                fig.update_layout(
+                    title = "Test dataset 1",
+                    xaxis_title='Date',
+                    yaxis_title='Values',
+                    template='plotly_white'
+                )
+                st.plotly_chart(fig, use_container_width=True)
+        if st.session_state.lang == "ukr":
+            st.button(label="Підтвердити", key="submit1", on_click=submit_data,
+                  args=(dataframe, "date", "target", "Тестовий набір даних 1", "День"))
+        else:
+            st.button(label="Submit", key="submit1", on_click=submit_data,
+                  args=(dataframe, "date", "target", "Тестовий набір даних 1", "День"))
     # Test 2: Load AXISBANK-BSE.csv and allow submission
     if t2:
         dataframe = pd.read_csv("Weather_dataset.csv")
-        st.markdown(
-            "### Тест набір даних 2 - це  датасет, що являє собою часовий ряд щогодинної зміни середньої температури в Німеччині.")
-        st.markdown("[Посилання на датасет](https://www.kaggle.com/datasets/parthdande/timeseries-weather-dataset)")
+        if st.session_state.lang == "ukr":
+            st.markdown(
+            "### Тестовий набір даних 2 - це  датасет, що являє собою часовий ряд щогодинної зміни середньої температури в Німеччині.")
+            st.markdown("[Посилання на датасет](https://www.kaggle.com/datasets/parthdande/timeseries-weather-dataset)")
+        else:
+            st.markdown(
+                "### Test dataset 2 is a dataset representing a time series of the hourly change in the average temperature in Germany.")
+            st.markdown("[Dataset link](https://www.kaggle.com/datasets/parthdande/timeseries-weather-dataset)")
         c1, c2 = st.columns([1, 4])
         with c1:
             st.write(dataframe)
         with c2:
             fig = go.Figure()
-
-            # Add actual values
-            fig.add_trace(
-                go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Дані',
-                           line=dict(color='blue')))
-
-            # Add title and labels
-            fig.update_layout(
-                title="Тестовий набір даних 2",
-                xaxis_title='Дата',
-                yaxis_title='Значення',
-                template='plotly_white'
-            )
-            st.plotly_chart(fig, use_container_width=True)
-        st.button(label="Підтвердити", key="submit2", on_click=submit_data,
+            if st.session_state.lang == "ukr":
+                # Add actual values
+                fig.add_trace(
+                    go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Дані',
+                               line=dict(color='blue')))
+    
+                # Add title and labels
+                fig.update_layout(
+                    title="Тестовий набір даних 2",
+                    xaxis_title='Дата',
+                    yaxis_title='Значення',
+                    template='plotly_white'
+                )
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                # Add actual values
+                fig.add_trace(
+                    go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Data', line=dict(color='blue')))
+    
+                # Add title and labels
+                fig.update_layout(
+                    title = "Test dataset 2",
+                    xaxis_title='Date',
+                    yaxis_title='Values',
+                    template='plotly_white'
+                )
+                st.plotly_chart(fig, use_container_width=True)
+                
+        if st.session_state.lang == "ukr":
+            st.button(label="Підтвердити", key="submit2", on_click=submit_data,
                   args=(dataframe, "date", "target", "Тестовий набір даних 2", "Година"))
+        else:
+            st.button(label="Submit", key="submit2", on_click=submit_data,
+                  args=(dataframe, "date", "target", "Тестовий набір даних 2", "Година"))
+        
 
 
     # Test 3: Load electricityConsumptionAndProduction.csv and allow submission
     if t3:
         dataframe = pd.read_csv("electricityConsumptionAndProductioction.csv")
-        st.markdown(
+        if st.session_state.lang == "ukr":
+            st.markdown(
             "### Тестовий набір даних 3 - це датасет, що являє собою часовий ряд щогодинної зміни обсягу спожитої електроенергії в Румунії.")
-        st.markdown(
+            st.markdown(
             "[Посилання на датасет](https://www.kaggle.com/datasets/srinuti/residential-power-usage-3years-data-timeseries)")
+        else:
+            st.markdown(
+                "### Test dataset 3 is a dataset representing a time series of the hourly change in the amount of electricity consumed in Romania.")
+            st.markdown("[Dataset link](https://www.kaggle.com/datasets/srinuti/residential-power-usage-3years-data-timeseries)")
+        
         c1, c2 = st.columns([1, 4])
         with c1:
             st.write(dataframe)
         with c2:
             fig = go.Figure()
-
-            # Add actual values
-            fig.add_trace(
+            if st.session_state.lang == "ukr":
+                # Add actual values
+                fig.add_trace(
                 go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Дані',
                            line=dict(color='blue')))
 
-            # Add title and labels
-            fig.update_layout(
+                # Add title and labels
+                fig.update_layout(
                 title="Тестовий набір даних 3",
                 xaxis_title='Дата',
                 yaxis_title='Значення',
                 template='plotly_white'
-            )
-            st.plotly_chart(fig, use_container_width=True)
-        st.button(label="Підтвердити", key="submit3", on_click=submit_data,
+                )
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                # Add actual values
+                fig.add_trace(
+                    go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Data', line=dict(color='blue')))
+    
+                # Add title and labels
+                fig.update_layout(
+                    title = "Test dataset 3",
+                    xaxis_title='Date',
+                    yaxis_title='Values',
+                    template='plotly_white'
+                )
+                st.plotly_chart(fig, use_container_width=True)
+
+        if st.session_state.lang == "ukr":
+            st.button(label="Підтвердити", key="submit3", on_click=submit_data,
+                  args=(dataframe, "date", "target", "Тестовий набір даних 3", "Година"))
+        else:
+            st.button(label="Submit", key="submit3", on_click=submit_data,
                   args=(dataframe, "date", "target", "Тестовий набір даних 3", "Година"))
 
     if t4:
         dataframe = pd.read_csv("anomaly.csv")
-        st.markdown(
+        if st.session_state.lang == "ukr":
+            st.markdown(
             "### Тестовий набір даних 4 - це копія тестового набору даних 1, але з доданими аномаліями для наочної демонстрації можливості тестування на аномалії .")
-        st.markdown(
+            st.markdown(
             "[Посилання на датасет](https://www.kaggle.com/datasets/sudipmanchare/simulated-sales-data-with-timeseries-features)")
+        else:
+            st.markdown(
+                "### Test dataset 4 is a copy of test dataset 1, but with added anomalies for a visual demonstration of anomaly testing capabilities.")
+            st.markdown("[Dataset link](https://www.kaggle.com/datasets/sudipmanchare/simulated-sales-data-with-timeseries-features)")
         c1, c2 = st.columns([1, 4])
         with c1:
             st.write(dataframe)
         with c2:
             fig = go.Figure()
-
-            # Add actual values
-            fig.add_trace(
-                go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Дані',
-                           line=dict(color='blue')))
-
-            # Add title and labels
-            fig.update_layout(
-                title="Тестовий набір даних 4",
-                xaxis_title='Дата',
-                yaxis_title='Значення',
-                template='plotly_white'
-            )
-            st.plotly_chart(fig, use_container_width=True)
-        st.button(label="Підтвердити", key="submit4", on_click=submit_data,
+            if st.session_state.lang == "ukr":
+                # Add actual values
+                fig.add_trace(
+                    go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Дані',
+                               line=dict(color='blue')))
+    
+                # Add title and labels
+                fig.update_layout(
+                    title="Тестовий набір даних 4",
+                    xaxis_title='Дата',
+                    yaxis_title='Значення',
+                    template='plotly_white'
+                )
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                # Add actual values
+                fig.add_trace(
+                    go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Data', line=dict(color='blue')))
+    
+                # Add title and labels
+                fig.update_layout(
+                    title = "Test dataset 4",
+                    xaxis_title='Date',
+                    yaxis_title='Values',
+                    template='plotly_white'
+                )
+                st.plotly_chart(fig, use_container_width=True)
+            
+        if st.session_state.lang == "ukr":
+            st.button(label="Підтвердити", key="submit4", on_click=submit_data,
+                  args=(dataframe, "date", "target", "Тестовий набір даних 4", "День"))
+        else:
+            st.button(label="Submit", key="submit4", on_click=submit_data,
                   args=(dataframe, "date", "target", "Тестовий набір даних 4", "День"))
 
 # If own data button is clicked, allow file upload
