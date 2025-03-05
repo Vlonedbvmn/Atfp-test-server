@@ -151,7 +151,7 @@ with col4:
     if st.session_state.lang == "ukr":
         st.button(label="Обрати свої", on_click=click_button2)
     else:
-        st.button(label="Choose your own data", on_click=click_button)
+        st.button(label="Choose your own data", on_click=click_button2)
     
 
 # If experimental data button is clicked, show additional options
@@ -394,14 +394,26 @@ if st.session_state.clicked:
 
 # If own data button is clicked, allow file upload
 if st.session_state.clicked2:
-    st.markdown("### Ви обрали свої дані. Наразі основні вимоги до даних це:")
-    st.markdown(
-        "### • Завжди повинні бути 2 колонки: час та значення показника, для якого здійснюється прогнозування")
-    st.markdown("### • Бажано оформити колонки з часом під формат timestamp, date, або datetime")
-    st.markdown(
-        "### • Бажано, щоб не було пропусків між записами значень, бо пропуски будуть заміщуватися, а отже якість прогнозування може погіршитися")
-    st.markdown("###  ")
-    uploaded_file = st.file_uploader("Оберіть файл (Підтриуються формати .csv та .xlsx)", type=["csv", "xlsx"])
+    if st.session_state.lang == "ukr":
+        st.markdown("### Ви обрали свої дані. Наразі основні вимоги до даних це:")
+        st.markdown(
+            "### • Завжди повинні бути 2 колонки: час та значення показника, для якого здійснюється прогнозування")
+        st.markdown("### • Бажано оформити колонки з часом під формат timestamp, date, або datetime")
+        st.markdown(
+            "### • Бажано, щоб не було пропусків між записами значень, бо пропуски будуть заміщуватися, а отже якість прогнозування може погіршитися")
+        st.markdown("###  ")
+    else:
+        st.markdown("### You have selected to choose your own data. Currently, the main requirements for the data are:")
+        st.markdown(
+            "### • There must always be 2 columns: time and the value of the indicator for which forecasting is being performed.")
+        st.markdown("### • It is recommended to format the time columns as timestamp, date, or datetime.")
+        st.markdown(
+            "### • It is recommended that there be no gaps between the value entries, as gaps will be filled, which may degrade the quality of the forecasting.")
+        st.markdown("###  ")
+    if st.session_state.lang == "ukr":
+        uploaded_file = st.file_uploader("Оберіть файл (only .csv and .xlsx formats are supported)", type=["csv", "xlsx"])
+    else:
+        uploaded_file = st.file_uploader("Choose file (Supported files are .csv та .xlsx)", type=["csv", "xlsx"])
     if uploaded_file is not None:
         if uploaded_file.name[-4:] == "xlsx":
             print(uploaded_file)
@@ -410,108 +422,210 @@ if st.session_state.clicked2:
         else:
             dataframe = pd.read_csv(uploaded_file)
             st.write(dataframe)
-
-        option = st.selectbox(
-            'Оберіть назву колонки з данними про дати',
-            tuple(dataframe.columns.values))
-
-        option2 = st.selectbox(
-            'Оберіть назву колонки з данними про значення які ви хочете передбачити',
-            tuple(dataframe.columns.values))
-        fr = st.selectbox("Оберіть частоту запису даних в ряді:",
-                          ["Місяць", "День", "Рік", "Хвилина", "Секунда", "Година"])
-        if st.checkbox("Налаштувати проміжок роботи"):
-
-            ran = st.select_slider(
-                "Проміжок (Виділений червоним):",
-                value=[1, 2],
-                options=[i for i in range(1, len(dataframe[option].tolist()))]
-            )
-            val1 = ran[0]
-            val2 = ran[1]
-            fig = go.Figure()
-
-            # Add actual values
-            fig.add_trace(
-                go.Scatter(x=dataframe[option], y=dataframe[option2], mode='lines', name='Дані',
-                           line=dict(color='blue')))
-
-            start_range = dataframe[option].iloc[val1]  # example start index
-            end_range = dataframe[option].iloc[val2]  # example end index
-
-            # Get the y-range for the vertical lines (you can also use fixed values)
-            y_min = dataframe[option2].min()
-            y_max = dataframe[option2].max()
-
-            # Add vertical red line at the start of the chosen range
-            fig.add_trace(
-                go.Scatter(
-                    x=[start_range, start_range],
-                    y=[y_min, y_max],
-                    mode='lines',
-                    line=dict(color='red', dash='dash', width=2),
-                    name='Start Range',
-                    showlegend=False  # Hide legend entry if not needed
+        if st.session_state.lang == "ukr":
+            option = st.selectbox(
+                'Оберіть назву колонки з данними про дати',
+                tuple(dataframe.columns.values))
+    
+            option2 = st.selectbox(
+                'Оберіть назву колонки з данними про значення які ви хочете передбачити',
+                tuple(dataframe.columns.values))
+            fr = st.selectbox("Оберіть частоту запису даних в ряді:",
+                              ["Місяць", "День", "Рік", "Хвилина", "Секунда", "Година"])
+            if st.checkbox("Налаштувати проміжок роботи"):
+    
+                ran = st.select_slider(
+                    "Проміжок (Виділений червоним):",
+                    value=[1, 2],
+                    options=[i for i in range(1, len(dataframe[option].tolist()))]
                 )
-            )
-
-            # Add vertical red line at the end of the chosen range
-            fig.add_trace(
-                go.Scatter(
-                    x=[end_range, end_range],
-                    y=[y_min, y_max],
-                    mode='lines',
-                    line=dict(color='red', dash='dash', width=2),
-                    name='End Range',
-                    showlegend=False
-                )
-            )
-
-            # Add title and labels
-            fig.update_layout(
-                title=f"{uploaded_file.name}",
-                xaxis_title='Дата',
-                yaxis_title='Значення',
-                template='plotly_white',
-                shapes=[
-                    dict(
-                        type="rect",
-                        xref="x",
-                        yref="paper",  # 'paper' makes it span the full y-range of the plot
-                        x0=start_range,
-                        y0=0,
-                        x1=end_range,
-                        y1=1,
-                        fillcolor="rgba(255, 0, 0, 0.1)",  # half-transparent red
-                        line=dict(width=0),
-                        layer="below"
+                val1 = ran[0]
+                val2 = ran[1]
+                fig = go.Figure()
+    
+                # Add actual values
+                fig.add_trace(
+                    go.Scatter(x=dataframe[option], y=dataframe[option2], mode='lines', name='Дані',
+                               line=dict(color='blue')))
+    
+                start_range = dataframe[option].iloc[val1]  # example start index
+                end_range = dataframe[option].iloc[val2]  # example end index
+    
+                # Get the y-range for the vertical lines (you can also use fixed values)
+                y_min = dataframe[option2].min()
+                y_max = dataframe[option2].max()
+    
+                # Add vertical red line at the start of the chosen range
+                fig.add_trace(
+                    go.Scatter(
+                        x=[start_range, start_range],
+                        y=[y_min, y_max],
+                        mode='lines',
+                        line=dict(color='red', dash='dash', width=2),
+                        name='Start Range',
+                        showlegend=False  # Hide legend entry if not needed
                     )
-                ]
-            )
-            st.plotly_chart(fig, use_container_width=True)
-
-            st.button(label="Підтвердити", key="submit_own", on_click=submit_data,
-                      args=(dataframe.iloc[val1:val2], option, option2, uploaded_file.name, fr))
+                )
+    
+                # Add vertical red line at the end of the chosen range
+                fig.add_trace(
+                    go.Scatter(
+                        x=[end_range, end_range],
+                        y=[y_min, y_max],
+                        mode='lines',
+                        line=dict(color='red', dash='dash', width=2),
+                        name='End Range',
+                        showlegend=False
+                    )
+                )
+    
+                # Add title and labels
+                fig.update_layout(
+                    title=f"{uploaded_file.name}",
+                    xaxis_title='Дата',
+                    yaxis_title='Значення',
+                    template='plotly_white',
+                    shapes=[
+                        dict(
+                            type="rect",
+                            xref="x",
+                            yref="paper",  # 'paper' makes it span the full y-range of the plot
+                            x0=start_range,
+                            y0=0,
+                            x1=end_range,
+                            y1=1,
+                            fillcolor="rgba(255, 0, 0, 0.1)",  # half-transparent red
+                            line=dict(width=0),
+                            layer="below"
+                        )
+                    ]
+                )
+                st.plotly_chart(fig, use_container_width=True)
+    
+                st.button(label="Підтвердити", key="submit_own", on_click=submit_data,
+                          args=(dataframe.iloc[val1:val2], option, option2, uploaded_file.name, fr))
+            else:
+                fig = go.Figure()
+    
+                # Add actual values
+                fig.add_trace(
+                    go.Scatter(x=dataframe[option], y=dataframe[option2], mode='lines', name='Дані',
+                               line=dict(color='blue')))
+    
+    
+                # Add title and labels
+                fig.update_layout(
+                    title=f"{uploaded_file.name}",
+                    xaxis_title='Дата',
+                    yaxis_title='Значення',
+                    template='plotly_white',
+                )
+                st.plotly_chart(fig, use_container_width=True)
+    
+                st.button(label="Підтвердити", key="submit_own", on_click=submit_data,
+                          args=(dataframe, option, option2, uploaded_file.name, fr))
         else:
-            fig = go.Figure()
-
-            # Add actual values
-            fig.add_trace(
-                go.Scatter(x=dataframe[option], y=dataframe[option2], mode='lines', name='Дані',
-                           line=dict(color='blue')))
-
-
-            # Add title and labels
-            fig.update_layout(
-                title=f"{uploaded_file.name}",
-                xaxis_title='Дата',
-                yaxis_title='Значення',
-                template='plotly_white',
-            )
-            st.plotly_chart(fig, use_container_width=True)
-
-            st.button(label="Підтвердити", key="submit_own", on_click=submit_data,
-                      args=(dataframe, option, option2, uploaded_file.name, fr))
+            option = st.selectbox(
+                'Select the column name with the date data',
+                tuple(dataframe.columns.values))
+    
+            option2 = st.selectbox(
+                'Select the column name with the values you want to predict',
+                tuple(dataframe.columns.values))
+            fr = st.selectbox("Select the frequency of data entries in the series:",
+                              ["Місяць", "День", "Рік", "Хвилина", "Секунда", "Година"])
+            if st.checkbox("Set the working interval"):
+    
+                ran = st.select_slider(
+                    "Interval (Highlighted in red):",
+                    value=[1, 2],
+                    options=[i for i in range(1, len(dataframe[option].tolist()))]
+                )
+                val1 = ran[0]
+                val2 = ran[1]
+                fig = go.Figure()
+    
+                # Add actual values
+                fig.add_trace(
+                    go.Scatter(x=dataframe[option], y=dataframe[option2], mode='lines', name='Data',
+                               line=dict(color='blue')))
+    
+                start_range = dataframe[option].iloc[val1]  # example start index
+                end_range = dataframe[option].iloc[val2]  # example end index
+    
+                # Get the y-range for the vertical lines (you can also use fixed values)
+                y_min = dataframe[option2].min()
+                y_max = dataframe[option2].max()
+    
+                # Add vertical red line at the start of the chosen range
+                fig.add_trace(
+                    go.Scatter(
+                        x=[start_range, start_range],
+                        y=[y_min, y_max],
+                        mode='lines',
+                        line=dict(color='red', dash='dash', width=2),
+                        name='Start Range',
+                        showlegend=False  # Hide legend entry if not needed
+                    )
+                )
+    
+                # Add vertical red line at the end of the chosen range
+                fig.add_trace(
+                    go.Scatter(
+                        x=[end_range, end_range],
+                        y=[y_min, y_max],
+                        mode='lines',
+                        line=dict(color='red', dash='dash', width=2),
+                        name='End Range',
+                        showlegend=False
+                    )
+                )
+    
+                # Add title and labels
+                fig.update_layout(
+                    title=f"{uploaded_file.name}",
+                    xaxis_title='Data',
+                    yaxis_title='Values',
+                    template='plotly_white',
+                    shapes=[
+                        dict(
+                            type="rect",
+                            xref="x",
+                            yref="paper",  # 'paper' makes it span the full y-range of the plot
+                            x0=start_range,
+                            y0=0,
+                            x1=end_range,
+                            y1=1,
+                            fillcolor="rgba(255, 0, 0, 0.1)",  # half-transparent red
+                            line=dict(width=0),
+                            layer="below"
+                        )
+                    ]
+                )
+                st.plotly_chart(fig, use_container_width=True)
+    
+                st.button(label="Submit", key="submit_own", on_click=submit_data,
+                          args=(dataframe.iloc[val1:val2], option, option2, uploaded_file.name, fr))
+            else:
+                fig = go.Figure()
+    
+                # Add actual values
+                fig.add_trace(
+                    go.Scatter(x=dataframe[option], y=dataframe[option2], mode='lines', name='Data',
+                               line=dict(color='blue')))
+    
+    
+                # Add title and labels
+                fig.update_layout(
+                    title=f"{uploaded_file.name}",
+                    xaxis_title='Data',
+                    yaxis_title='Values',
+                    template='plotly_white',
+                )
+                st.plotly_chart(fig, use_container_width=True)
+    
+                st.button(label="Submit", key="submit_own", on_click=submit_data,
+                          args=(dataframe, option, option2, uploaded_file.name, fr))
 
 # After submission, show the dataframe and success message
 if st.session_state.submitted:
