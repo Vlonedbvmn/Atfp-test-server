@@ -629,11 +629,20 @@ if st.session_state.clicked2:
 
 # After submission, show the dataframe and success message
 if st.session_state.submitted:
-    st.success(
-        f"Дані датасету {st.session_state.name} успішно завантажені! Тепер можете перейти до розділу 'Налаштування моделі'")
+    if st.session_state.lang == "ukr":
+        st.success(
+            f"Дані датасету {st.session_state.name} успішно завантажені! Тепер можете перейти до розділу 'Налаштування моделі'")
+    else:
+        st.success(
+            f"The dataset {st.session_state.name} has been successfully uploaded! You can now proceed to the 'Model Settings' section")
 
 st.divider()
 if st.session_state.name is not None:
-    st.header(f"Наразі обраний датасет: {st.session_state.name}")
-    with st.expander("Подивитися обраний датасет:"):
-        st.write(st.session_state.df)
+    if st.session_state.lang == "ukr":
+        st.header(f"Наразі обраний датасет: {st.session_state.name}")
+        with st.expander("Подивитися обраний датасет:"):
+            st.write(st.session_state.df)
+    else:
+        st.header(f"Currently selected dataset: {st.session_state.name}")
+        with st.expander("Check chosen dataset:"):
+            st.write(st.session_state.df)
