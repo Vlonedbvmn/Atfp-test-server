@@ -1597,23 +1597,44 @@ if st.session_state.df is not None:
 
     try:
         if model == "NBEATSx":
-            st.markdown("## Ви обрали модель NBEATSx")
-            st.markdown(
-                "### NBEATSx — це глибока нейронна архітектура на основі MLP, яка використовує прямі та зворотні залишкові зв'язки.")
-            st.divider()
-            horizon = st.select_slider(
-                "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
-                options=[i for i in range(1, 151)]
-            )
-            iter = st.select_slider(
-                "Оберіть к-ть ітерацій начання моделі (чим більше, тим довше та точніше):",
-                options=[i for i in range(5, 101)]
-            )
+            if st.session_state.lang == "ukr":
+                st.markdown("## Ви обрали модель NBEATSx")
+                st.markdown(
+                    "### NBEATSx — це глибока нейронна архітектура на основі MLP, яка використовує прямі та зворотні залишкові зв'язки.")
+                st.divider()
+                horizon = st.select_slider(
+                    "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
+                    options=[i for i in range(1, 151)]
+                )
+                iter = st.select_slider(
+                    "Оберіть к-ть ітерацій начання моделі (чим більше, тим довше та точніше):",
+                    options=[i for i in range(5, 101)]
+                )
 
-            inp = st.number_input("Оберіть к-ть попередніх значень з ряду для кроку прогнозу:", step=1, min_value=5,
-                                  max_value=2050)
-            st.button(label="Підтвердити", key="kan", on_click=submit_data_NBx,
-                      args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
+                inp = st.number_input("Оберіть к-ть попередніх значень з ряду для кроку прогнозу:", step=1, min_value=5,
+                                    max_value=2050)
+                st.button(label="Підтвердити", key="kan", on_click=submit_data_NBx,
+                        args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
+            else:
+                st.markdown("## You have selected the NBEATSx model")
+                st.markdown(
+                    "### NBEATSx is a deep neural architecture based on MLP that uses direct and reverse residual connections.")
+                st.divider()
+                horizon = st.select_slider(
+                    "Select the forecasting horizon (how far ahead the prediction will be made):",
+                    options=[i for i in range(1, 151)]
+                )
+                iter = st.select_slider(
+                    "Select the number of model initialization iterations (the more, the longer and more accurate):",
+                    options=[i for i in range(5, 101)]
+                )
+                inp = st.number_input("Select the number of previous values from the series for the forecast step:",
+                                      step=1, min_value=5,
+                                      max_value=150)
+
+                st.button(label="Submit", key="kan", on_click=submit_data_KAN,
+                          args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
+            
     except:
         if st.session_state.lang == "ukr":
             st.warning('Надано не коректні гіперпараметри', icon="⚠️")
@@ -1621,23 +1642,42 @@ if st.session_state.df is not None:
             st.warning('Incorrect hyperparameters have been provided', icon="⚠️")
     try:
         if model == "TimesNet":
-            st.markdown("## Ви обрали модель TimesNet")
+            if st.session_state.lang == "ukr":
+                st.markdown("## Ви обрали модель TimesNet")
+                st.markdown(
+                    "### TimesNet — це модель на основі CNN, яка ефективно вирішує завдання моделювання як внутрішньоперіодних, так і міжперіодних змін у часових рядах.")
+                st.divider()
+                horizon = st.select_slider(
+                    "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
+                    options=[i for i in range(1, 151)]
+                )
+                iter = st.select_slider(
+                    "Оберіть к-ть ітерацій начання моделі (чим більше, тим довше та точніше):",
+                    options=[i for i in range(5, 101)]
+                )
+                inp = st.number_input("Оберіть к-ть попередніх значень з ряду для кроку прогнозу:", step=1, min_value=5,
+                                    max_value=150)
+                st.button(label="Підтвердити", key="kan", on_click=submit_data_TN,
+                        args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
+            else:
+                st.markdown("## You have selected the TimesNet model")
+                st.markdown(
+                    "### TimesNet is a CNN-based model that effectively addresses the task of modeling both intra-period and inter-period changes in time series.")
+                st.divider()
+                horizon = st.select_slider(
+                    "Select the forecasting horizon (how far ahead the prediction will be made):",
+                    options=[i for i in range(1, 151)]
+                )
+                iter = st.select_slider(
+                    "Select the number of model initialization iterations (the more, the longer and more accurate):",
+                    options=[i for i in range(5, 101)]
+                )
+                inp = st.number_input("Select the number of previous values from the series for the forecast step:",
+                                      step=1, min_value=5,
+                                      max_value=150)
 
-            st.markdown(
-                "### TimesNet — це модель на основі CNN, яка ефективно вирішує завдання моделювання як внутрішньоперіодних, так і міжперіодних змін у часових рядах.")
-            st.divider()
-            horizon = st.select_slider(
-                "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
-                options=[i for i in range(1, 151)]
-            )
-            iter = st.select_slider(
-                "Оберіть к-ть ітерацій начання моделі (чим більше, тим довше та точніше):",
-                options=[i for i in range(5, 101)]
-            )
-            inp = st.number_input("Оберіть к-ть попередніх значень з ряду для кроку прогнозу:", step=1, min_value=5,
-                                  max_value=150)
-            st.button(label="Підтвердити", key="kan", on_click=submit_data_TN,
-                      args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
+                st.button(label="Submit", key="kan", on_click=submit_data_KAN,
+                          args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
     except:
         if st.session_state.lang == "ukr":
             st.warning('Надано не коректні гіперпараметри', icon="⚠️")
@@ -1645,22 +1685,42 @@ if st.session_state.df is not None:
             st.warning('Incorrect hyperparameters have been provided', icon="⚠️")
     try:
         if model == "TimeMixer":
-            st.markdown("## Ви обрали модель TimeMixer")
-            st.markdown(
-                "### TimeMixer - модель, яка поєднує елементи архітектури Transformers і CNN для досягнення високої точності в прогнозах, обробляючи залежності як в просторі, так і в часі.")
-            st.divider()
-            horizon = st.select_slider(
-                "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
-                options=[i for i in range(1, 151)]
-            )
-            iter = st.select_slider(
-                "Оберіть к-ть ітерацій начання моделі (чим більше, тим довше та точніше):",
-                options=[i for i in range(5, 101)]
-            )
-            inp = st.number_input("Оберіть к-ть попередніх значень з ряду для кроку прогнозу:", step=1, min_value=5,
-                                  max_value=150)
-            st.button(label="Підтвердити", key="kan", on_click=submit_data_TM,
-                      args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
+            if st.session_state.lang == "ukr":
+                st.markdown("## Ви обрали модель TimeMixer")
+                st.markdown(
+                    "### TimeMixer - модель, яка поєднує елементи архітектури Transformers і CNN для досягнення високої точності в прогнозах, обробляючи залежності як в просторі, так і в часі.")
+                st.divider()
+                horizon = st.select_slider(
+                    "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
+                    options=[i for i in range(1, 151)]
+                )
+                iter = st.select_slider(
+                    "Оберіть к-ть ітерацій начання моделі (чим більше, тим довше та точніше):",
+                    options=[i for i in range(5, 101)]
+                )
+                inp = st.number_input("Оберіть к-ть попередніх значень з ряду для кроку прогнозу:", step=1, min_value=5,
+                                    max_value=150)
+                st.button(label="Підтвердити", key="kan", on_click=submit_data_TM,
+                        args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
+            else:
+                st.markdown("## You have selected the TimeMixer model")
+                st.markdown(
+                    "### TimeMixer is a model that combines elements of Transformer and CNN architectures to achieve high accuracy in predictions by processing dependencies in both space and time.")
+                st.divider()
+                horizon = st.select_slider(
+                    "Select the forecasting horizon (how far ahead the prediction will be made):",
+                    options=[i for i in range(1, 151)]
+                )
+                iter = st.select_slider(
+                    "Select the number of model initialization iterations (the more, the longer and more accurate):",
+                    options=[i for i in range(5, 101)]
+                )
+                inp = st.number_input("Select the number of previous values from the series for the forecast step:",
+                                      step=1, min_value=5,
+                                      max_value=150)
+
+                st.button(label="Submit", key="kan", on_click=submit_data_KAN,
+                          args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
     except:
         if st.session_state.lang == "ukr":
             st.warning('Надано не коректні гіперпараметри', icon="⚠️")
@@ -1668,22 +1728,42 @@ if st.session_state.df is not None:
             st.warning('Incorrect hyperparameters have been provided', icon="⚠️")
     try:
         if model == "PatchTST":
-            st.markdown("## Ви обрали модель PatchTST")
-            st.markdown(
-                "### PatchTST — це високоефективна модель на основі Transformer, призначена для багатовимірного прогнозування часових рядів.")
-            st.divider()
-            horizon = st.select_slider(
-                "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
-                options=[i for i in range(1, 151)]
-            )
-            iter = st.select_slider(
-                "Оберіть к-ть ітерацій начання моделі (чим більше, тим довше та точніше):",
-                options=[i for i in range(5, 101)]
-            )
-            inp = st.number_input("Оберіть к-ть попередніх значень з ряду для кроку прогнозу:", step=1, min_value=5,
-                                  max_value=150)
-            st.button(label="Підтвердити", key="kan", on_click=submit_data_PTST,
-                      args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
+            if st.session_state.lang == "ukr":
+                st.markdown("## Ви обрали модель PatchTST")
+                st.markdown(
+                    "### PatchTST — це високоефективна модель на основі Transformer, призначена для багатовимірного прогнозування часових рядів.")
+                st.divider()
+                horizon = st.select_slider(
+                    "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
+                    options=[i for i in range(1, 151)]
+                )
+                iter = st.select_slider(
+                    "Оберіть к-ть ітерацій начання моделі (чим більше, тим довше та точніше):",
+                    options=[i for i in range(5, 101)]
+                )
+                inp = st.number_input("Оберіть к-ть попередніх значень з ряду для кроку прогнозу:", step=1, min_value=5,
+                                    max_value=150)
+                st.button(label="Підтвердити", key="kan", on_click=submit_data_PTST,
+                        args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
+            else:
+                st.markdown("## You have selected the PatchTST model")
+                st.markdown(
+                    "### PatchTST is a highly efficient Transformer-based model designed for multivariate time series forecasting.")
+                st.divider()
+                horizon = st.select_slider(
+                    "Select the forecasting horizon (how far ahead the prediction will be made):",
+                    options=[i for i in range(1, 151)]
+                )
+                iter = st.select_slider(
+                    "Select the number of model initialization iterations (the more, the longer and more accurate):",
+                    options=[i for i in range(5, 101)]
+                )
+                inp = st.number_input("Select the number of previous values from the series for the forecast step:",
+                                      step=1, min_value=5,
+                                      max_value=150)
+
+                st.button(label="Submit", key="kan", on_click=submit_data_KAN,
+                          args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
     except:
         if st.session_state.lang == "ukr":
             st.warning('Надано не коректні гіперпараметри', icon="⚠️")
@@ -1691,22 +1771,42 @@ if st.session_state.df is not None:
             st.warning('Incorrect hyperparameters have been provided', icon="⚠️")
     try:
         if model == "SNN":
-            st.markdown("## Ви обрали модель SNN")
-            st.markdown(
-                "### SNN — це розроблена ШНМ, призначена для прогнозування часових рядів з використанням спайкових нейронних мереж та резервуарних обчислень.")
-            st.divider()
-            horizon = st.select_slider(
-                "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
-                options=[i for i in range(1, 151)]
-            )
-            iter = st.select_slider(
-                "Оберіть к-ть ітерацій начання моделі (чим більше, тим довше та точніше):",
-                options=[i for i in range(5, 101)]
-            )
-            inp = st.number_input("Оберіть к-ть попередніх значень з ряду для кроку прогнозу:", step=1, min_value=5,
-                                  max_value=150)
-            st.button(label="Підтвердити", key="kan", on_click=submit_data_SNN,
-                      args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
+            if st.session_state.lang == "ukr":
+                st.markdown("## Ви обрали модель SNN")
+                st.markdown(
+                    "### SNN — це розроблена ШНМ, призначена для прогнозування часових рядів з використанням спайкових нейронних мереж та резервуарних обчислень.")
+                st.divider()
+                horizon = st.select_slider(
+                    "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
+                    options=[i for i in range(1, 151)]
+                )
+                iter = st.select_slider(
+                    "Оберіть к-ть ітерацій начання моделі (чим більше, тим довше та точніше):",
+                    options=[i for i in range(5, 101)]
+                )
+                inp = st.number_input("Оберіть к-ть попередніх значень з ряду для кроку прогнозу:", step=1, min_value=5,
+                                    max_value=150)
+                st.button(label="Підтвердити", key="kan", on_click=submit_data_SNN,
+                        args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
+            else:
+                st.markdown("## You have selected the SNN model")
+                st.markdown(
+                    "### SNN is a developed Spiking Neural Network (SNN) designed for time series forecasting using spiking neural networks and reservoir computing.")
+                st.divider()
+                horizon = st.select_slider(
+                    "Select the forecasting horizon (how far ahead the prediction will be made):",
+                    options=[i for i in range(1, 151)]
+                )
+                iter = st.select_slider(
+                    "Select the number of model initialization iterations (the more, the longer and more accurate):",
+                    options=[i for i in range(5, 101)]
+                )
+                inp = st.number_input("Select the number of previous values from the series for the forecast step:",
+                                      step=1, min_value=5,
+                                      max_value=150)
+
+                st.button(label="Submit", key="kan", on_click=submit_data_KAN,
+                          args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
     except:
         if st.session_state.lang == "ukr":
             st.warning('Надано не коректні гіперпараметри', icon="⚠️")
@@ -1714,20 +1814,40 @@ if st.session_state.df is not None:
             st.warning('Incorrect hyperparameters have been provided', icon="⚠️")
     try:
         if model == "Авто-вибір":
-            st.markdown("## Ви обрали Авто-вибір")
-            st.markdown(
-                "### Тут обирається модель, яка найкраще може працювати з Вашими даними та налаштовуються гіперпараметри для моделі.")
-            st.divider()
-            horizon = st.select_slider(
-                "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
-                options=[i for i in range(1, 151)]
-            )
-            iter = st.select_slider(
-                "Оберіть к-ть ітерацій начання моделі (чим більше, тим довше та точніше):",
-                options=[i for i in range(5, 101)]
-            )
-            st.button(label="Підтвердити", key="kan", on_click=submit_data_auto,
-                      args=(ds_for_pred, iter, horizon, means[st.session_state.freq]))
+            if st.session_state.lang == "ukr":
+                st.markdown("## Ви обрали Авто-вибір")
+                st.markdown(
+                    "### Тут обирається модель, яка найкраще може працювати з Вашими даними та налаштовуються гіперпараметри для моделі.")
+                st.divider()
+                horizon = st.select_slider(
+                    "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
+                    options=[i for i in range(1, 151)]
+                )
+                iter = st.select_slider(
+                    "Оберіть к-ть ітерацій начання моделі (чим більше, тим довше та точніше):",
+                    options=[i for i in range(5, 101)]
+                )
+                st.button(label="Підтвердити", key="kan", on_click=submit_data_auto,
+                        args=(ds_for_pred, iter, horizon, means[st.session_state.freq]))
+            else:
+                st.markdown("## You have selected the Auto-choose")
+                st.markdown(
+                    "### Here, a model is selected that can work best with your data, and the hyperparameters for the model are adjusted.")
+                st.divider()
+                horizon = st.select_slider(
+                    "Select the forecasting horizon (how far ahead the prediction will be made):",
+                    options=[i for i in range(1, 151)]
+                )
+                iter = st.select_slider(
+                    "Select the number of model initialization iterations (the more, the longer and more accurate):",
+                    options=[i for i in range(5, 101)]
+                )
+                inp = st.number_input("Select the number of previous values from the series for the forecast step:",
+                                      step=1, min_value=5,
+                                      max_value=150)
+
+                st.button(label="Submit", key="kan", on_click=submit_data_KAN,
+                          args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
     except:
         if st.session_state.lang == "ukr":
             st.warning('Надано не коректні гіперпараметри', icon="⚠️")
@@ -1747,31 +1867,32 @@ if st.session_state.df is not None:
             if st.session_state.lang == "ukr":
                 st.markdown(
                     f"## Середньоквадратичне відхилення обраної моделі ({st.session_state.inst_name}): {round(st.session_state.mse, 3)}")
+
                 st.session_state.fig.update_layout(
                     xaxis_title='',
                     yaxis_title='Значення'
                 )
                 st.plotly_chart(st.session_state.fig, use_container_width=True)
             else:
-                st.markdown(f"## Mean square error (MSE) of the selected model ({st.session_state.inst_name}):{round(st.session_state.mse, 3)}")
+                st.markdown(
+                    f"## The MSE of the selected model ({st.session_state.inst_name}): {round(st.session_state.mse, 3)}")
+
                 st.session_state.fig.update_layout(
                     xaxis_title='',
                     yaxis_title='Values'
                 )
                 st.plotly_chart(st.session_state.fig, use_container_width=True)
-
+        else:
+            if st.session_state.lang == "ukr":
                 st.markdown(
-                    f"##  Mean square error (MSE) of the selected model by auto-selection ({st.session_state.inst_name}): {round(st.session_state.mse, 3)}")
+                    f"## Середньоквадратичне відхилення обраної моделі авто-вибором ({st.session_state.inst_name}): {round(st.session_state.mse, 3)}")
                 st.plotly_chart(st.session_state.fig, use_container_width=True)
-
-                # st.button("Train", type="primary", on_click=save_performance, args=((model, k)))
-                #
-                # with st.expander("See full dataset"):
-                #     st.write(wine_df)
-                #
-                # if len(st.session_state['score']) != 0:
-                #     st.subheader(f"The model has an F1-Score of: {st.session_state['score'][-1]}")
-                if st.session_state.lang == "ukr":
-                    st.warning('Для початки роботи з моделями, оберіть дані', icon="⚠️")
-                else:
-                    st.warning('To begin working with the models, choose data', icon="⚠️")
+            else:
+                st.markdown(
+                    f"## The MSE of the selected model by auto-selection ({st.session_state.inst_name}): {round(st.session_state.mse, 3)}")
+                st.plotly_chart(st.session_state.fig, use_container_width=True)
+else:
+    if st.session_state.lang == "ukr":
+        st.warning('Для початки роботи з моделями, оберіть дані', icon="⚠️")
+    else:
+        st.warning('To start working with the models, select the data.', icon="⚠️")
