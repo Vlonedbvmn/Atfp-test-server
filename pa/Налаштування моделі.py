@@ -1536,12 +1536,18 @@ if st.session_state.df is not None:
     # st.session_state.df_forpred = ds_for_pred
     with st.container():
         st.title("Обрання та налашутвання моделі прогнозування")
-
-    model = option_menu("Оберіть модель для передбачення",
-                        ["KAN", "TimesNet", "NBEATSx", "TimeMixer", "PatchTST", "SNN", "Авто-вибір"],
-                        # icons=['gear', 'gear', 'gear', 'gear', 'gear', 'gear'],
-                        menu_icon="no",
-                        orientation="horizontal")
+    if st.session_state.lang == "ukr":
+         model = option_menu("Оберіть модель для передбачення",
+                           ["KAN", "TimesNet", "NBEATSx", "TimeMixer", "PatchTST", "SNN", "Авто-вибір"],
+                           # icons=['gear', 'gear', 'gear', 'gear', 'gear', 'gear'],
+                           menu_icon="no",
+                           orientation="horizontal")
+    else:
+         model = option_menu("Choose model for forcasting",
+                           ["KAN", "TimesNet", "NBEATSx", "TimeMixer", "PatchTST", "SNN", "Авто-вибір"],
+                           # icons=['gear', 'gear', 'gear', 'gear', 'gear', 'gear'],
+                           menu_icon="no",
+                           orientation="horizontal")
 
     try:
         if model == "KAN":
