@@ -247,7 +247,7 @@ if st.session_state.df is not None:
     # try:
     if plug == "Stock price":
         st.markdown("## Плагіни stock price")
-        file_list = glob.glob("models/" + "*.pth")
+        file_list = glob.glob("/models/" + "*.pth")
         print(f"Found {len(file_list)} CSV files.")
         # file_list = file_list[:5]
         ticks = []
