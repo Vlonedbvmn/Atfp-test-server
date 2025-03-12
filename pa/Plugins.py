@@ -247,11 +247,13 @@ if st.session_state.df is not None:
     # try:
     if plug == "Stock price":
         st.markdown("## Плагіни stock price")
-        file_list = glob.glob("/models/" + "*.pth")
+        folder_path = 'models/'
+        # Get list of all .pth files in folder
+        pth_files = glob.glob(os.path.join(folder_path, '*.pth'))
         print(f"Found {len(file_list)} CSV files.")
         # file_list = file_list[:5]
         ticks = []
-        for file in file_list:
+        for file in pth_files:
             # Extract ticker symbol from filename (assuming filename like TICKER.csv)
             # print(file.replace("\\", "/"))
             # # fi = pd.read_csv(file.replace("\\", "/"))
