@@ -247,7 +247,7 @@ if st.session_state.df is not None:
     # try:
     if plug == "Stock price":
         st.markdown("## Плагіни stock price")
-        file_list = glob.glob(os.path.join("C:/Users/auspo/PycharmProjects/plugins/models", "*.pth"))
+        file_list = glob.glob(os.path.join("/models", "*.pth"))
         print(f"Found {len(file_list)} CSV files.")
         # file_list = file_list[:5]
         ticks = []
@@ -268,7 +268,7 @@ if st.session_state.df is not None:
                 key="one11"
             )
             st.button(label="Зробити прогноз", key="kan", on_click=mk_fcst,
-                      args=(ds_for_pred, selection, "C:/Users/auspo/PycharmProjects/plugins/models", horizon))
+                      args=(ds_for_pred, selection, "/models", horizon))
             st.divider()
             st.markdown(f"### Результати прогнозу")
             if st.session_state.predicted4 is not None:
@@ -414,7 +414,7 @@ if st.session_state.df is not None:
                     st.plotly_chart(st.session_state.bp2, use_container_width=True)
     if plug == "Crypto":
         st.markdown("## Плагіни stock price")
-        file_list = glob.glob(os.path.join("C:/Users/auspo/PycharmProjects/plugins/crypto_models", "*.pth"))
+        file_list = glob.glob(os.path.join("/crypto_models", "*.pth"))
         print(f"Found {len(file_list)} CSV files.")
         # file_list = file_list[:5]
         ticks = []
@@ -435,7 +435,7 @@ if st.session_state.df is not None:
                 key="one11"
             )
             st.button(label="Зробити прогноз", key="kan", on_click=mk_fcst,
-                      args=(ds_for_pred, selection, "C:/Users/auspo/PycharmProjects/plugins/crypto_models", horizon, "cryp"))
+                      args=(ds_for_pred, selection, "/crypto_models", horizon, "cryp"))
             st.divider()
             st.markdown(f"### Результати прогнозу")
             if st.session_state.predicted4 is not None:
