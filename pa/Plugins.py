@@ -250,7 +250,7 @@ if st.session_state.df is not None:
         folder_path = 'models/'
         # Get list of all .pth files in folder
         pth_files = glob.glob(os.path.join(folder_path, '*.pth'))
-        print(f"Found {len(file_list)} CSV files.")
+        print(f"Found {len(pth_files)} CSV files.")
         # file_list = file_list[:5]
         ticks = []
         for file in pth_files:
