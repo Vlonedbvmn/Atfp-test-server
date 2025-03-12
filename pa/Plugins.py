@@ -247,17 +247,17 @@ if st.session_state.df is not None:
     # try:
     if plug == "Stock price":
         st.markdown("## Плагіни stock price")
-        file_list = glob.glob(os.path.join("/models", "*.pth"))
+        file_list = glob.glob("models/" + "*.pth")
         print(f"Found {len(file_list)} CSV files.")
         # file_list = file_list[:5]
         ticks = []
         for file in file_list:
             # Extract ticker symbol from filename (assuming filename like TICKER.csv)
-            print(file.replace("\\", "/"))
-            # fi = pd.read_csv(file.replace("\\", "/"))
-            # fi['Date'] = [i for i in range(1, len(fi) + 1)]
-            ticker = os.path.splitext(os.path.basename(file.replace("\\", "/")))[0]
-            if ticker.split("_")[0] not in ticks:
+            # print(file.replace("\\", "/"))
+            # # fi = pd.read_csv(file.replace("\\", "/"))
+            # # fi['Date'] = [i for i in range(1, len(fi) + 1)]
+            # ticker = os.path.splitext(os.path.basename(file.replace("\\", "/")))[0]
+            if file.split("_")[0] not in ticks:
                 ticks.append(ticker.split("_")[0])
         selection = pills("Tickers", ticks)
         if selection is not None:
