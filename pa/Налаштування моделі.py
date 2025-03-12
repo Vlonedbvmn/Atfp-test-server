@@ -310,23 +310,41 @@ def submit_data_auto(datafra, iter, horizon, rarety):
             # Create distplot with custom bin_size
             st.session_state.fig = go.Figure()
 
+            if st.session_state.lang == "ukr":
             # Plot the data except the last seven days
-            st.session_state.fig.add_trace(go.Scatter(
-                x=dpred["unique_id"],
-                y=dpred["real"],
-                mode='lines',
-                name='Дані',
-                line=dict(color='blue')
-            ))
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["real"],
+                    mode='lines',
+                    name='Дані',
+                    line=dict(color='blue')
+                ))
 
-            # Plot the last seven days in a different color
-            st.session_state.fig.add_trace(go.Scatter(
-                x=dpred["unique_id"],
-                y=dpred["pred"],
-                mode='lines',
-                name='Прогноз',
-                line=dict(color='green')
-            ))
+                # Plot the last seven days in a different color
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["pred"],
+                    mode='lines',
+                    name='Прогноз',
+                    line=dict(color='green')
+                ))
+            else:
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["real"],
+                    mode='lines',
+                    name='Data',
+                    line=dict(color='blue')
+                ))
+
+                # Plot the last seven days in a different color
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["pred"],
+                    mode='lines',
+                    name='Forecast',
+                    line=dict(color='green')
+                ))
             print(dpred)
         if key_with_min_value == "TimesNet":
             fcst = NeuralForecast(
@@ -363,23 +381,41 @@ def submit_data_auto(datafra, iter, horizon, rarety):
             # Create distplot with custom bin_size
             st.session_state.fig = go.Figure()
 
+            if st.session_state.lang == "ukr":
             # Plot the data except the last seven days
-            st.session_state.fig.add_trace(go.Scatter(
-                x=dpred["unique_id"],
-                y=dpred["real"],
-                mode='lines',
-                name='Дані',
-                line=dict(color='blue')
-            ))
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["real"],
+                    mode='lines',
+                    name='Дані',
+                    line=dict(color='blue')
+                ))
 
-            # Plot the last seven days in a different color
-            st.session_state.fig.add_trace(go.Scatter(
-                x=dpred["unique_id"],
-                y=dpred["pred"],
-                mode='lines',
-                name='Прогноз',
-                line=dict(color='green')
-            ))
+                # Plot the last seven days in a different color
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["pred"],
+                    mode='lines',
+                    name='Прогноз',
+                    line=dict(color='green')
+                ))
+            else:
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["real"],
+                    mode='lines',
+                    name='Data',
+                    line=dict(color='blue')
+                ))
+
+                # Plot the last seven days in a different color
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["pred"],
+                    mode='lines',
+                    name='Forecast',
+                    line=dict(color='green')
+        ))
             print(dpred)
         if key_with_min_value == "TimeMixer":
             fcst = NeuralForecast(
@@ -417,23 +453,41 @@ def submit_data_auto(datafra, iter, horizon, rarety):
             # Create distplot with custom bin_size
             st.session_state.fig = go.Figure()
 
+            if st.session_state.lang == "ukr":
             # Plot the data except the last seven days
-            st.session_state.fig.add_trace(go.Scatter(
-                x=dpred["unique_id"],
-                y=dpred["real"],
-                mode='lines',
-                name='Дані',
-                line=dict(color='blue')
-            ))
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["real"],
+                    mode='lines',
+                    name='Дані',
+                    line=dict(color='blue')
+                ))
 
-            # Plot the last seven days in a different color
-            st.session_state.fig.add_trace(go.Scatter(
-                x=dpred["unique_id"],
-                y=dpred["pred"],
-                mode='lines',
-                name='Прогноз',
-                line=dict(color='green')
-            ))
+                # Plot the last seven days in a different color
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["pred"],
+                    mode='lines',
+                    name='Прогноз',
+                    line=dict(color='green')
+                ))
+            else:
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["real"],
+                    mode='lines',
+                    name='Data',
+                    line=dict(color='blue')
+                ))
+
+                # Plot the last seven days in a different color
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["pred"],
+                    mode='lines',
+                    name='Forecast',
+                    line=dict(color='green')
+                ))
             print(dpred)
         if key_with_min_value == "PatchTST":
             fcst = NeuralForecast(
@@ -470,23 +524,41 @@ def submit_data_auto(datafra, iter, horizon, rarety):
             # Create distplot with custom bin_size
             st.session_state.fig = go.Figure()
 
+            if st.session_state.lang == "ukr":
             # Plot the data except the last seven days
-            st.session_state.fig.add_trace(go.Scatter(
-                x=dpred["unique_id"],
-                y=dpred["real"],
-                mode='lines',
-                name='Дані',
-                line=dict(color='blue')
-            ))
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["real"],
+                    mode='lines',
+                    name='Дані',
+                    line=dict(color='blue')
+                ))
 
-            # Plot the last seven days in a different color
-            st.session_state.fig.add_trace(go.Scatter(
-                x=dpred["unique_id"],
-                y=dpred["pred"],
-                mode='lines',
-                name='Прогноз',
-                line=dict(color='green')
-            ))
+                # Plot the last seven days in a different color
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["pred"],
+                    mode='lines',
+                    name='Прогноз',
+                    line=dict(color='green')
+                ))
+            else:
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["real"],
+                    mode='lines',
+                    name='Data',
+                    line=dict(color='blue')
+                ))
+
+                # Plot the last seven days in a different color
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["pred"],
+                    mode='lines',
+                    name='Forecast',
+                    line=dict(color='green')
+                ))
             print(dpred)
 
         if key_with_min_value == "NBEATSx":
@@ -523,25 +595,42 @@ def submit_data_auto(datafra, iter, horizon, rarety):
             dpred["unique_id"] = [i for i in range(1, len(dpred) + 1)]
             # Create distplot with custom bin_size
             st.session_state.fig = go.Figure()
-
+            if st.session_state.lang == "ukr":
             # Plot the data except the last seven days
-            st.session_state.fig.add_trace(go.Scatter(
-                x=dpred["unique_id"],
-                y=dpred["real"],
-                mode='lines',
-                name='Дані',
-                line=dict(color='blue')
-            ))
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["real"],
+                    mode='lines',
+                    name='Дані',
+                    line=dict(color='blue')
+                ))
 
-            # Plot the last seven days in a different color
-            st.session_state.fig.add_trace(go.Scatter(
-                x=dpred["unique_id"],
-                y=dpred["pred"],
-                mode='lines',
-                name='Прогноз',
-                line=dict(color='green')
-            ))
-            print(dpred)
+                # Plot the last seven days in a different color
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["pred"],
+                    mode='lines',
+                    name='Прогноз',
+                    line=dict(color='green')
+                ))
+            else:
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["real"],
+                    mode='lines',
+                    name='Data',
+                    line=dict(color='blue')
+                ))
+
+                # Plot the last seven days in a different color
+                st.session_state.fig.add_trace(go.Scatter(
+                    x=dpred["unique_id"],
+                    y=dpred["pred"],
+                    mode='lines',
+                    name='Forecast',
+                    line=dict(color='green')
+                ))
+                    print(dpred)
     except:
         st.warning('Надано не коректні гіперпараметри', icon="⚠️")
 
@@ -617,23 +706,41 @@ def submit_data_KAN(datafra, iter, horizon, rarety, inp):
         # Create distplot with custom bin_size
         st.session_state.fig = go.Figure()
 
+        if st.session_state.lang == "ukr":
         # Plot the data except the last seven days
-        st.session_state.fig.add_trace(go.Scatter(
-            x=dpred["unique_id"],
-            y=dpred["real"],
-            mode='lines',
-            name='Дані',
-            line=dict(color='blue')
-        ))
+            st.session_state.fig.add_trace(go.Scatter(
+                x=dpred["unique_id"],
+                y=dpred["real"],
+                mode='lines',
+                name='Дані',
+                line=dict(color='blue')
+            ))
 
-        # Plot the last seven days in a different color
-        st.session_state.fig.add_trace(go.Scatter(
-            x=dpred["unique_id"],
-            y=dpred["pred"],
-            mode='lines',
-            name='Прогноз',
-            line=dict(color='green')
-        ))
+            # Plot the last seven days in a different color
+            st.session_state.fig.add_trace(go.Scatter(
+                x=dpred["unique_id"],
+                y=dpred["pred"],
+                mode='lines',
+                name='Прогноз',
+                line=dict(color='green')
+            ))
+        else:
+            st.session_state.fig.add_trace(go.Scatter(
+                x=dpred["unique_id"],
+                y=dpred["real"],
+                mode='lines',
+                name='Data',
+                line=dict(color='blue')
+            ))
+
+            # Plot the last seven days in a different color
+            st.session_state.fig.add_trace(go.Scatter(
+                x=dpred["unique_id"],
+                y=dpred["pred"],
+                mode='lines',
+                name='Forecast',
+                line=dict(color='green')
+            ))
         # st.session_state.fig = px.line(dpred, x='unique_id', y=['real', 'pred'], labels={'value': 'Y values', 'x': 'X values'})
         print(dpred)
     except Exception as ex:
@@ -1263,22 +1370,41 @@ def submit_data_TN(datafra, iter, horizon, rarety, inp):
         st.session_state.fig = go.Figure()
 
         # Plot the data except the last seven days
-        st.session_state.fig.add_trace(go.Scatter(
-            x=dpred["unique_id"],
-            y=dpred["real"],
-            mode='lines',
-            name='Дані',
-            line=dict(color='blue')
-        ))
+        if st.session_state.lang == "ukr":
+        # Plot the data except the last seven days
+            st.session_state.fig.add_trace(go.Scatter(
+                x=dpred["unique_id"],
+                y=dpred["real"],
+                mode='lines',
+                name='Дані',
+                line=dict(color='blue')
+            ))
 
-        # Plot the last seven days in a different color
-        st.session_state.fig.add_trace(go.Scatter(
-            x=dpred["unique_id"],
-            y=dpred["pred"],
-            mode='lines',
-            name='Прогноз',
-            line=dict(color='green')
-        ))
+            # Plot the last seven days in a different color
+            st.session_state.fig.add_trace(go.Scatter(
+                x=dpred["unique_id"],
+                y=dpred["pred"],
+                mode='lines',
+                name='Прогноз',
+                line=dict(color='green')
+            ))
+        else:
+            st.session_state.fig.add_trace(go.Scatter(
+                x=dpred["unique_id"],
+                y=dpred["real"],
+                mode='lines',
+                name='Data',
+                line=dict(color='blue')
+            ))
+
+            # Plot the last seven days in a different color
+            st.session_state.fig.add_trace(go.Scatter(
+                x=dpred["unique_id"],
+                y=dpred["pred"],
+                mode='lines',
+                name='Forecast',
+                line=dict(color='green')
+            ))
         print(dpred)
     except:
         st.warning('Надано не коректні гіперпараметри', icon="⚠️")
@@ -1337,23 +1463,41 @@ def submit_data_TM(datafra, iter, horizon, rarety, inp):
         # Create distplot with custom bin_size
         st.session_state.fig = go.Figure()
 
+        if st.session_state.lang == "ukr":
         # Plot the data except the last seven days
-        st.session_state.fig.add_trace(go.Scatter(
-            x=dpred["unique_id"],
-            y=dpred["real"],
-            mode='lines',
-            name='Дані',
-            line=dict(color='blue')
-        ))
+            st.session_state.fig.add_trace(go.Scatter(
+                x=dpred["unique_id"],
+                y=dpred["real"],
+                mode='lines',
+                name='Дані',
+                line=dict(color='blue')
+            ))
 
-        # Plot the last seven days in a different color
-        st.session_state.fig.add_trace(go.Scatter(
-            x=dpred["unique_id"],
-            y=dpred["pred"],
-            mode='lines',
-            name='Прогноз',
-            line=dict(color='green')
-        ))
+            # Plot the last seven days in a different color
+            st.session_state.fig.add_trace(go.Scatter(
+                x=dpred["unique_id"],
+                y=dpred["pred"],
+                mode='lines',
+                name='Прогноз',
+                line=dict(color='green')
+            ))
+        else:
+            st.session_state.fig.add_trace(go.Scatter(
+                x=dpred["unique_id"],
+                y=dpred["real"],
+                mode='lines',
+                name='Data',
+                line=dict(color='blue')
+            ))
+
+            # Plot the last seven days in a different color
+            st.session_state.fig.add_trace(go.Scatter(
+                x=dpred["unique_id"],
+                y=dpred["pred"],
+                mode='lines',
+                name='Forecast',
+                line=dict(color='green')
+            ))
         print(dpred)
     except:
         st.warning('Надано не коректні гіперпараметри', icon="⚠️")
@@ -1411,24 +1555,41 @@ def submit_data_PTST(datafra, iter, horizon, rarety, inp):
         # Create distplot with custom bin_size
         st.session_state.fig = go.Figure()
 
+        if st.session_state.lang == "ukr":
         # Plot the data except the last seven days
-        st.session_state.fig.add_trace(go.Scatter(
-            x=dpred["unique_id"],
-            y=dpred["real"],
-            mode='lines',
-            name='Дані',
-            line=dict(color='blue')
-        ))
+            st.session_state.fig.add_trace(go.Scatter(
+                x=dpred["unique_id"],
+                y=dpred["real"],
+                mode='lines',
+                name='Дані',
+                line=dict(color='blue')
+            ))
 
-        # Plot the last seven days in a different color
-        st.session_state.fig.add_trace(go.Scatter(
-            x=dpred["unique_id"],
-            y=dpred["pred"],
-            mode='lines',
-            name='Прогноз',
-            line=dict(color='green')
-        ))
-        print(dpred)
+            # Plot the last seven days in a different color
+            st.session_state.fig.add_trace(go.Scatter(
+                x=dpred["unique_id"],
+                y=dpred["pred"],
+                mode='lines',
+                name='Прогноз',
+                line=dict(color='green')
+            ))
+        else:
+            st.session_state.fig.add_trace(go.Scatter(
+                x=dpred["unique_id"],
+                y=dpred["real"],
+                mode='lines',
+                name='Data',
+                line=dict(color='blue')
+            ))
+
+            # Plot the last seven days in a different color
+            st.session_state.fig.add_trace(go.Scatter(
+                x=dpred["unique_id"],
+                y=dpred["pred"],
+                mode='lines',
+                name='Forecast',
+                line=dict(color='green')
+            ))
     except:
         st.warning('Надано не коректні гіперпараметри', icon="⚠️")
 
@@ -1484,24 +1645,41 @@ def submit_data_NBx(datafra, iter, horizon, rarety, inp):
     dpred["unique_id"] = [i for i in range(1, len(dpred) + 1)]
     # Create distplot with custom bin_size
     st.session_state.fig = go.Figure()
-
+    if st.session_state.lang == "ukr":
     # Plot the data except the last seven days
-    st.session_state.fig.add_trace(go.Scatter(
-        x=dpred["unique_id"],
-        y=dpred["real"],
-        mode='lines',
-        name='Дані',
-        line=dict(color='blue')
-    ))
+        st.session_state.fig.add_trace(go.Scatter(
+            x=dpred["unique_id"],
+            y=dpred["real"],
+            mode='lines',
+            name='Дані',
+            line=dict(color='blue')
+        ))
 
-    # Plot the last seven days in a different color
-    st.session_state.fig.add_trace(go.Scatter(
-        x=dpred["unique_id"],
-        y=dpred["pred"],
-        mode='lines',
-        name='Прогноз',
-        line=dict(color='green')
-    ))
+        # Plot the last seven days in a different color
+        st.session_state.fig.add_trace(go.Scatter(
+            x=dpred["unique_id"],
+            y=dpred["pred"],
+            mode='lines',
+            name='Прогноз',
+            line=dict(color='green')
+        ))
+    else:
+        st.session_state.fig.add_trace(go.Scatter(
+            x=dpred["unique_id"],
+            y=dpred["real"],
+            mode='lines',
+            name='Data',
+            line=dict(color='blue')
+        ))
+
+        # Plot the last seven days in a different color
+        st.session_state.fig.add_trace(go.Scatter(
+            x=dpred["unique_id"],
+            y=dpred["pred"],
+            mode='lines',
+            name='Forecast',
+            line=dict(color='green')
+        ))
     print(dpred)
     # except:
     #     st.warning('Надано не коректні гіперпараметри', icon="⚠️")
@@ -1535,7 +1713,9 @@ if st.session_state.df is not None:
     print(ds_for_pred)
     # st.session_state.df_forpred = ds_for_pred
     with st.container():
-        st.title("Обрання та налашутвання моделі прогнозування")
+        if st.session_state.lang == "ukr":
+            st.title("Обрання та налашутвання моделі прогнозування")
+        else: st.title("Selection and configuration of the forecasting model.")
     if st.session_state.lang == "ukr":
          model = option_menu("Оберіть модель для передбачення",
                            ["KAN", "TimesNet", "NBEATSx", "TimeMixer", "PatchTST", "SNN", "Авто-вибір"],
