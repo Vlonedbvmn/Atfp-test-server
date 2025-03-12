@@ -260,7 +260,7 @@ if st.session_state.df is not None:
             # # fi['Date'] = [i for i in range(1, len(fi) + 1)]
             # ticker = os.path.splitext(os.path.basename(file.replace("\\", "/")))[0]
             if file.split("_")[0] not in ticks:
-                ticks.append(file.split("_")[0])
+                ticks.append(file.split("_")[0].split("/")[-1])
         selection = pills("Tickers", ticks)
         if selection is not None:
             st.markdown(f"Ви обрали плагін: {selection}.")
@@ -270,7 +270,7 @@ if st.session_state.df is not None:
                 key="one11"
             )
             st.button(label="Зробити прогноз", key="kan", on_click=mk_fcst,
-                      args=(ds_for_pred, selection, "/models", horizon))
+                      args=(ds_for_pred, selection, "pa/models", horizon))
             st.divider()
             st.markdown(f"### Результати прогнозу")
             if st.session_state.predicted4 is not None:
