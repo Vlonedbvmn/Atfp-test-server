@@ -630,7 +630,7 @@ def submit_data_auto(datafra, iter, horizon, rarety):
                     name='Forecast',
                     line=dict(color='green')
                 ))
-                    print(dpred)
+            print(dpred)
     except:
         st.warning('Надано не коректні гіперпараметри', icon="⚠️")
 
