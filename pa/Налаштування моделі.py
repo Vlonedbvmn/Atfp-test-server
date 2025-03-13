@@ -749,7 +749,7 @@ def submit_data_KAN(datafra, iter, horizon, rarety, inp):
 
 
 @st.cache_data(show_spinner="Робимо прогнозування...")
-def submit_data_SNN(datafra, iter, horizon, rarety, inp):
+def submit_data_SNN(datafra, iter, horizon, rarety, inp, bs):
     # if st.session_state.date_not_n:
     print("no date")
     print(datafra)
@@ -856,27 +856,28 @@ def submit_data_SNN(datafra, iter, horizon, rarety, inp):
     # spike_grad = surrogate.fast_sigmoid()
     #
 
-    import requests
-    import json
-    # URL to your forecast endpoint (adjust domain/IP and port as needed)
-    url = "https://8m19g3rrmp5fzb-8000.proxy.runpod.net/forecast"
+    
+    if bs:
+        import requests
+        import json
+        # URL to your forecast endpoint (adjust domain/IP and port as needed)
+        url = "https://8m19g3rrmp5fzb-8000.proxy.runpod.net/forecast"
 
-    # Convert the DataFrame into a list of dictionaries.
-    payload = {
-        "data": dafaf.to_dict(orient='records'),
-        "inp": inp,  # Example integer value for inp
-        "horiz": horizon,  # Example integer value for horiz
-        "iter": iter,  # Example integer value for iter
-    }
+        # Convert the DataFrame into a list of dictionaries.
+        payload = {
+            "data": dafaf.to_dict(orient='records'),
+            "inp": inp,  # Example integer value for inp
+            "horiz": horizon,  # Example integer value for horiz
+            "iter": iter,  # Example integer value for iter
+        }
 
-    # Define the URL of your forecasting endpoint
+        # Define the URL of your forecasting endpoint
 
-    # Send a POST request with the JSON payload.
-    response = requests.post(url, json=payload)
+        # Send a POST request with the JSON payload.
+        response = requests.post(url, json=payload)
 
-    # Check and print the response.
-    data = ""
-    if response.status_code == 200:
+        # Check and print the response.
+        data = ""
         data = response.json().get("predictions")
         # print("Forecast predictions:", data)
 
@@ -1966,8 +1967,11 @@ if st.session_state.df is not None:
                 )
                 inp = st.number_input("Оберіть к-ть попередніх значень з ряду для кроку прогнозу:", step=1, min_value=5,
                                     max_value=150)
+                
+                boosted_vers = st.checkbox("Використати пришвидшене навчання")
+
                 st.button(label="Підтвердити", key="kan", on_click=submit_data_SNN,
-                        args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
+                        args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp, boosted_vers))
             else:
                 st.markdown("## You have selected the SNN model")
                 st.markdown(
@@ -1985,8 +1989,10 @@ if st.session_state.df is not None:
                                       step=1, min_value=5,
                                       max_value=150)
 
+                boosted_vers = st.checkbox("Use boosted learning")
+
                 st.button(label="Submit", key="kan", on_click=submit_data_KAN,
-                          args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
+                          args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp, boosted_vers))
     except:
         if st.session_state.lang == "ukr":
             st.warning('Надано не коректні гіперпараметри', icon="⚠️")
