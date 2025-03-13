@@ -137,9 +137,9 @@ def mk_fcst(datafre, ticker, models_dir, horizon, tsk="stock"):
 
     # Set up file paths and device
     if tsk == "cryp":
-        model_filename = os.path.join(models_dir, f"{ticker}_intraday_model.pth")
-        reservoir_filename = os.path.join(models_dir, f"{ticker}_intraday_reservoir.pth")
-        scaler_filename = os.path.join(models_dir, f"{ticker}_intraday_scaler.pkl")
+        model_filename = os.path.join(models_dir, f"{ticker}-USD_intraday_model.pth")
+        reservoir_filename = os.path.join(models_dir, f"{ticker}-USD_intraday_reservoir.pth")
+        scaler_filename = os.path.join(models_dir, f"{ticker}-USD_intraday_scaler.pkl")
     else:
         model_filename = os.path.join(models_dir, f"{ticker}_daily_model.pth")
         reservoir_filename = os.path.join(models_dir, f"{ticker}_daily_reservoir.pth")
