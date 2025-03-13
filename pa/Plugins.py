@@ -194,7 +194,7 @@ def mk_fcst(datafre, ticker, models_dir, horizon, tsk="stock"):
         if counterr < horizon:
             pr.append(i)
             h.append(i)
-            counter += 1
+            counterr += 1
         else: break
 
     pr3dates = []
