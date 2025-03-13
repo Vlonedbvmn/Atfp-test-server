@@ -189,9 +189,13 @@ def mk_fcst(datafre, ticker, models_dir, horizon, tsk="stock"):
     result = make_prediction(new_sample)
     print("Prediction for new sample:", result)
     pr = []
+    counterr = 0
     for i in result.tolist()[0]:
-        pr.append(i)
-        h.append(i)
+        if counterr < horizon:
+            pr.append(i)
+            h.append(i)
+            counter += 1
+        else: break
 
     pr3dates = []
     pr4dates = []
@@ -238,7 +242,7 @@ if st.session_state.df is not None:
     with st.container():
         st.title("Плагіни")
 
-    plug = option_menu("Оберіть модель для передбачення",
+    plug = option_menu("Оберіть категорію плагінів для прогнозування",
                          ["Stock price", "Crypto"],
                          # icons=['gear', 'gear', 'gear', 'gear', 'gear', 'gear'],
                          menu_icon="no",
