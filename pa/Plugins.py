@@ -236,7 +236,7 @@ if st.session_state.df is not None:
     print(ds_for_pred)
     # st.session_state.df_forpred = ds_for_pred
     with st.container():
-        st.title("Обрання та налашутвання моделі прогнозування")
+        st.title("Плагіни")
 
     plug = option_menu("Оберіть модель для передбачення",
                          ["Stock price", "Crypto"],
@@ -416,18 +416,20 @@ if st.session_state.df is not None:
                     st.plotly_chart(st.session_state.bp2, use_container_width=True)
     if plug == "Crypto":
         st.markdown("## Плагіни stock price")
-        file_list = glob.glob(os.path.join("/crypto_models", "*.pth"))
-        print(f"Found {len(file_list)} CSV files.")
+        folder_path = 'pa/crypto_models/'
+        # Get list of all .pth files in folder
+        pth_files = glob.glob(os.path.join(folder_path, '*.pth'))
+        print(f"Found {len(pth_files)} CSV files.")
         # file_list = file_list[:5]
         ticks = []
-        for file in file_list:
+        for file in pth_files:
             # Extract ticker symbol from filename (assuming filename like TICKER.csv)
-            print(file.replace("\\", "/"))
-            # fi = pd.read_csv(file.replace("\\", "/"))
-            # fi['Date'] = [i for i in range(1, len(fi) + 1)]
-            ticker = os.path.splitext(os.path.basename(file.replace("\\", "/")))[0]
-            if ticker.split("_")[0] not in ticks:
-                ticks.append(ticker.split("_")[0])
+            # print(file.replace("\\", "/"))
+            # # fi = pd.read_csv(file.replace("\\", "/"))
+            # # fi['Date'] = [i for i in range(1, len(fi) + 1)]
+            # ticker = os.path.splitext(os.path.basename(file.replace("\\", "/")))[0]
+            if file.split("_")[0] not in ticks:
+                ticks.append(file.split("_")[0].split("/")[-1])
         selection = pills("Tickers", ticks)
         if selection is not None:
             st.markdown(f"Ви обрали плагін: {selection}.")
@@ -437,7 +439,7 @@ if st.session_state.df is not None:
                 key="one11"
             )
             st.button(label="Зробити прогноз", key="kan", on_click=mk_fcst,
-                      args=(ds_for_pred, selection, "/crypto_models", horizon, "cryp"))
+                      args=(ds_for_pred, selection, "pa/crypto_models", horizon, "cryp"))
             st.divider()
             st.markdown(f"### Результати прогнозу")
             if st.session_state.predicted4 is not None:
