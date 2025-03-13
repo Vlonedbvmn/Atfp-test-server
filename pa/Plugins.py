@@ -268,6 +268,10 @@ if st.session_state.df is not None:
         selection = pills("Тикери", sorted(ticks))
         if selection is not None:
             st.markdown(f"## Ви обрали плагін: {selection}")
+            with open(f'pa/models/{ticker}_explanation_ukr.txt', 'r') as filee:
+                content = filee.read()
+                print(content)
+                st.write(content)
             horizon = st.select_slider(
                 "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
                 options=[i for i in range(1, 31)],
