@@ -259,7 +259,7 @@ if st.session_state.df is not None:
             # # fi = pd.read_csv(file.replace("\\", "/"))
             # # fi['Date'] = [i for i in range(1, len(fi) + 1)]
             # ticker = os.path.splitext(os.path.basename(file.replace("\\", "/")))[0]
-            if file.split("_")[0] not in ticks:
+            if file.split("_")[0].split("/")[-1] not in ticks:
                 ticks.append(file.split("_")[0].split("/")[-1])
         selection = pills("Tickers", sorted(ticks))
         if selection is not None:
@@ -428,9 +428,9 @@ if st.session_state.df is not None:
             # # fi = pd.read_csv(file.replace("\\", "/"))
             # # fi['Date'] = [i for i in range(1, len(fi) + 1)]
             # ticker = os.path.splitext(os.path.basename(file.replace("\\", "/")))[0]
-            if file.split("_")[0] not in ticks:
+            if file.split("/")[2].split("-")[0] not in ticks:
                 ticks.append(file.split("/")[2].split("-")[0])
-        selection = pills("Tickers", ticks.sort())
+        selection = pills("Tickers", sorted(ticks))
         if selection is not None:
             st.markdown(f"Ви обрали плагін: {selection}.")
             horizon = st.select_slider(
