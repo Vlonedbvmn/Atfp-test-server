@@ -261,7 +261,7 @@ if st.session_state.df is not None:
             # ticker = os.path.splitext(os.path.basename(file.replace("\\", "/")))[0]
             if file.split("_")[0] not in ticks:
                 ticks.append(file.split("_")[0].split("/")[-1])
-        selection = pills("Tickers", sort(ticks))
+        selection = pills("Tickers", sorted(ticks))
         if selection is not None:
             st.markdown(f"Ви обрали плагін: {selection}.")
             horizon = st.select_slider(
