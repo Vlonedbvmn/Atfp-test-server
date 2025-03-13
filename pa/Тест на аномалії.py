@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 from neuralforecast.models import KAN, TimeLLM, TimesNet, NBEATSx, TimeMixer, PatchTST
-from statsforecast.models import MSTL
 from neuralforecast import NeuralForecast
 import plotly.figure_factory as ff
 import plotly.express as px
