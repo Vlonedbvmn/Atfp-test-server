@@ -506,7 +506,7 @@ if st.session_state.df is not None:
             st.button(label="Провести тестування", key="anom", on_click=anomal,
                       args=(st.session_state.df_anom, means[st.session_state.freq]))
         else:
-            st.title("Time series anomaly detection testing.")
+            st.title("Time series anomaly detection testing")
             # st.markdown("### ")
             st.markdown("#### Time series anomaly detection testing is a crucial stage of analysis that allows for the identification of atypical or unexpected changes in data, which may indicate significant events or issues in system operation. Anomalies can signal technical failures, system malfunctions, or even instances of fraud in financial data. Timely detection of such deviations helps prevent critical errors and minimize risks.")
 
