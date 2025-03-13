@@ -452,13 +452,13 @@ if st.session_state.df is not None:
                     ticks.append(file.split("_")[0].split("/")[-1])
             selection = pills("Tickers", sorted(ticks))
             if selection is not None:
-                st.markdown(f"## You have chosen plugin: {selection}")
+                st.markdown(f"## You have choosen plugin: {selection}")
                 with open(f'pa/models/{selection}_explanation_eng.txt', 'r') as filee:
                     content = filee.read()
                     print(content)
                     st.write(content)
                 horizon = st.select_slider(
-                    "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
+                    "Select the forecasting horizon (how far ahead the prediction will be made):",
                     options=[i for i in range(1, 31)],
                     key="one11"
                 )
@@ -626,7 +626,7 @@ if st.session_state.df is not None:
                     ticks.append(file.split("/")[2].split("-")[0])
             selection = pills("Тикери", sorted(ticks))
             if selection is not None:
-                st.markdown(f"Ви обрали плагін: {selection}")
+                st.markdown(f"## Ви обрали плагін: {selection}")
                 with open(f'pa/crypto_models/{selection}_explanation_ukr.txt', 'r') as filee:
                     content = filee.read()
                     print(content)
@@ -799,20 +799,20 @@ if st.session_state.df is not None:
                     ticks.append(file.split("/")[2].split("-")[0])
             selection = pills("Tickers", sorted(ticks))
             if selection is not None:
-                st.markdown(f"Ви обрали плагін: {selection}")
+                st.markdown(f"## You have choosen plugin: {selection}")
                 with open(f'pa/crypto_models/{selection}_explanation_eng.txt', 'r') as filee:
                     content = filee.read()
                     print(content)
                     st.write(content)
                 horizon = st.select_slider(
-                    "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
+                    "Select the forecasting horizon (how far ahead the prediction will be made):",
                     options=[i for i in range(1, 31)],
                     key="one11"
                 )
-                st.button(label="Зробити прогноз", key="kan", on_click=mk_fcst,
+                st.button(label="Forecast", key="kan", on_click=mk_fcst,
                         args=(ds_for_pred, selection, "pa/crypto_models", horizon, "cryp"))
                 st.divider()
-                st.markdown(f"### Результати прогнозу")
+                st.markdown(f"### Forecast results")
                 if st.session_state.predicted4 is not None:
                     col3, col4 = st.columns(2)
                     with col3:
