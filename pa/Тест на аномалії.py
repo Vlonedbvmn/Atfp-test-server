@@ -113,19 +113,16 @@ def df_to_windowed_df(dataframe, first_date_str, last_date_str, n=3, hor=7):
 def windowed_df_to_date_X_y(windowed_dataframe, hor):
     df_as_np = windowed_dataframe.to_numpy()
 
-    dates = df_as_np[:, 0]  # Extract dates
+    dates = df_as_np[:, 0]  
 
-    # Extract the input matrix (X) excluding target columns
     middle_matrix = df_as_np[:, 1:-hor]
     X = middle_matrix.reshape((len(dates), middle_matrix.shape[1], 1))
 
-    # Extract the 7-day target matrix (Y)
     Y = df_as_np[:, -hor:]
 
     return dates, X.astype(np.float32), Y.astype(np.float32)
 
 
-# @st.cache_data(show_spinner="Проводимо тестування...")
 def anomal(datafra, freqs):
     with st.spinner('Проводимо тестування...'):
         if st.session_state.date_not_n:
@@ -215,7 +212,6 @@ def anomal(datafra, freqs):
         # URL to your forecast endpoint (adjust domain/IP and port as needed)
         url = "https://wvrtp7efbuzv24-8000.proxy.runpod.net/forecast"
 
-        # Convert the DataFrame into a list of dictionaries.
         dafaf['ds'] = dafaf['ds'].astype(str)
         inp = 2
         horizon = 40
