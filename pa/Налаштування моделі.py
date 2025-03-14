@@ -202,7 +202,6 @@ def windowed_df_to_date_X_y(windowed_dataframe, hor):
     return dates, X.astype(np.float32), Y.astype(np.float32)
 
 
-@st.cache_data(show_spinner="Робимо прогнозування...")
 def submit_data_auto(datafra, iter, horizon, rarety):
     if st.session_state.date_not_n:
         start_date = pd.to_datetime('2024-01-01')
@@ -651,7 +650,6 @@ def submit_data_auto(datafra, iter, horizon, rarety):
     # print(dpred)
 
 
-@st.cache_data(show_spinner="Робимо прогнозування...")
 def submit_data_KAN(datafra, iter, horizon, rarety, inp):
     if st.session_state.date_not_n:
         print("no date")
@@ -748,7 +746,6 @@ def submit_data_KAN(datafra, iter, horizon, rarety, inp):
         st.warning('Надано не коректні гіперпараметри', icon="⚠️")
 
 
-@st.cache_data(show_spinner="Робимо прогнозування...")
 def submit_data_SNN(datafra, iter, horizon, rarety, inp, bs):
     # if st.session_state.date_not_n:
     print("no date")
@@ -1318,7 +1315,6 @@ def submit_data_SNN(datafra, iter, horizon, rarety, inp, bs):
         #     st.warning('Надано не коректні гіперпараметри', icon="⚠️")
 
 
-@st.cache_data(show_spinner="Робимо прогнозування...")
 def submit_data_TN(datafra, iter, horizon, rarety, inp):
     if st.session_state.date_not_n:
         start_date = pd.to_datetime('2024-01-01')
@@ -1411,7 +1407,6 @@ def submit_data_TN(datafra, iter, horizon, rarety, inp):
         st.warning('Надано не коректні гіперпараметри', icon="⚠️")
 
 
-@st.cache_data(show_spinner="Робимо прогнозування...")
 def submit_data_TM(datafra, iter, horizon, rarety, inp):
     if st.session_state.date_not_n:
         start_date = pd.to_datetime('2024-01-01')
@@ -1504,7 +1499,6 @@ def submit_data_TM(datafra, iter, horizon, rarety, inp):
         st.warning('Надано не коректні гіперпараметри', icon="⚠️")
 
 
-@st.cache_data(show_spinner="Робимо прогнозування...")
 def submit_data_PTST(datafra, iter, horizon, rarety, inp):
     if st.session_state.date_not_n:
         start_date = pd.to_datetime('2024-01-01')
@@ -1595,7 +1589,6 @@ def submit_data_PTST(datafra, iter, horizon, rarety, inp):
         st.warning('Надано не коректні гіперпараметри', icon="⚠️")
 
 
-@st.cache_data(show_spinner="Робимо прогнозування...")
 def submit_data_NBx(datafra, iter, horizon, rarety, inp):
     if st.session_state.date_not_n:
         start_date = pd.to_datetime('2024-01-01')
