@@ -53,25 +53,17 @@ def send_form_email(text, uploaded_images):
     with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
         server.login(sender_email, sender_password)
         server.send_message(msg)
-    print("Email sent successfully.")
 
 
 
-
-
-
-
-st.markdown("### ")
-st.markdown("### ")
-st.markdown("### ")
 if st.session_state.lang == "ukr":
-    st.markdown("## Зараз працюємо над...")
+    st.markdown("# Зараз працюємо над...")
     st.markdown("#### • Переклад вебплатформи на англійську")
     st.markdown("#### • Алгоритм проведення аналізу на аномалії")
     st.markdown("#### • Додання розгорнутих пояснень та візуалізації процесу навчання")
     st.markdown("#### • Зв'язка з google drive та dropbox")
 else:
-    st.markdown("### Currently working on...")
+    st.markdown("# Currently working on...")
     st.markdown("#### • Translation of webplatform to english language")
     st.markdown("#### • Anomaly detection alghoritm")
     st.markdown("#### • Adding extended training process log visuals")
@@ -81,9 +73,9 @@ st.markdown("### ")
 st.divider()
 with st.container():
     if st.session_state.lang == "ukr":
-        st.markdown("## Зворотній зв'язок")
+        st.markdown("# Зворотній зв'язок")
     else:
-        st.markdown("## Feedback") 
+        st.markdown("# Feedback") 
 
 with st.form("my_form"):
     if st.session_state.lang == "ukr":
