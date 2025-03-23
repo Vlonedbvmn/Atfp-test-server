@@ -61,25 +61,29 @@ def send_form_email(text, uploaded_images):
 
 
 
+st.markdown("### ")
+st.markdown("### ")
+st.markdown("### ")
+if st.session_state.lang == "ukr":
+    st.markdown("## Зараз працюємо над...")
+    st.markdown("#### • Переклад вебплатформи на англійську")
+    st.markdown("#### • Алгоритм проведення аналізу на аномалії")
+    st.markdown("#### • Додання розгорнутих пояснень та візуалізації процесу навчання")
+    st.markdown("#### • Зв'язка з google drive та dropbox")
+else:
+    st.markdown("### Currently working on...")
+    st.markdown("#### • Translation of webplatform to english language")
+    st.markdown("#### • Anomaly detection alghoritm")
+    st.markdown("#### • Adding extended training process log visuals")
+    st.markdown("#### • Google drive and dropbox link up")
+
+st.markdown("### ")
+st.divider()
 with st.container():
     if st.session_state.lang == "ukr":
-        st.title("Зворотній зв'язок")
-        st.title("Зараз працюємо над...")
+        st.markdown("## Зворотній зв'язок")
     else:
-        st.title("Feedback") 
-        st.title("Currently working on...")
-
-
-if st.session_state.lang == "ukr":
-    st.markdown("#### Переклад вебплатформи на англійську")
-    st.markdown("## Алгоритм проведення аналізу на аномалії")
-    st.markdown("## Додання розгорнутих пояснень та візуалізації процесу навчання")
-    st.markdown("## Зв'язка з google drive та dropbox")
-else:
-    st.markdown("## Translation of webplatform to english language")
-    st.markdown("## Anomaly detection alghoritm")
-    st.markdown("## Adding extended training process log visuals")
-    st.markdown("## Google drive and dropbox link up")
+        st.markdown("## Feedback") 
 
 with st.form("my_form"):
     if st.session_state.lang == "ukr":
