@@ -63,12 +63,15 @@ def send_form_email(text, uploaded_images):
 
 with st.container():
     if st.session_state.lang == "ukr":
+        st.title("Зворотній зв'язок")
         st.title("Зараз працюємо над...")
-    else: st.title("Currently working on...")
+    else:
+        st.title("Feedback") 
+        st.title("Currently working on...")
 
 
 if st.session_state.lang == "ukr":
-    st.markdown("## Переклад вебплатформи на англійську")
+    st.markdown("#### Переклад вебплатформи на англійську")
     st.markdown("## Алгоритм проведення аналізу на аномалії")
     st.markdown("## Додання розгорнутих пояснень та візуалізації процесу навчання")
     st.markdown("## Зв'язка з google drive та dropbox")
