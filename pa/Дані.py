@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 
 
 
-# Initialize session state variables
+
 if 'clicked' not in st.session_state:
     st.session_state.clicked = False
 if 'clicked2' not in st.session_state:
@@ -34,12 +34,7 @@ means = {"Місяць": "M",
          "День": "D",
          }
 
-# Set Streamlit page config
-# st.set_page_config(
-#     page_title="Дані",
-#     layout="wide",
-#     initial_sidebar_state="auto"
-# )
+
 
 
 st.markdown("""
@@ -104,18 +99,17 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 
-# Define button click functions
+
 def click_button():
     st.session_state.clicked = True
     st.session_state.clicked2 = False
-    st.session_state.submitted = False  # Reset submitted state on new button click
+    st.session_state.submitted = False  
 
 
 def click_button2():
     st.session_state.clicked = False
     st.session_state.clicked2 = True
-    st.session_state.submitted = False  # Reset submitted state on new button click
-
+    st.session_state.submitted = False  
 
 def submit_data(dataframe, date_col, target_col, name, fr):
     st.session_state.df = dataframe
@@ -126,8 +120,7 @@ def submit_data(dataframe, date_col, target_col, name, fr):
     st.session_state.submitted = True
 
 
-# Main function
-# if __name__ == "__main__":
+
 
 with st.container():
     if st.session_state.lang == "ukr":
@@ -135,18 +128,18 @@ with st.container():
     else:
         st.title("Choose the data you would like to work with")
 
-# Create two columns for buttons
+
 st.markdown('<div class="button-container">', unsafe_allow_html=True)
 col1, col2, col3, col4 = st.columns(4)
 
-# Button for selecting experimental data
+
 with col1:
     if st.session_state.lang == "ukr":
         st.button(label="Обрати тестувальні", on_click=click_button)
     else:
         st.button(label="Choose test data", on_click=click_button)
 st.markdown('</div>', unsafe_allow_html=True)
-# Button for selecting own data
+
 with col4:
     if st.session_state.lang == "ukr":
         st.button(label="Обрати свої", on_click=click_button2)
@@ -154,7 +147,7 @@ with col4:
         st.button(label="Choose your own data", on_click=click_button2)
     
 
-# If experimental data button is clicked, show additional options
+
 if st.session_state.clicked:
     if st.session_state.lang == "ukr":
         st.markdown(
@@ -185,7 +178,7 @@ if st.session_state.clicked:
         with c4:
             t4 = st.button(label="Test dataset 4 (Anomaly analysis)")
     st.markdown('</div>', unsafe_allow_html=True)
-    # Test 1: Load sales.csv and allow submission
+
     if t1:
         dataframe = pd.read_csv("sales.csv")
         if st.session_state.lang == "ukr":
@@ -204,11 +197,11 @@ if st.session_state.clicked:
         with c2:
             fig = go.Figure()
             if st.session_state.lang == "ukr":
-                # Add actual values
+
                 fig.add_trace(
                     go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Дані', line=dict(color='blue')))
     
-                # Add title and labels
+
                 fig.update_layout(
                     title = "Тестовий набір даних 1",
                     xaxis_title='Дата',
@@ -217,11 +210,11 @@ if st.session_state.clicked:
                 )
                 st.plotly_chart(fig, use_container_width=True)
             else:
-                # Add actual values
+ 
                 fig.add_trace(
                     go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Data', line=dict(color='blue')))
     
-                # Add title and labels
+
                 fig.update_layout(
                     title = "Test dataset 1",
                     xaxis_title='Date',
@@ -235,7 +228,7 @@ if st.session_state.clicked:
         else:
             st.button(label="Submit", key="submit1", on_click=submit_data,
                   args=(dataframe, "date", "target", "Тестовий набір даних 1", "День"))
-    # Test 2: Load AXISBANK-BSE.csv and allow submission
+
     if t2:
         dataframe = pd.read_csv("Weather_dataset.csv")
         if st.session_state.lang == "ukr":
@@ -252,12 +245,12 @@ if st.session_state.clicked:
         with c2:
             fig = go.Figure()
             if st.session_state.lang == "ukr":
-                # Add actual values
+
                 fig.add_trace(
                     go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Дані',
                                line=dict(color='blue')))
     
-                # Add title and labels
+
                 fig.update_layout(
                     title="Тестовий набір даних 2",
                     xaxis_title='Дата',
@@ -266,11 +259,11 @@ if st.session_state.clicked:
                 )
                 st.plotly_chart(fig, use_container_width=True)
             else:
-                # Add actual values
+ 
                 fig.add_trace(
                     go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Data', line=dict(color='blue')))
     
-                # Add title and labels
+
                 fig.update_layout(
                     title = "Test dataset 2",
                     xaxis_title='Date',
@@ -288,7 +281,7 @@ if st.session_state.clicked:
         
 
 
-    # Test 3: Load electricityConsumptionAndProduction.csv and allow submission
+
     if t3:
         dataframe = pd.read_csv("electricityConsumptionAndProductioction.csv")
         if st.session_state.lang == "ukr":
@@ -307,12 +300,12 @@ if st.session_state.clicked:
         with c2:
             fig = go.Figure()
             if st.session_state.lang == "ukr":
-                # Add actual values
+
                 fig.add_trace(
                 go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Дані',
                            line=dict(color='blue')))
 
-                # Add title and labels
+
                 fig.update_layout(
                 title="Тестовий набір даних 3",
                 xaxis_title='Дата',
@@ -321,11 +314,11 @@ if st.session_state.clicked:
                 )
                 st.plotly_chart(fig, use_container_width=True)
             else:
-                # Add actual values
+
                 fig.add_trace(
                     go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Data', line=dict(color='blue')))
     
-                # Add title and labels
+
                 fig.update_layout(
                     title = "Test dataset 3",
                     xaxis_title='Date',
@@ -358,12 +351,12 @@ if st.session_state.clicked:
         with c2:
             fig = go.Figure()
             if st.session_state.lang == "ukr":
-                # Add actual values
+
                 fig.add_trace(
                     go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Дані',
                                line=dict(color='blue')))
     
-                # Add title and labels
+
                 fig.update_layout(
                     title="Тестовий набір даних 4",
                     xaxis_title='Дата',
@@ -372,11 +365,11 @@ if st.session_state.clicked:
                 )
                 st.plotly_chart(fig, use_container_width=True)
             else:
-                # Add actual values
+
                 fig.add_trace(
                     go.Scatter(x=dataframe['date'], y=dataframe['target'], mode='lines', name='Data', line=dict(color='blue')))
     
-                # Add title and labels
+
                 fig.update_layout(
                     title = "Test dataset 4",
                     xaxis_title='Date',
@@ -392,7 +385,7 @@ if st.session_state.clicked:
             st.button(label="Submit", key="submit4", on_click=submit_data,
                   args=(dataframe, "date", "target", "Тестовий набір даних 4", "День"))
 
-# If own data button is clicked, allow file upload
+
 if st.session_state.clicked2:
     if st.session_state.lang == "ukr":
         st.markdown("### Ви обрали свої дані. Наразі основні вимоги до даних це:")
@@ -443,19 +436,19 @@ if st.session_state.clicked2:
                 val2 = ran[1]
                 fig = go.Figure()
     
-                # Add actual values
+
                 fig.add_trace(
                     go.Scatter(x=dataframe[option], y=dataframe[option2], mode='lines', name='Дані',
                                line=dict(color='blue')))
     
-                start_range = dataframe[option].iloc[val1]  # example start index
-                end_range = dataframe[option].iloc[val2]  # example end index
+                start_range = dataframe[option].iloc[val1]  
+                end_range = dataframe[option].iloc[val2]  
     
-                # Get the y-range for the vertical lines (you can also use fixed values)
+
                 y_min = dataframe[option2].min()
                 y_max = dataframe[option2].max()
     
-                # Add vertical red line at the start of the chosen range
+
                 fig.add_trace(
                     go.Scatter(
                         x=[start_range, start_range],
@@ -463,11 +456,11 @@ if st.session_state.clicked2:
                         mode='lines',
                         line=dict(color='red', dash='dash', width=2),
                         name='Start Range',
-                        showlegend=False  # Hide legend entry if not needed
+                        showlegend=False  
                     )
                 )
     
-                # Add vertical red line at the end of the chosen range
+
                 fig.add_trace(
                     go.Scatter(
                         x=[end_range, end_range],
@@ -479,7 +472,7 @@ if st.session_state.clicked2:
                     )
                 )
     
-                # Add title and labels
+
                 fig.update_layout(
                     title=f"{uploaded_file.name}",
                     xaxis_title='Дата',
@@ -489,12 +482,12 @@ if st.session_state.clicked2:
                         dict(
                             type="rect",
                             xref="x",
-                            yref="paper",  # 'paper' makes it span the full y-range of the plot
+                            yref="paper",  
                             x0=start_range,
                             y0=0,
                             x1=end_range,
                             y1=1,
-                            fillcolor="rgba(255, 0, 0, 0.1)",  # half-transparent red
+                            fillcolor="rgba(255, 0, 0, 0.1)",  
                             line=dict(width=0),
                             layer="below"
                         )
@@ -507,13 +500,13 @@ if st.session_state.clicked2:
             else:
                 fig = go.Figure()
     
-                # Add actual values
+
                 fig.add_trace(
                     go.Scatter(x=dataframe[option], y=dataframe[option2], mode='lines', name='Дані',
                                line=dict(color='blue')))
     
     
-                # Add title and labels
+
                 fig.update_layout(
                     title=f"{uploaded_file.name}",
                     xaxis_title='Дата',
@@ -545,19 +538,19 @@ if st.session_state.clicked2:
                 val2 = ran[1]
                 fig = go.Figure()
     
-                # Add actual values
+
                 fig.add_trace(
                     go.Scatter(x=dataframe[option], y=dataframe[option2], mode='lines', name='Data',
                                line=dict(color='blue')))
     
-                start_range = dataframe[option].iloc[val1]  # example start index
-                end_range = dataframe[option].iloc[val2]  # example end index
+                start_range = dataframe[option].iloc[val1]  
+                end_range = dataframe[option].iloc[val2]  
     
-                # Get the y-range for the vertical lines (you can also use fixed values)
+
                 y_min = dataframe[option2].min()
                 y_max = dataframe[option2].max()
     
-                # Add vertical red line at the start of the chosen range
+
                 fig.add_trace(
                     go.Scatter(
                         x=[start_range, start_range],
@@ -565,11 +558,11 @@ if st.session_state.clicked2:
                         mode='lines',
                         line=dict(color='red', dash='dash', width=2),
                         name='Start Range',
-                        showlegend=False  # Hide legend entry if not needed
+                        showlegend=False  
                     )
                 )
     
-                # Add vertical red line at the end of the chosen range
+
                 fig.add_trace(
                     go.Scatter(
                         x=[end_range, end_range],
@@ -581,7 +574,7 @@ if st.session_state.clicked2:
                     )
                 )
     
-                # Add title and labels
+
                 fig.update_layout(
                     title=f"{uploaded_file.name}",
                     xaxis_title='Data',
@@ -591,12 +584,12 @@ if st.session_state.clicked2:
                         dict(
                             type="rect",
                             xref="x",
-                            yref="paper",  # 'paper' makes it span the full y-range of the plot
+                            yref="paper",  
                             x0=start_range,
                             y0=0,
                             x1=end_range,
                             y1=1,
-                            fillcolor="rgba(255, 0, 0, 0.1)",  # half-transparent red
+                            fillcolor="rgba(255, 0, 0, 0.1)",  
                             line=dict(width=0),
                             layer="below"
                         )
@@ -609,13 +602,12 @@ if st.session_state.clicked2:
             else:
                 fig = go.Figure()
     
-                # Add actual values
+
                 fig.add_trace(
                     go.Scatter(x=dataframe[option], y=dataframe[option2], mode='lines', name='Data',
                                line=dict(color='blue')))
     
     
-                # Add title and labels
                 fig.update_layout(
                     title=f"{uploaded_file.name}",
                     xaxis_title='Data',
@@ -627,7 +619,6 @@ if st.session_state.clicked2:
                 st.button(label="Submit", key="submit_own", on_click=submit_data,
                           args=(dataframe, option, option2, uploaded_file.name, fr))
 
-# After submission, show the dataframe and success message
 if st.session_state.submitted:
     if st.session_state.lang == "ukr":
         st.success(

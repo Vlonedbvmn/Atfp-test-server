@@ -9,7 +9,7 @@ os.environ['NIXTLA_ID_AS_COL'] = '1'
 
 if 'role' not in st.session_state:
     st.session_state.role = None
-# Directory of the pages
+
 # st.logo("atfp-logo.png")
 st.set_page_config(
     # page_title="ATFP",

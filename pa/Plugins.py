@@ -25,23 +25,7 @@ from streamlit_pills import pills
 import io
 
 
-# Define your supported languages
-# languages = {"English": "en", "Español": "es"}
-# # selected_language = st.sidebar.selectbox("Choose your language", list(languages.keys()))
-# lang_code = languages[selected_language]
-#
-# # Load the appropriate translation (assuming your locale files are in the 'locales' folder)
-# translation = gettext.translation('messages', localedir='locales', languages=[lang_code], fallback=True)
-# translation.install()
-# _ = translation.gettext
 
-# st.write(_("Welcome to my app!"))
-
-# st.set_page_config(
-#     page_title="Модель",
-#     layout="wide",
-#     initial_sidebar_state="auto"
-# )
 
 means = {"Місяць": "M",
          "Година": "h",
@@ -135,7 +119,7 @@ def mk_fcst(datafre, ticker, models_dir, horizon, tsk="stock"):
             out = self.tcn2(mem2).squeeze(2)
             return out
 
-    # Set up file paths and device
+
     if tsk == "cryp":
         model_filename = os.path.join(models_dir, f"{ticker}-USD_intraday_model.pth")
         reservoir_filename = os.path.join(models_dir, f"{ticker}-USD_intraday_reservoir.pth")
@@ -146,21 +130,21 @@ def mk_fcst(datafre, ticker, models_dir, horizon, tsk="stock"):
         scaler_filename = os.path.join(models_dir, f"{ticker}_daily_scaler.pkl")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # Load reservoir parameters (W_in, W_res, reservoir_size)
+
     reservoir_data = torch.load(reservoir_filename, map_location=device)
     W_in = reservoir_data["W_in"]
     W_res = reservoir_data["W_res"]
     reservoir_size = reservoir_data["reservoir_size"]
 
-    # Set the output dimension (must match your training configuration; here, e.g., 20)
+
     output_dim = 30
 
-    # Create the model instance and load the state dict
+
     model = SNNRegression(reservoir_size, output_dim).to(device)
     model_state = torch.load(model_filename, map_location=device)
     model.load_state_dict(model_state)
 
-    # Load the scaler using pickle
+
     with open(scaler_filename, "rb") as f:
         scaler = pickle.load(f)
 
@@ -263,7 +247,7 @@ if st.session_state.df is not None:
         if st.session_state.lang == "ukr":
             st.markdown("## Плагіни stock price")
             folder_path = 'pa/models/'
-            # Get list of all .pth files in folder
+
             pth_files = glob.glob(os.path.join(folder_path, '*.pth'))
             print(f"Found {len(pth_files)} CSV files.")
             # file_list = file_list[:5]
@@ -327,7 +311,6 @@ if st.session_state.df is not None:
 
                     cool1, cool2 = st.columns([2, 5])
 
-                    # Create the plotly figure
                     with cool1:
                         st.markdown("##### Вибір горизонту прогнозу ")
                         st.markdown("# ")
@@ -364,33 +347,33 @@ if st.session_state.df is not None:
                         #     line=dict(color='green')
                         # ))
                         q50 = last_days[st.session_state.target][:(slid)]
-                        lower_forecast = q50 / 1.2  # q1: median divided by 1.5
-                        upper_forecast = q50 * 1.2  # q99: median multiplied by 1.5
+                        lower_forecast = q50 / 1.2 
+                        upper_forecast = q50 * 1.2  
                         if lower_forecast is not None:
                             max_value = max(upper_forecast.tolist()) + 100
                             min_value = min(lower_forecast.tolist()) - 100
-                        # First, add the upper bound trace (invisible line) to serve as the fill ceiling.
+
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
                             y=upper_forecast,
                             mode='lines',
-                            line=dict(color='rgba(0,128,0,0)'),  # fully transparent line
+                            line=dict(color='rgba(0,128,0,0)'), 
                             showlegend=False,
                             hoverinfo='skip'
                         ))
 
-                        # Next, add the lower bound trace that fills the area up to the previous (upper bound) trace.
+
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
                             y=lower_forecast,
                             mode='lines',
-                            fill='tonexty',  # fills the area between this trace and the one above
-                            fillcolor='rgba(0,128,0,0.2)',  # adjust the color and transparency as needed
-                            line=dict(color='rgba(0,128,0,0)'),  # transparent line to keep the focus on the fill
+                            fill='tonexty',  
+                            fillcolor='rgba(0,128,0,0.2)',  
+                            line=dict(color='rgba(0,128,0,0)'),  
                             name='Діапазон можливих значень прогнозу'
                         ))
 
-                        # Finally, add the median (50% quantile) forecast line on top.
+
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
                             y=q50,
@@ -398,21 +381,21 @@ if st.session_state.df is not None:
                             name='Прогноз',
                             line=dict(color='green')
                         ))
-                        # Update layout (optional)
+
                         st.session_state.plotp2.update_layout(
                             xaxis_title='Дата',
                             # yaxis_title='Значення',
                             yaxis=dict(
                                 # range=[min_value, max_value],
-                                title='Спрогнозовані значення'  # Optional: add a title for clarity
+                                title='Спрогнозовані значення' 
                             ),
-                            title="Графік прогнозу",  # Increase the overall height
+                            title="Графік прогнозу",  
                         )
 
-                        # Show the plot
+
                         st.plotly_chart(st.session_state.plotp2, use_container_width=True)
 
-                        # Plot the data except the last seven days
+
 
                         st.session_state.bp2 = go.Figure()
 
@@ -423,7 +406,7 @@ if st.session_state.df is not None:
                             marker_color='green'
                         ))
 
-                        # Customize layout
+
                         st.session_state.bp2.update_layout(
                             title='Барплот прогнозу',
                             xaxis_title='Дата',
@@ -431,13 +414,13 @@ if st.session_state.df is not None:
                             template='plotly_white'
                         )
 
-                        # Display the Plotly chart in Streamlit
+
         
                         st.plotly_chart(st.session_state.bp2, use_container_width=True)
         else:
             st.markdown("## Stock price plugins")
             folder_path = 'pa/models/'
-            # Get list of all .pth files in folder
+
             pth_files = glob.glob(os.path.join(folder_path, '*.pth'))
             print(f"Found {len(pth_files)} CSV files.")
             # file_list = file_list[:5]
@@ -501,7 +484,7 @@ if st.session_state.df is not None:
 
                     cool1, cool2 = st.columns([2, 5])
 
-                    # Create the plotly figure
+
                     with cool1:
                         st.markdown("##### Choose forecast horizon ")
                         st.markdown("# ")
@@ -514,9 +497,7 @@ if st.session_state.df is not None:
                         st.markdown("##### Forecast statistics ")
 
                         st.write(last_days[:(slid)].describe().head(7), use_container_width=True)
-                        # else:
-                        #     st.write(last_days[:(slid)].describe().drop(["unique_id"], axis=1).head(7),
-                        #              use_container_width=True)
+
 
                     with cool2:
 
@@ -538,33 +519,32 @@ if st.session_state.df is not None:
                         #     line=dict(color='green')
                         # ))
                         q50 = last_days[st.session_state.target][:(slid)]
-                        lower_forecast = q50 / 1.2  # q1: median divided by 1.5
-                        upper_forecast = q50 * 1.2  # q99: median multiplied by 1.5
+                        lower_forecast = q50 / 1.2  
+                        upper_forecast = q50 * 1.2  
                         if lower_forecast is not None:
                             max_value = max(upper_forecast.tolist()) + 100
                             min_value = min(lower_forecast.tolist()) - 100
-                        # First, add the upper bound trace (invisible line) to serve as the fill ceiling.
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
                             y=upper_forecast,
                             mode='lines',
-                            line=dict(color='rgba(0,128,0,0)'),  # fully transparent line
+                            line=dict(color='rgba(0,128,0,0)'),  
                             showlegend=False,
                             hoverinfo='skip'
                         ))
 
-                        # Next, add the lower bound trace that fills the area up to the previous (upper bound) trace.
+
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
                             y=lower_forecast,
                             mode='lines',
-                            fill='tonexty',  # fills the area between this trace and the one above
-                            fillcolor='rgba(0,128,0,0.2)',  # adjust the color and transparency as needed
-                            line=dict(color='rgba(0,128,0,0)'),  # transparent line to keep the focus on the fill
+                            fill='tonexty', 
+                            fillcolor='rgba(0,128,0,0.2)', 
+                            line=dict(color='rgba(0,128,0,0)'),
                             name='Range of possible forecast values'
                         ))
 
-                        # Finally, add the median (50% quantile) forecast line on top.
+
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
                             y=q50,
@@ -572,21 +552,21 @@ if st.session_state.df is not None:
                             name='Forecast',
                             line=dict(color='green')
                         ))
-                        # Update layout (optional)
+
                         st.session_state.plotp2.update_layout(
                             xaxis_title='Дата',
                             # yaxis_title='Значення',
                             yaxis=dict(
                                 # range=[min_value, max_value],
-                                title='Forecasted values'  # Optional: add a title for clarity
+                                title='Forecasted values'  
                             ),
-                            title="Forecast plot",  # Increase the overall height
+                            title="Forecast plot",  
                         )
 
-                        # Show the plot
+
                         st.plotly_chart(st.session_state.plotp2, use_container_width=True)
 
-                        # Plot the data except the last seven days
+
 
                         st.session_state.bp2 = go.Figure()
 
@@ -597,7 +577,7 @@ if st.session_state.df is not None:
                             marker_color='green'
                         ))
 
-                        # Customize layout
+
                         st.session_state.bp2.update_layout(
                             title='Forecast barplot',
                             xaxis_title='Date',
@@ -605,23 +585,17 @@ if st.session_state.df is not None:
                             template='plotly_white'
                         )
 
-                        # Display the Plotly chart in Streamlit
                         st.plotly_chart(st.session_state.bp2, use_container_width=True)
     if plug == "Crypto":
         if st.session_state.lang == "ukr":
             st.markdown("## Плагіни crypto")
             folder_path = 'pa/crypto_models/'
-            # Get list of all .pth files in folder
+
             pth_files = glob.glob(os.path.join(folder_path, '*.pth'))
             print(f"Found {len(pth_files)} CSV files.")
             # file_list = file_list[:5]
             ticks = []
             for file in pth_files:
-                # Extract ticker symbol from filename (assuming filename like TICKER.csv)
-                # print(file.replace("\\", "/"))
-                # # fi = pd.read_csv(file.replace("\\", "/"))
-                # # fi['Date'] = [i for i in range(1, len(fi) + 1)]
-                # ticker = os.path.splitext(os.path.basename(file.replace("\\", "/")))[0]
                 if file.split("/")[2].split("-")[0] not in ticks:
                     ticks.append(file.split("/")[2].split("-")[0])
             selection = pills("Тикери", sorted(ticks))
@@ -675,7 +649,7 @@ if st.session_state.df is not None:
 
                     cool1, cool2 = st.columns([2, 5])
 
-                    # Create the plotly figure
+
                     with cool1:
                         st.markdown("##### Вибір горизонту прогнозу ")
                         st.markdown("# ")
@@ -703,7 +677,7 @@ if st.session_state.df is not None:
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
+
                         # st.session_state.plotp.add_trace(go.Scatter(
                         #     x=last_days[st.session_state.date][:(slid)],
                         #     y=last_days[st.session_state.target][:(slid)],
@@ -712,33 +686,33 @@ if st.session_state.df is not None:
                         #     line=dict(color='green')
                         # ))
                         q50 = last_days[st.session_state.target][:(slid)]
-                        lower_forecast = q50 / 1.2  # q1: median divided by 1.5
-                        upper_forecast = q50 * 1.2  # q99: median multiplied by 1.5
+                        lower_forecast = q50 / 1.2 
+                        upper_forecast = q50 * 1.2 
                         if lower_forecast is not None:
                             max_value = max(upper_forecast.tolist()) + 100
                             min_value = min(lower_forecast.tolist()) - 100
-                        # First, add the upper bound trace (invisible line) to serve as the fill ceiling.
+
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
                             y=upper_forecast,
                             mode='lines',
-                            line=dict(color='rgba(0,128,0,0)'),  # fully transparent line
+                            line=dict(color='rgba(0,128,0,0)'),  
                             showlegend=False,
                             hoverinfo='skip'
                         ))
 
-                        # Next, add the lower bound trace that fills the area up to the previous (upper bound) trace.
+
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
                             y=lower_forecast,
                             mode='lines',
-                            fill='tonexty',  # fills the area between this trace and the one above
-                            fillcolor='rgba(0,128,0,0.2)',  # adjust the color and transparency as needed
-                            line=dict(color='rgba(0,128,0,0)'),  # transparent line to keep the focus on the fill
+                            fill='tonexty',  
+                            fillcolor='rgba(0,128,0,0.2)',  
+                            line=dict(color='rgba(0,128,0,0)'),  
                             name='Діапазон можливих значень прогнозу'
                         ))
 
-                        # Finally, add the median (50% quantile) forecast line on top.
+
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
                             y=q50,
@@ -746,21 +720,20 @@ if st.session_state.df is not None:
                             name='Прогноз',
                             line=dict(color='green')
                         ))
-                        # Update layout (optional)
+
                         st.session_state.plotp2.update_layout(
                             xaxis_title='Дата',
                             # yaxis_title='Значення',
                             yaxis=dict(
                                 # range=[min_value, max_value],
-                                title='Спрогнозовані значення'  # Optional: add a title for clarity
+                                title='Спрогнозовані значення'  
                             ),
-                            title="Графік прогнозу",  # Increase the overall height
+                            title="Графік прогнозу",  
                         )
 
-                        # Show the plot
                         st.plotly_chart(st.session_state.plotp2, use_container_width=True)
 
-                        # Plot the data except the last seven days
+
 
                         st.session_state.bp2 = go.Figure()
 
@@ -771,7 +744,7 @@ if st.session_state.df is not None:
                             marker_color='green'
                         ))
 
-                        # Customize layout
+
                         st.session_state.bp2.update_layout(
                             title='Барплот прогнозу',
                             xaxis_title='Дата',
@@ -779,12 +752,12 @@ if st.session_state.df is not None:
                             template='plotly_white'
                         )
 
-                        # Display the Plotly chart in Streamlit
+
                         st.plotly_chart(st.session_state.bp2, use_container_width=True)
         else:
             st.markdown("## Сrypto plugins")
             folder_path = 'pa/crypto_models/'
-            # Get list of all .pth files in folder
+
             pth_files = glob.glob(os.path.join(folder_path, '*.pth'))
             print(f"Found {len(pth_files)} CSV files.")
             # file_list = file_list[:5]
@@ -848,7 +821,7 @@ if st.session_state.df is not None:
 
                     cool1, cool2 = st.columns([2, 5])
 
-                    # Create the plotly figure
+
                     with cool1:
                         st.markdown("##### Choose forecast horizon ")
                         st.markdown("# ")
@@ -876,7 +849,7 @@ if st.session_state.df is not None:
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
+
                         # st.session_state.plotp.add_trace(go.Scatter(
                         #     x=last_days[st.session_state.date][:(slid)],
                         #     y=last_days[st.session_state.target][:(slid)],
@@ -890,28 +863,28 @@ if st.session_state.df is not None:
                         if lower_forecast is not None:
                             max_value = max(upper_forecast.tolist()) + 100
                             min_value = min(lower_forecast.tolist()) - 100
-                        # First, add the upper bound trace (invisible line) to serve as the fill ceiling.
+                   
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
                             y=upper_forecast,
                             mode='lines',
-                            line=dict(color='rgba(0,128,0,0)'),  # fully transparent line
+                            line=dict(color='rgba(0,128,0,0)'), 
                             showlegend=False,
                             hoverinfo='skip'
                         ))
 
-                        # Next, add the lower bound trace that fills the area up to the previous (upper bound) trace.
+                     
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
                             y=lower_forecast,
                             mode='lines',
-                            fill='tonexty',  # fills the area between this trace and the one above
-                            fillcolor='rgba(0,128,0,0.2)',  # adjust the color and transparency as needed
-                            line=dict(color='rgba(0,128,0,0)'),  # transparent line to keep the focus on the fill
+                            fill='tonexty',  
+                            fillcolor='rgba(0,128,0,0.2)',  
+                            line=dict(color='rgba(0,128,0,0)'),  
                             name='Range of possible forecast values'
                         ))
 
-                        # Finally, add the median (50% quantile) forecast line on top.
+
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
                             y=q50,
@@ -919,21 +892,21 @@ if st.session_state.df is not None:
                             name='Forecast',
                             line=dict(color='green')
                         ))
-                        # Update layout (optional)
+
                         st.session_state.plotp2.update_layout(
                             xaxis_title='Дата',
                             # yaxis_title='Значення',
                             yaxis=dict(
                                 # range=[min_value, max_value],
-                                title='Forecasted values'  # Optional: add a title for clarity
+                                title='Forecasted values'  
                             ),
-                            title="Forecast plot",  # Increase the overall height
+                            title="Forecast plot",  
                         )
 
-                        # Show the plot
+
                         st.plotly_chart(st.session_state.plotp2, use_container_width=True)
 
-                        # Plot the data except the last seven days
+
 
                         st.session_state.bp2 = go.Figure()
 
@@ -944,7 +917,7 @@ if st.session_state.df is not None:
                             marker_color='green'
                         ))
 
-                        # Customize layout
+
                         st.session_state.bp2.update_layout(
                             title='Forecast barplot',
                             xaxis_title='Date',
@@ -952,7 +925,7 @@ if st.session_state.df is not None:
                             template='plotly_white'
                         )
 
-                        # Display the Plotly chart in Streamlit
+
                         st.plotly_chart(st.session_state.bp2, use_container_width=True)
 
 else:
