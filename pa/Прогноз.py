@@ -65,7 +65,7 @@ def predd(datafre):
             new_sample = datafre["y"].tolist()[-st.session_state.inp:]
             new_sample = np.array(new_sample).reshape(-1, 1)
 
-            # .reshape(orig_shape)
+
             def make_prediction(input_values):
 
                 input_values = st.session_state.scaler.transform(input_values)
@@ -160,10 +160,10 @@ if st.session_state.inst_name is not None:
         with st.container():
             st.title("Прогноз")
 
-        # Create two columns for buttons
+
         col1, col2 = st.columns(2)
 
-        # Button for selecting experimental data
+
         with col1:
             st.markdown(f"### Модель: {st.session_state.inst_name}")
             dff = pd.DataFrame()
@@ -175,7 +175,7 @@ if st.session_state.inst_name is not None:
             st.button(label="Прогноз", key="pr", on_click=predd,
                       args=(dff,))
 
-        # Button for selecting own data
+
         with col2:
             st.markdown(f"### Дані:")
             with st.expander("Подивитися обраний датасет:"):
@@ -189,10 +189,10 @@ if st.session_state.inst_name is not None:
         with st.container():
             st.title("Forecast")
 
-        # Create two columns for buttons
+
         col1, col2 = st.columns(2)
 
-        # Button for selecting experimental data
+
         with col1:
             st.markdown(f"### Model: {st.session_state.inst_name}")
             dff = pd.DataFrame()
@@ -204,7 +204,6 @@ if st.session_state.inst_name is not None:
             st.button(label="Forecast", key="pr", on_click=predd,
                       args=(dff,))
 
-        # Button for selecting own data
         with col2:
             st.markdown(f"### Data:")
             with st.expander("Check chosen dataset:"):
@@ -248,7 +247,7 @@ if st.session_state.inst_name is not None:
 
             cool1, cool2 = st.columns([2,5])
 
-            # Create the plotly figure
+
             with cool1:
                 st.markdown("##### Вибір горизонту прогнозу ")
                 st.markdown("# ")
@@ -289,7 +288,7 @@ if st.session_state.inst_name is not None:
                 if lower_forecast is not None:
                     max_value = max(upper_forecast.tolist())+100
                     min_value = min(lower_forecast.tolist()) - 100
-                # First, add the upper bound trace (invisible line) to serve as the fill ceiling.
+
                 st.session_state.plotp.add_trace(go.Scatter(
                     x=last_days[st.session_state.date][:(slid)],
                     y=upper_forecast,
@@ -299,18 +298,18 @@ if st.session_state.inst_name is not None:
                     hoverinfo='skip'
                 ))
 
-                # Next, add the lower bound trace that fills the area up to the previous (upper bound) trace.
+
                 st.session_state.plotp.add_trace(go.Scatter(
                     x=last_days[st.session_state.date][:(slid)],
                     y=lower_forecast,
                     mode='lines',
-                    fill='tonexty',  # fills the area between this trace and the one above
-                    fillcolor='rgba(0,128,0,0.2)',  # adjust the color and transparency as needed
-                    line=dict(color='rgba(0,128,0,0)'),  # transparent line to keep the focus on the fill
+                    fill='tonexty',  
+                    fillcolor='rgba(0,128,0,0.2)',  
+                    line=dict(color='rgba(0,128,0,0)'),  
                     name='Діапазон можливих значень прогнозу'
                 ))
 
-                # Finally, add the median (50% quantile) forecast line on top.
+
                 st.session_state.plotp.add_trace(go.Scatter(
                     x=last_days[st.session_state.date][:(slid)],
                     y=q50,
@@ -318,21 +317,21 @@ if st.session_state.inst_name is not None:
                     name='Прогноз',
                     line=dict(color='green')
                 ))
-                # Update layout (optional)
+
                 st.session_state.plotp.update_layout(
                     xaxis_title='Дата',
                     # yaxis_title='Значення',
                     yaxis=dict(
                         # range=[min_value, max_value],
-                        title='Спрогнозовані значення'  # Optional: add a title for clarity
+                        title='Спрогнозовані значення'  
                     ),
-                    title="Графік прогнозу", # Increase the overall height
+                    title="Графік прогнозу", 
                 )
 
-                # Show the plot
+
                 st.plotly_chart(st.session_state.plotp, use_container_width=True)
 
-                # Plot the data except the last seven days
+
 
                 st.session_state.bp = go.Figure()
 
@@ -343,7 +342,7 @@ if st.session_state.inst_name is not None:
                     marker_color='green'
                 ))
 
-                # Customize layout
+
                 st.session_state.bp.update_layout(
                     title='Барплот прогнозу',
                     xaxis_title='Дата',
@@ -351,7 +350,6 @@ if st.session_state.inst_name is not None:
                     template='plotly_white'
                 )
 
-                 # Display the Plotly chart in Streamlit
                 st.plotly_chart(st.session_state.bp, use_container_width=True)
         else:
             col3, col4 = st.columns(2)
@@ -388,7 +386,6 @@ if st.session_state.inst_name is not None:
 
             cool1, cool2 = st.columns([2, 5])
 
-            # Create the plotly figure
             with cool1:
                 st.markdown("##### Choose forecast horizon ")
                 st.markdown("# ")
@@ -416,7 +413,6 @@ if st.session_state.inst_name is not None:
                     line=dict(color='blue')
                 ))
 
-                # Plot the last seven days in a different color
                 # st.session_state.plotp.add_trace(go.Scatter(
                 #     x=last_days[st.session_state.date][:(slid)],
                 #     y=last_days[st.session_state.target][:(slid)],
@@ -430,7 +426,6 @@ if st.session_state.inst_name is not None:
                 if lower_forecast is not None:
                     max_value = max(upper_forecast.tolist()) + 100
                     min_value = min(lower_forecast.tolist()) - 100
-                # First, add the upper bound trace (invisible line) to serve as the fill ceiling.
                 st.session_state.plotp.add_trace(go.Scatter(
                     x=last_days[st.session_state.date][:(slid)],
                     y=upper_forecast,
@@ -440,18 +435,17 @@ if st.session_state.inst_name is not None:
                     hoverinfo='skip'
                 ))
 
-                # Next, add the lower bound trace that fills the area up to the previous (upper bound) trace.
                 st.session_state.plotp.add_trace(go.Scatter(
                     x=last_days[st.session_state.date][:(slid)],
                     y=lower_forecast,
                     mode='lines',
-                    fill='tonexty',  # fills the area between this trace and the one above
-                    fillcolor='rgba(0,128,0,0.2)',  # adjust the color and transparency as needed
-                    line=dict(color='rgba(0,128,0,0)'),  # transparent line to keep the focus on the fill
+                    fill='tonexty',  
+                    fillcolor='rgba(0,128,0,0.2)',  
+                    line=dict(color='rgba(0,128,0,0)'),  
                     name='Range of possible forecast values'
                 ))
 
-                # Finally, add the median (50% quantile) forecast line on top.
+
                 st.session_state.plotp.add_trace(go.Scatter(
                     x=last_days[st.session_state.date][:(slid)],
                     y=q50,
@@ -459,21 +453,21 @@ if st.session_state.inst_name is not None:
                     name='Forecast',
                     line=dict(color='green')
                 ))
-                # Update layout (optional)
+
                 st.session_state.plotp.update_layout(
                     xaxis_title='Date',
                     # yaxis_title='Значення',
                     yaxis=dict(
                         # range=[min_value, max_value],
-                        title='Forecasted values'  # Optional: add a title for clarity
+                        title='Forecasted values'  
                     ),
-                    title="Forecast plot",  # Increase the overall height
+                    title="Forecast plot",  
                 )
 
-                # Show the plot
+
                 st.plotly_chart(st.session_state.plotp, use_container_width=True)
 
-                # Plot the data except the last seven days
+
 
                 st.session_state.bp = go.Figure()
 
@@ -484,7 +478,7 @@ if st.session_state.inst_name is not None:
                     marker_color='green'
                 ))
 
-                # Customize layout
+
                 st.session_state.bp.update_layout(
                     title='Forecast barplot',
                     xaxis_title='Date',
@@ -492,7 +486,7 @@ if st.session_state.inst_name is not None:
                     template='plotly_white'
                 )
 
-                # Display the Plotly chart in Streamlit
+
                 st.plotly_chart(st.session_state.bp, use_container_width=True)
 
 

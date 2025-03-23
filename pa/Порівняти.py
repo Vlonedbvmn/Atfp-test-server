@@ -91,13 +91,13 @@ def df_to_windowed_df(dataframe, first_date_str, last_date_str, n=3, hor=7):
 def windowed_df_to_date_X_y(windowed_dataframe, hor):
     df_as_np = windowed_dataframe.to_numpy()
 
-    dates = df_as_np[:, 0]  # Extract dates
+    dates = df_as_np[:, 0]  
 
-    # Extract the input matrix (X) excluding target columns
+
     middle_matrix = df_as_np[:, 1:-hor]
     X = middle_matrix.reshape((len(dates), middle_matrix.shape[1], 1))
 
-    # Extract the 7-day target matrix (Y)
+
     Y = df_as_np[:, -hor:]
 
     return dates, X.astype(np.float32), Y.astype(np.float32)
@@ -164,10 +164,10 @@ def submit_data_KAN(datafra, iter, horizon, rarety, inp, typ):
         dpred["real"] = Y_test_df["y"]
         dpred["pred"] = forecasts["KAN"].values.tolist()
         dpred["unique_id"] = [i for i in range(1, len(dpred) + 1)]
-        # Create distplot with custom bin_size
+
         fig = go.Figure()
 
-        # Plot the data except the last seven days
+
         fig.add_trace(go.Scatter(
             x=dpred["unique_id"],
             y=dpred["real"],
@@ -176,7 +176,7 @@ def submit_data_KAN(datafra, iter, horizon, rarety, inp, typ):
             line=dict(color='blue')
         ))
 
-        # Plot the last seven days in a different color
+
         fig.add_trace(go.Scatter(
             x=dpred["unique_id"],
             y=dpred["pred"],
@@ -277,12 +277,12 @@ def submit_data_SNN(datafra, iter, horizon, rarety, inp, typ):
         reservoir_size = 400
 
         W_in, W_res = create_reservoir(input_dim, reservoir_size)
-        # SNN parameters
+
         beta = 0.5
         time_steps = 150
         spike_grad = surrogate.fast_sigmoid()
 
-        # Define the SNN model
+
         class SNNRegression(nn.Module):
             def __init__(self, reservoir_size, output_size):
                 super(SNNRegression, self).__init__()
@@ -335,14 +335,14 @@ def submit_data_SNN(datafra, iter, horizon, rarety, inp, typ):
         scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=5,
                                                                verbose=True)
 
-        # Data loaders
+
         batch_size = 32
         train_dataset = TensorDataset(X_train, y_train)
         val_dataset = TensorDataset(X_val, y_val)
         train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
         val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
-        # Training loop
+
         epochs = iter
         train_losses = []
         val_losses = []
@@ -355,10 +355,10 @@ def submit_data_SNN(datafra, iter, horizon, rarety, inp, typ):
             for X_batch, y_batch in train_loader:
                 X_batch, y_batch = X_batch.to(device), y_batch.to(device)
 
-                # Reservoir computation
+
                 reservoir_state = []
                 for x in X_batch:
-                    x = x.unsqueeze(0)  # Ensure x has a batch dimension
+                    x = x.unsqueeze(0)  
                     res_state = torch.tanh(W_in @ x.T + W_res @ torch.rand(reservoir_size, 1).to(device))
                     reservoir_state.append(res_state.squeeze(1))
                 reservoir_state = torch.stack(reservoir_state).to(device)
@@ -428,10 +428,10 @@ def submit_data_SNN(datafra, iter, horizon, rarety, inp, typ):
         single_prediction = predictions[sample_idx].cpu().numpy()
         single_y_test = y_test[sample_idx].cpu().numpy()
         times = [i for i in range(1, len(single_prediction)-1)]
-        # Create distplot with custom bin_size
+
         fig = go.Figure()
 
-        # Plot the data except the last seven days
+  
         fig.add_trace(go.Scatter(
             x=times,
             y=single_y_test,
@@ -440,7 +440,7 @@ def submit_data_SNN(datafra, iter, horizon, rarety, inp, typ):
             line=dict(color='blue')
         ))
 
-        # Plot the last seven days in a different color
+
         fig.add_trace(go.Scatter(
             x=times,
             y=single_prediction,
@@ -505,10 +505,10 @@ def submit_data_TN(datafra, iter, horizon, rarety, inp, typ):
         dpred["real"] = Y_test_df["y"]
         dpred["pred"] = forecasts["TimesNet"].values.tolist()
         dpred["unique_id"] = [i for i in range(1, len(dpred) + 1)]
-        # Create distplot with custom bin_size
+
         fig = go.Figure()
 
-        # Plot the data except the last seven days
+
         fig.add_trace(go.Scatter(
             x=dpred["unique_id"],
             y=dpred["real"],
@@ -517,7 +517,7 @@ def submit_data_TN(datafra, iter, horizon, rarety, inp, typ):
             line=dict(color='blue')
         ))
 
-        # Plot the last seven days in a different color
+
         fig.add_trace(go.Scatter(
             x=dpred["unique_id"],
             y=dpred["pred"],
@@ -583,10 +583,10 @@ def submit_data_TM(datafra, iter, horizon, rarety, inp, typ):
         dpred["real"] = Y_test_df["y"]
         dpred["pred"] = forecasts["TimeMixer"].values.tolist()
         dpred["unique_id"] = [i for i in range(1, len(dpred) + 1)]
-        # Create distplot with custom bin_size
+
         fig = go.Figure()
 
-        # Plot the data except the last seven days
+
         fig.add_trace(go.Scatter(
             x=dpred["unique_id"],
             y=dpred["real"],
@@ -595,7 +595,7 @@ def submit_data_TM(datafra, iter, horizon, rarety, inp, typ):
             line=dict(color='blue')
         ))
 
-        # Plot the last seven days in a different color
+
         fig.add_trace(go.Scatter(
             x=dpred["unique_id"],
             y=dpred["pred"],
@@ -658,10 +658,10 @@ def submit_data_PTST(datafra, iter, horizon, rarety, inp, typ):
         dpred["real"] = Y_test_df["y"]
         dpred["pred"] = forecasts["PatchTST"].values.tolist()
         dpred["unique_id"] = [i for i in range(1, len(dpred) + 1)]
-        # Create distplot with custom bin_size
+
         fig = go.Figure()
 
-        # Plot the data except the last seven days
+
         fig.add_trace(go.Scatter(
             x=dpred["unique_id"],
             y=dpred["real"],
@@ -670,7 +670,7 @@ def submit_data_PTST(datafra, iter, horizon, rarety, inp, typ):
             line=dict(color='blue')
         ))
 
-        # Plot the last seven days in a different color
+
         fig.add_trace(go.Scatter(
             x=dpred["unique_id"],
             y=dpred["pred"],
@@ -707,8 +707,8 @@ def submit_data_NBx(datafra, iter, horizon, rarety, inp, typ):
     q = int(round(len(datafra) * 0.1, 0))
     fcst = NeuralForecast(
         models=[
-            NBEATSx(h=100000,
-                    input_size=89000,
+            NBEATSx(h=horizon,
+                    input_size=int(round(inp, 0)),
                     # output_size=horizon,
                     max_steps=iter,
                     scaler_type='standard',
@@ -734,10 +734,10 @@ def submit_data_NBx(datafra, iter, horizon, rarety, inp, typ):
     dpred["real"] = Y_test_df["y"]
     dpred["pred"] = forecasts["NBEATSx"].values.tolist()
     dpred["unique_id"] = [i for i in range(1, len(dpred) + 1)]
-    # Create distplot with custom bin_size
+
     fig = go.Figure()
 
-    # Plot the data except the last seven days
+
     fig.add_trace(go.Scatter(
         x=dpred["unique_id"],
         y=dpred["real"],
@@ -746,7 +746,7 @@ def submit_data_NBx(datafra, iter, horizon, rarety, inp, typ):
         line=dict(color='blue')
     ))
 
-    # Plot the last seven days in a different color
+
     fig.add_trace(go.Scatter(
         x=dpred["unique_id"],
         y=dpred["pred"],

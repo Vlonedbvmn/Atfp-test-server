@@ -108,13 +108,13 @@ def df_to_windowed_df(dataframe, first_date_str, last_date_str, n=3, hor=7):
 def windowed_df_to_date_X_y(windowed_dataframe, hor):
     df_as_np = windowed_dataframe.to_numpy()
 
-    dates = df_as_np[:, 0]  # Extract dates
+    dates = df_as_np[:, 0]  
 
-    # Extract the input matrix (X) excluding target columns
+
     middle_matrix = df_as_np[:, 1:-hor]
     X = middle_matrix.reshape((len(dates), middle_matrix.shape[1], 1))
 
-    # Extract the 7-day target matrix (Y)
+
     Y = df_as_np[:, -hor:]
 
     return dates, X.astype(np.float32), Y.astype(np.float32)
@@ -126,7 +126,7 @@ def response_1(chr):
                 yield word + " "
                 time.sleep(0.1)
 
-# Streamed response emulator
+
 def response_generator(datafra, res):
     my_bar = st.progress(0, text="Статус відповіді")
     my_bar.progress(33, "Запит отримано")
@@ -278,10 +278,10 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
+
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
+
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -290,7 +290,7 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
+
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -299,7 +299,7 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
+
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -307,7 +307,6 @@ def response_generator(datafra, res):
                         my_bar.progress(100, "Надаю відповідь")
                         st.session_state.fig_b = chr
                         st.session_state.dataai = pred2.rename(columns={"KAN": st.session_state.target}).drop(["unique_id"], axis=1)
-                        # Show the plot
                     else:
                         fcst = NeuralForecast(
                             models=[
@@ -353,10 +352,9 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
+
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -365,7 +363,7 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
+
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -374,7 +372,7 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
+
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -431,10 +429,10 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
+
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
+
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -443,7 +441,7 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
+
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -452,7 +450,7 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
+
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -460,7 +458,6 @@ def response_generator(datafra, res):
                         my_bar.progress(100, "Надаю відповідь")
                         st.session_state.fig_b = chr
                         st.session_state.dataai = pred2.rename(columns={"NBEATSx": st.session_state.target}).drop(["unique_id"], axis=1)
-                        # Show the plot
                     else:
                         fcst = NeuralForecast(
                             models=[
@@ -506,10 +503,9 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
+
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -518,7 +514,6 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -527,7 +522,6 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -584,10 +578,9 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
+
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -596,7 +589,7 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
+
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -605,7 +598,7 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
+
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -613,7 +606,7 @@ def response_generator(datafra, res):
                         my_bar.progress(100, "Надаю відповідь")
                         st.session_state.fig_b = chr
                         st.session_state.dataai = pred2.rename(columns={"TimesNet": st.session_state.target}).drop(["unique_id"], axis=1)
-                        # Show the plot
+
                     else:
                         fcst = NeuralForecast(
                             models=[
@@ -636,7 +629,7 @@ def response_generator(datafra, res):
                             columns={'ds': st.session_state.date, "TimesNet": st.session_state.target},
                             inplace=True)
                         preds.reset_index(drop=True, inplace=True)
-                        # preds = preds.drop(columns=['unique_id'], inplace=True)
+
                         print(preds)
                         print(-qu)
                         pred1 = datafra[-qu:]
@@ -659,10 +652,10 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
+
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
+
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -671,7 +664,7 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
+
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -680,7 +673,6 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -738,10 +730,8 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -750,7 +740,6 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -759,7 +748,7 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
+
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -767,7 +756,7 @@ def response_generator(datafra, res):
                         my_bar.progress(100, "Надаю відповідь")
                         st.session_state.fig_b = chr
                         st.session_state.dataai = pred2.rename(columns={"TimeMixer": st.session_state.target}).drop(["unique_id"], axis=1)
-                        # Show the plot
+
                     else:
                         fcst = NeuralForecast(
                             models=[
@@ -814,10 +803,9 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
+
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -826,7 +814,6 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -835,7 +822,7 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
+
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -914,7 +901,7 @@ def response_generator(datafra, res):
                         st.session_state.reser_size = reservoir_size
                         st.session_state.win = W_in
                         st.session_state.wres = W_res
-                        # SNN parameters
+
                         beta = 0.5
                         time_steps = 150
                         spike_grad = surrogate.fast_sigmoid()
@@ -974,14 +961,14 @@ def response_generator(datafra, res):
                                                                                patience=5,
                                                                                verbose=True)
 
-                        # Data loaders
+
                         batch_size = 32
                         train_dataset = TensorDataset(X_train, y_train)
                         val_dataset = TensorDataset(X_val, y_val)
                         train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
                         val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
-                        # Training loop
+
                         epochs = 75
                         train_losses = []
                         val_losses = []
@@ -1069,7 +1056,7 @@ def response_generator(datafra, res):
                         new_sample = datafrsnn["y"].tolist()[-7:]
                         new_sample = np.array(new_sample).reshape(-1, 1)
 
-                        # .reshape(orig_shape)
+
                         def make_prediction(input_values):
 
                             input_values = st.session_state.scaler.transform(input_values)
@@ -1114,10 +1101,10 @@ def response_generator(datafra, res):
                         rest_of_data = predicted.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
+
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
+
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -1126,7 +1113,7 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
+
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -1135,7 +1122,7 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
+
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -1143,7 +1130,7 @@ def response_generator(datafra, res):
                         my_bar.progress(100, "Надаю відповідь")
                         st.session_state.fig_b = chr
                         st.session_state.dataai = predicted2
-                        # Show the plot
+
                     else:
                         windowed_df = df_to_windowed_df(datafra,
                                                         datafra["ds"].tolist()[int(inp_sz)],
@@ -1204,12 +1191,12 @@ def response_generator(datafra, res):
                         st.session_state.reser_size = reservoir_size
                         st.session_state.win = W_in
                         st.session_state.wres = W_res
-                        # SNN parameters
+
                         beta = 0.5
                         time_steps = 150
                         spike_grad = surrogate.fast_sigmoid()
 
-                        # Define the SNN model
+
                         class SNNRegression(nn.Module):
                             def __init__(self, reservoir_size, output_size):
                                 super(SNNRegression, self).__init__()
@@ -1264,14 +1251,14 @@ def response_generator(datafra, res):
                                                                                patience=5,
                                                                                verbose=True)
 
-                        # Data loaders
+
                         batch_size = 32
                         train_dataset = TensorDataset(X_train, y_train)
                         val_dataset = TensorDataset(X_val, y_val)
                         train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
                         val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
-                        # Training loop
+
                         epochs = iter
                         train_losses = []
                         val_losses = []
@@ -1283,10 +1270,10 @@ def response_generator(datafra, res):
                             for X_batch, y_batch in train_loader:
                                 X_batch, y_batch = X_batch.to(device), y_batch.to(device)
 
-                                # Reservoir computation
+
                                 reservoir_state = []
                                 for x in X_batch:
-                                    x = x.unsqueeze(0)  # Ensure x has a batch dimension
+                                    x = x.unsqueeze(0)  
                                     res_state = torch.tanh(
                                         W_in @ x.T + W_res @ torch.rand(reservoir_size, 1).to(device))
                                     reservoir_state.append(res_state.squeeze(1))
@@ -1403,10 +1390,10 @@ def response_generator(datafra, res):
                         rest_of_data = predicted.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
+
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
+
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -1415,7 +1402,7 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
+
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -1424,7 +1411,7 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
+
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -1482,10 +1469,10 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
+
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
+
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -1494,7 +1481,6 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -1503,7 +1489,7 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
+
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -1511,7 +1497,6 @@ def response_generator(datafra, res):
                         my_bar.progress(100, "Надаю відповідь")
                         st.session_state.fig_b = chr
                         st.session_state.dataai = pred2.rename(columns={"PatchTST": st.session_state.target}).drop(["unique_id"], axis=1)
-                        # Show the plot
                     else:
                         fcst = NeuralForecast(
                             models=[
@@ -1557,10 +1542,8 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -1569,7 +1552,6 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -1578,7 +1560,6 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -1689,10 +1670,8 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -1701,7 +1680,6 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -1710,7 +1688,6 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -1763,10 +1740,8 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -1775,7 +1750,6 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -1784,7 +1758,6 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -1837,10 +1810,8 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -1849,7 +1820,6 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -1858,7 +1828,6 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -1911,10 +1880,8 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -1923,7 +1890,6 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -1932,7 +1898,6 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -1986,10 +1951,8 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -1998,7 +1961,6 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -2007,7 +1969,6 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -2065,10 +2026,8 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -2077,7 +2036,6 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -2086,7 +2044,6 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -2094,7 +2051,6 @@ def response_generator(datafra, res):
                         st.session_state.fig_b = chr
                         st.session_state.dataai = pred2.rename(columns={"NBEATSx": st.session_state.target}).drop(["unique_id"], axis=1)
                         my_bar.progress(100, "Надаю відповідь")
-                        # Show the plot
                     else:
                         fcst = NeuralForecast(
                             models=[
@@ -2138,10 +2094,8 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        # Create the plotly figure
                         chr = go.Figure()
 
-                        # Plot the data except the last seven days
                         chr.add_trace(go.Scatter(
                             x=rest_of_data[st.session_state.date],
                             y=rest_of_data[st.session_state.target],
@@ -2150,7 +2104,6 @@ def response_generator(datafra, res):
                             line=dict(color='blue')
                         ))
 
-                        # Plot the last seven days in a different color
                         chr.add_trace(go.Scatter(
                             x=last_days[st.session_state.date],
                             y=last_days[st.session_state.target],
@@ -2159,7 +2112,6 @@ def response_generator(datafra, res):
                             line=dict(color='red')
                         ))
 
-                        # Update layout (optional)
                         chr.update_layout(
                             xaxis_title='Дата',
                             yaxis_title='Значення'
@@ -2185,35 +2137,30 @@ def response_generator(datafra, res):
                 ],
                 freq=means[st.session_state.freq]
             )
-            model.fit(datafra)  # Use the entire dataset for training
+            model.fit(datafra)  
 
-            # Generate predictions
             predictions = model.predict(datafra.head(1))
             print(predictions)
             datafra['NBEATSx'] = predictions['NBEATSx']
             datafra['residuals'] = np.abs(datafra['y'] - datafra['NBEATSx'])
 
-            # Set anomaly threshold (adjust based on domain knowledge)
             threshold = 4 * datafra['residuals'].std()
             datafra['anomaly'] = datafra['residuals'] > threshold
             if st.session_state.date_not_n == True:
                 datafra["ds"] = [i for i in range(1, len(datafra) + 1)]
-            # Plot actual, predicted values, and anomalies using plotly
             fig = go.Figure()
 
-            # Add actual values
             fig.add_trace(go.Scatter(x=datafra['ds'], y=datafra['y'], mode='lines', name='Дані', line=dict(color='blue')))
 
-            # Add predicted values
             fig.add_trace(go.Scatter(x=datafra['ds'], y=datafra['NBEATSx'], mode='lines', name='Прогнозовано',
                                      line=dict(color='green')))
 
-            # Highlight anomalies
+
             anomalies = datafra[datafra['anomaly'] == True]
             fig.add_trace(go.Scatter(x=anomalies['ds'], y=anomalies['y'], mode='markers', name='Аномалія',
                                      marker=dict(color='red', size=8)))
 
-            # Add title and labels
+
             fig.update_layout(
                 title='Графік аномалій',
                 xaxis_title='Дата',
@@ -2294,17 +2241,14 @@ if st.session_state.df is not None:
             #     st.plotly_chart(message["content"])
             # else:
             st.write(message["content"])
-    # Accept user input
     if prompt := st.chat_input("Напишіть свій запит і отримайте відповідь"):
-        # Add user message to chat history
+
         st.session_state.messages.append({"role": "user", "content": prompt})
-        # Display user message in chat message container
         with st.chat_message("user"):
             st.markdown(prompt)
 
         # st.session_state.messages.append({"role": "assistant", "content": "Дякую за запитання, інтерпритую ваш запит до моделі прогнозування"})
 
-        # Display assistant response in chat message container
         with st.chat_message("assistant"):
             gen = response_generator(ds_for_pred, prompt)
             response = st.write_stream(gen)
