@@ -49,13 +49,12 @@ def send_form_email(text, uploaded_images):
             filename=image.name
         )
 
-    try:
-        with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
-            server.login(sender_email, sender_password)
-            server.send_message(msg)
-        print("Email sent successfully.")
-    except Exception as e:
-        print(f"Failed to send email: {e}")
+
+    with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
+        server.login(sender_email, sender_password)
+        server.send_message(msg)
+    print("Email sent successfully.")
+
 
 
 
