@@ -98,5 +98,5 @@ with st.form("my_form"):
         if submitted:
             send_form_email(text_input, uploaded_images)
             st.write("Thanks for your feedback!")
-st.write("Outside the form")
+
     
