@@ -25,7 +25,7 @@ import imghdr
 
 def send_form_email(text, uploaded_images):
     sender_email = "atfp.webplatform@gmail.com"
-    sender_password = "#*($UYHJrfl29342"
+    sender_password = "wydv sclj qlvn uppf"
     smtp_server = "smtp.gmail.com"
     smtp_port = 465 
 
