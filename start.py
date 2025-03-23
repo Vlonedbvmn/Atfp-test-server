@@ -89,8 +89,11 @@ if st.session_state.lang == "ukr":
         "pa/Plugins.py",
         title="Плагіни (New)"
     )
-
-    pg = st.navigation({"": [p1, p2], "Для фахівців:": [p3, p4, p8, p7, p5], "Для всіх:": [p6]})
+    p9 = st.Page(
+        "pa/curwork.py",
+        title="Зворотній зв'язок"
+    )
+    pg = st.navigation({"": [p1, p2], "Для фахівців:": [p3, p4, p8, p7, p5], "Для всіх:": [p6, p9]})
     pg.run()
 else:
     p1 = st.Page(
@@ -126,8 +129,11 @@ else:
         "pa/Plugins.py",
         title="Plugins (New)"
     )
-
-    pg = st.navigation({"": [p1, p2], "Professional level:": [p3, p4, p8, p7, p5], "Regular:": [p6]})
+    p9 = st.Page(
+        "pa/curwork.py",
+        title="Feedback"
+    )
+    pg = st.navigation({"": [p1, p2], "Professional level:": [p3, p4, p8, p7, p5], "Regular:": [p6, p9]})
     pg.run()
 
 
