@@ -17,9 +17,9 @@ import streamlit as st
 if "logstate" not in st.session_state:
     st.session_state.logstate = True
 if "regstate" not in st.session_state:
-    st.session_state.logstate = False
+    st.session_state.regstate = False
 if "finstate" not in st.session_state:
-    st.session_state.logstate = False
+    st.session_state.finstate = False
 
 if st.session_state.logstate:
     with st.form("my_form"):
