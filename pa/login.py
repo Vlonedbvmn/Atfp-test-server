@@ -20,6 +20,10 @@ if "regstate" not in st.session_state:
     st.session_state.regstate = False
 if "finstate" not in st.session_state:
     st.session_state.finstate = False
+if "usernam" not in st.session_state:
+    st.session_state.usernam = None
+if "eml" not in st.session_state:
+    st.session_state.eml = None
 
 if st.session_state.logstate:
     with st.form("my_form"):
@@ -27,7 +31,33 @@ if st.session_state.logstate:
         username = st.text_input("Введіть ім'я користувача:", placeholder="Введіть тут...")
         password = st.text_input("Введіть пароль користувача:", placeholder="Введіть тут...")
 
+        if st.button("Зареєструватись"):
+            st.success("Ви ввійшли у свій аккаунт")
+            st.session_state.regstate = True
+            st.session_state.logstate = False
+
         submitted = st.form_submit_button("Ввійти")
         if submitted:
             st.success("Ви ввійшли у свій аккаунт")
-            st.write(f"Назар: {username}")
+            st.session_state.finstate = True
+            st.session_state.logstate = False
+
+
+if st.session_state.regstate:
+    with st.form("my_form"):
+        st.title("Створіть свій акаунт")
+        username = st.text_input("Введіть ім'я користувача:", placeholder="Введіть тут...")
+        password = st.text_input("Введіть пароль користувача:", placeholder="Введіть тут...")
+        submitted = st.form_submit_button("Ввійти")
+        if submitted:
+            st.success("Ви ввійшли у свій аккаунт")
+            st.session_state.finstate = True
+            st.session_state.regstate = False
+
+
+if st.session_state.finstate:
+    st.write(f"Ви зареєстровані під аккаунтом {usernam}")
+    if st.button("Вийти"):
+            st.success("Ви ввійшли у свій аккаунт")
+            st.session_state.finstate = True
+            st.session_state.logstate = False
