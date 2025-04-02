@@ -45,7 +45,7 @@ if st.session_state.logstate:
 
 
 if st.session_state.regstate:
-    with st.form("my_form"):
+    with st.form("my_fg"):
         st.title("Створіть свій акаунт")
         username = st.text_input("Введіть ім'я користувача:", placeholder="Введіть тут...")
         password = st.text_input("Введіть пароль користувача:", placeholder="Введіть тут...")
