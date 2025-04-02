@@ -31,16 +31,17 @@ if st.session_state.logstate:
         username = st.text_input("Введіть ім'я користувача:", placeholder="Введіть тут...")
         password = st.text_input("Введіть пароль користувача:", placeholder="Введіть тут...")
 
-        if st.button("Зареєструватись"):
-            st.success("Ви ввійшли у свій аккаунт")
-            st.session_state.regstate = True
-            st.session_state.logstate = False
-
         submitted = st.form_submit_button("Ввійти")
         if submitted:
             st.success("Ви ввійшли у свій аккаунт")
             st.session_state.finstate = True
             st.session_state.logstate = False
+
+        if st.button("Зареєструватись"):
+            st.session_state.regstate = True
+            st.session_state.logstate = False
+
+        
 
 
 if st.session_state.regstate:
