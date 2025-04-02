@@ -61,5 +61,5 @@ if st.session_state.finstate:
     st.write(f"Ви зареєстровані під аккаунтом {st.session_state.usernam}")
     if st.button("Вийти"):
             st.success("Ви ввійшли у свій аккаунт")
-            st.session_state.finstate = True
-            st.session_state.logstate = False
+            st.session_state.finstate = False
+            st.session_state.logstate = True
