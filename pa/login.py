@@ -21,7 +21,7 @@ if "regstate" not in st.session_state:
 if "finstate" not in st.session_state:
     st.session_state.logstate = False
 
-if st.session_state.logstate == True:
+if st.session_state.logstate:
     with st.form("my_form"):
         st.title("Ввійдіть у свій акаунт")
         username = st.text_input("Введіть ім'я користувача:", placeholder="Введіть тут...")
