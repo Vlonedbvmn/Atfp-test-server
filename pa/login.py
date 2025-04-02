@@ -29,4 +29,5 @@ if st.session_state.logstate:
 
         submitted = st.form_submit_button("Ввійти")
         if submitted:
-            st.write("slider", username, "checkbox", password)
+            st.success("Ви ввійшли у свій аккаунт")
+            st.write(f"Назар: {username}")
