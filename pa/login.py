@@ -36,10 +36,10 @@ if st.session_state.logstate:
             st.success("Ви ввійшли у свій аккаунт")
             st.session_state.finstate = True
             st.session_state.logstate = False
-
-        if st.button("Зареєструватись"):
+    if st.button("Зареєструватись"):
             st.session_state.regstate = True
             st.session_state.logstate = False
+        
 
         
 
