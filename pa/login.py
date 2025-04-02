@@ -30,7 +30,7 @@ if st.session_state.logstate:
         st.title("Ввійдіть у свій акаунт")
         username = st.text_input("Введіть ім'я користувача:", placeholder="Введіть тут...")
         password = st.text_input("Введіть пароль користувача:", placeholder="Введіть тут...")
-
+        st.session_state.usernam = username
         submitted = st.form_submit_button("Ввійти")
         if submitted:
             st.success("Ви ввійшли у свій аккаунт")
@@ -49,6 +49,7 @@ if st.session_state.regstate:
         st.title("Створіть свій акаунт")
         username = st.text_input("Введіть ім'я користувача:", placeholder="Введіть тут...")
         password = st.text_input("Введіть пароль користувача:", placeholder="Введіть тут...")
+        st.session_state.usernam = username
         submitted = st.form_submit_button("Ввійти")
         if submitted:
             st.success("Ви ввійшли у свій аккаунт")
@@ -57,7 +58,7 @@ if st.session_state.regstate:
 
 
 if st.session_state.finstate:
-    st.write(f"Ви зареєстровані під аккаунтом {usernam}")
+    st.write(f"Ви зареєстровані під аккаунтом {st.session_state.usernam}")
     if st.button("Вийти"):
             st.success("Ви ввійшли у свій аккаунт")
             st.session_state.finstate = True
