@@ -97,7 +97,7 @@ if st.session_state.lang == "ukr":
         "pa/login.py",
         title="Ввійти"
     )
-    pg = st.navigation({"": [p1, p2], "Для фахівців:": [p3, p4, p8, p7, p5], "Для всіх:": [p6, p9, p10]})
+    pg = st.navigation({"": [p1, p2], "Для фахівців:": [p3, p4, p8, p7, p5], "Для всіх:": [p6, p9]})
     pg.run()
 else:
     p1 = st.Page(
@@ -141,7 +141,7 @@ else:
         "pa/login.py",
         title="Log in"
     )
-    pg = st.navigation({"": [p1, p2], "Professional level:": [p3, p4, p8, p7, p5], "Regular:": [p6, p9, p10]})
+    pg = st.navigation({"": [p1, p2], "Professional level:": [p3, p4, p8, p7, p5], "Regular:": [p6, p9]})
     pg.run()
 
 
