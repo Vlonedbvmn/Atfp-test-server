@@ -527,6 +527,20 @@ if st.session_state.clicked2:
                 tuple(dataframe.columns.values))
             fr = st.selectbox("Select the frequency of data entries in the series:",
                               ["Місяць", "День", "Рік", "Хвилина", "Секунда", "Година"])
+            fr = st.selectbox("Select the frequency of data entries in the series:",
+                              ["Month", "Day", "Year", "Minute", "Second", "Hour"])
+            if fr == "Month":
+                fr = "Місяць"
+            if fr == "Day":
+                fr = "День" 
+            if fr == "Year":
+                fr = "Рік" 
+            if fr == "Minute":
+                fr = "Хвилина" 
+            if fr == "Second":
+                fr = "Секунда" 
+            if fr == "Hour":
+                fr = "Година" 
             if st.checkbox("Set the working interval"):
     
                 ran = st.select_slider(
