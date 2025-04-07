@@ -1676,7 +1676,7 @@ if st.session_state.df is not None:
                            menu_icon="no",
                            orientation="horizontal")
     else:
-         model = option_menu("Choose model for forcasting",
+         model = option_menu("Choose model for forecasting",
                            ["KAN", "TimesNet", "NBEATSx", "TimeMixer", "PatchTST", "SNN", "Авто-вибір"],
                            # icons=['gear', 'gear', 'gear', 'gear', 'gear', 'gear'],
                            menu_icon="no",
