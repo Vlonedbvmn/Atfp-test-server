@@ -1944,7 +1944,7 @@ if st.session_state.df is not None:
                 boosted_vers = st.checkbox("Use boosted learning")
 
                 st.button(label="Submit", key="kan", on_click=submit_data_KAN,
-                          args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp, boosted_vers))
+                          args=(ds_for_pred, iter, horizon, "D", inp, boosted_vers))
     except:
         if st.session_state.lang == "ukr":
             st.warning('Надано не коректні гіперпараметри', icon="⚠️")
