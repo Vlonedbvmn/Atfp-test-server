@@ -165,7 +165,7 @@ def mk_fcst(datafre, ticker, models_dir, horizon, tsk="stock"):
 
     print(datafre)
     qu = int(round(len(datafre) * 0.1, 0))
-    h = datafre[-qu:]["y"].tolist()
+    h = datafre[-(qu+horizon):]["y"].tolist()
     new_sample = datafre["y"].tolist()[-50:]
     new_sample = np.array(new_sample).reshape(-1, 1)
 
@@ -176,10 +176,26 @@ def mk_fcst(datafre, ticker, models_dir, horizon, tsk="stock"):
     counterr = 0
     for i in result.tolist()[0]:
         if counterr < horizon:
-            pr.append(i)
-            h.append(i)
+            pr.append(datafre[-horizon+counterr]["y"].tolist()[0])
+            h.append(datafre[-horizon+counterr]["y"].tolist()[0])
             counterr += 1
         else: break
+    # qu = int(round(len(datafre) * 0.1, 0))
+    # h = datafre[-qu:]["y"].tolist()
+    # new_sample = datafre["y"].tolist()[-50:]
+    # new_sample = np.array(new_sample).reshape(-1, 1)
+
+    # print(new_sample)
+    # result = make_prediction(new_sample)
+    # print("Prediction for new sample:", result)
+    # pr = []
+    # counterr = 0
+    # for i in result.tolist()[0]:
+    #     if counterr < horizon:
+    #         pr.append(i)
+    #         h.append(i)
+    #         counterr += 1
+    #     else: break
 
     pr3dates = []
     pr4dates = []
