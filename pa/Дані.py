@@ -526,8 +526,6 @@ if st.session_state.clicked2:
                 'Select the column name with the values you want to predict',
                 tuple(dataframe.columns.values))
             fr = st.selectbox("Select the frequency of data entries in the series:",
-                              ["Місяць", "День", "Рік", "Хвилина", "Секунда", "Година"])
-            fr = st.selectbox("Select the frequency of data entries in the series:",
                               ["Month", "Day", "Year", "Minute", "Second", "Hour"])
             if fr == "Month":
                 fr = "Місяць"
