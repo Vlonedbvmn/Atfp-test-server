@@ -210,7 +210,7 @@ def anomal(datafra, freqs):
         import requests
         import json
 
-        url = "https://6yhxofi7qjjqjr-8000.proxy.runpod.net/"
+        url = "https://j6yem9syh2hk29-8000.proxy.runpod.net/forecast"
 
         dafaf['ds'] = dafaf['ds'].astype(str)
         inp = 2
