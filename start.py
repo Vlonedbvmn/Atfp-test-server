@@ -119,7 +119,7 @@ else:
     )
     p5 = st.Page(
         "pa/Тест на аномалії.py",
-        title="Anoamly analisis",
+        title="Anomaly analysis",
     )
     p6 = st.Page(
         "pa/ШІ помічник.py",
