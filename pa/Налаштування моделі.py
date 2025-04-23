@@ -1914,6 +1914,7 @@ if st.session_state.df is not None:
                     st.markdown(
                         "### SNN — це розроблена ШНМ, призначена для прогнозування часових рядів з використанням спайкових нейронних мереж та резервуарних обчислень.")
                     st.divider()
+                    st.success("Зауважте, зараз інстанс моделі SNN розгорнуто на сервері з більш потужним NVIDIA A40 GPU. Зараз пришвидшене навчання доступне.")
                     horizon = st.select_slider(
                         "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
                         options=[i for i in range(1, 151)]
@@ -1934,6 +1935,8 @@ if st.session_state.df is not None:
                     st.markdown(
                         "### SNN is a developed Spiking Neural Network (SNN) designed for time series forecasting using spiking neural networks and reservoir computing.")
                     st.divider()
+                    st.success("Please note, the SNN model instance is now deployed on a server with a more powerful NVIDIA A40 GPU. Boosted training is now available.")
+                    
                     horizon = st.select_slider(
                         "Select the forecasting horizon (how far ahead the prediction will be made):",
                         options=[i for i in range(1, 151)]
