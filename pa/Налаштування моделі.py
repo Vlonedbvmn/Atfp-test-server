@@ -1904,47 +1904,93 @@ if st.session_state.df is not None:
             st.warning('Incorrect hyperparameters have been provided', icon="⚠️")
     try:
         if model == "SNN":
-            if st.session_state.lang == "ukr":
-                st.markdown("## Ви обрали модель SNN")
-                st.markdown(
-                    "### SNN — це розроблена ШНМ, призначена для прогнозування часових рядів з використанням спайкових нейронних мереж та резервуарних обчислень.")
-                st.divider()
-                horizon = st.select_slider(
-                    "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
-                    options=[i for i in range(1, 151)]
-                )
-                iter = st.select_slider(
-                    "Оберіть к-ть ітерацій начання моделі (чим більше, тим довше та точніше):",
-                    options=[i for i in range(5, 101)]
-                )
-                inp = st.number_input("Оберіть к-ть попередніх значень з ряду для кроку прогнозу:", step=1, min_value=5,
-                                    max_value=150)
-                
-                boosted_vers = st.checkbox("Використати пришвидшене навчання")
+            import requests
 
-                st.button(label="Підтвердити", key="kan", on_click=submit_data_SNN,
-                        args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp, boosted_vers))
-            else:
-                st.markdown("## You have selected the SNN model")
-                st.markdown(
-                    "### SNN is a developed Spiking Neural Network (SNN) designed for time series forecasting using spiking neural networks and reservoir computing.")
-                st.divider()
-                horizon = st.select_slider(
-                    "Select the forecasting horizon (how far ahead the prediction will be made):",
-                    options=[i for i in range(1, 151)]
-                )
-                iter = st.select_slider(
-                    "Select the number of model initialization iterations (the more, the longer and more accurate):",
-                    options=[i for i in range(5, 101)]
-                )
-                inp = st.number_input("Select the number of previous values from the series for the forecast step:",
-                                      step=1, min_value=5,
-                                      max_value=150)
+            x = requests.get('https://j6yem9syh2hk29-8000.proxy.runpod.net/')
+            print(x.status_code)
+            if x.status_code == 200:
+                if st.session_state.lang == "ukr":
+                    st.markdown("## Ви обрали модель SNN")
+                    st.markdown(
+                        "### SNN — це розроблена ШНМ, призначена для прогнозування часових рядів з використанням спайкових нейронних мереж та резервуарних обчислень.")
+                    st.divider()
+                    horizon = st.select_slider(
+                        "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
+                        options=[i for i in range(1, 151)]
+                    )
+                    iter = st.select_slider(
+                        "Оберіть к-ть ітерацій начання моделі (чим більше, тим довше та точніше):",
+                        options=[i for i in range(5, 101)]
+                    )
+                    inp = st.number_input("Оберіть к-ть попередніх значень з ряду для кроку прогнозу:", step=1, min_value=5,
+                                        max_value=150)
+                    
+                    boosted_vers = st.checkbox("Використати пришвидшене навчання")
 
-                boosted_vers = st.checkbox("Use boosted learning")
+                    st.button(label="Підтвердити", key="kan", on_click=submit_data_SNN,
+                            args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp, boosted_vers))
+                else:
+                    st.markdown("## You have selected the SNN model")
+                    st.markdown(
+                        "### SNN is a developed Spiking Neural Network (SNN) designed for time series forecasting using spiking neural networks and reservoir computing.")
+                    st.divider()
+                    horizon = st.select_slider(
+                        "Select the forecasting horizon (how far ahead the prediction will be made):",
+                        options=[i for i in range(1, 151)]
+                    )
+                    iter = st.select_slider(
+                        "Select the number of model initialization iterations (the more, the longer and more accurate):",
+                        options=[i for i in range(5, 101)]
+                    )
+                    inp = st.number_input("Select the number of previous values from the series for the forecast step:",
+                                        step=1, min_value=5,
+                                        max_value=150)
 
-                st.button(label="Submit", key="kan", on_click=submit_data_SNN,
-                          args=(ds_for_pred, iter, horizon, "D", inp, boosted_vers))
+                    boosted_vers = st.checkbox("Use boosted training")
+
+                    st.button(label="Submit", key="kan", on_click=submit_data_SNN,
+                            args=(ds_for_pred, iter, horizon, "D", inp, boosted_vers))
+            else: 
+                if st.session_state.lang == "ukr":
+                    st.markdown("## Ви обрали модель SNN")
+                    st.markdown(
+                        "### SNN — це розроблена ШНМ, призначена для прогнозування часових рядів з використанням спайкових нейронних мереж та резервуарних обчислень.")
+                    st.divider()
+                    st.warning("Зауважте, зараз інстанс моделі SNN не розгорнуто на сервері з більш потужним gpu. Нажаль, зараз пришвидшене навчання не доступне.")
+                    horizon = st.select_slider(
+                        "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
+                        options=[i for i in range(1, 151)]
+                    )
+                    iter = st.select_slider(
+                        "Оберіть к-ть ітерацій начання моделі (чим більше, тим довше та точніше):",
+                        options=[i for i in range(5, 101)]
+                    )
+                    inp = st.number_input("Оберіть к-ть попередніх значень з ряду для кроку прогнозу:", step=1, min_value=5,
+                                        max_value=150)
+                    
+
+                    st.button(label="Підтвердити", key="kan", on_click=submit_data_SNN,
+                            args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp, False))
+                else:
+                    st.markdown("## You have selected the SNN model")
+                    st.markdown(
+                        "### SNN is a developed Spiking Neural Network (SNN) designed for time series forecasting using spiking neural networks and reservoir computing.")
+                    st.divider()
+                    st.warning("Please note, the SNN model instance is not deployed on a server with a more powerful GPU. Unfortunately, boosted training is not available at the moment.")
+                    horizon = st.select_slider(
+                        "Select the forecasting horizon (how far ahead the prediction will be made):",
+                        options=[i for i in range(1, 151)]
+                    )
+                    iter = st.select_slider(
+                        "Select the number of model initialization iterations (the more, the longer and more accurate):",
+                        options=[i for i in range(5, 101)]
+                    )
+                    inp = st.number_input("Select the number of previous values from the series for the forecast step:",
+                                        step=1, min_value=5,
+                                        max_value=150)
+
+                    st.button(label="Submit", key="kan", on_click=submit_data_SNN,
+                            args=(ds_for_pred, iter, horizon, "D", inp, False))
     except:
         if st.session_state.lang == "ukr":
             st.warning('Надано не коректні гіперпараметри', icon="⚠️")
