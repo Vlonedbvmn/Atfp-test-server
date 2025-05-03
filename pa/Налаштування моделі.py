@@ -1906,7 +1906,7 @@ if st.session_state.df is not None:
         if model == "SNN":
             import requests
 
-            x = requests.get('https://j6yem9syh2hk29-8000.proxy.runpod.net/')
+            x = requests.get('https://eh0nukgv5icnkb-8000.proxy.runpod.net/')
             print(x.status_code)
             if x.status_code == 200:
                 if st.session_state.lang == "ukr":
