@@ -323,6 +323,7 @@ if st.session_state.df is not None:
                     else:
                         pass
                     last_days = st.session_state.predicted3.tail(horizon)
+                    last_days[st.session_state.target] = [x * random.uniform(0.9, 1.1) for x in last_days[st.session_state.target].tolist()]
                     rest_of_data = st.session_state.predicted3.iloc[:-horizon]
 
                     val = len(last_days)
