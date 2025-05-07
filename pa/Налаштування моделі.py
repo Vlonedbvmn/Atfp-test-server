@@ -828,7 +828,7 @@ def submit_data_SNN(datafra, iter, horizon, rarety, inp, bs):
         import requests
         import json
 
-        url = "https://eh0nukgv5icnkb-8000.proxy.runpod.net/forecast"
+        url = "https://nxwekahcj0m93m-8000.proxy.runpod.net/forecast"
 
 
         payload = {
@@ -1906,7 +1906,7 @@ if st.session_state.df is not None:
         if model == "SNN":
             import requests
 
-            x = requests.get('https://eh0nukgv5icnkb-8000.proxy.runpod.net/')
+            x = requests.get('https://nxwekahcj0m93m-8000.proxy.runpod.net/')
             print(x.status_code)
             if x.status_code == 200:
                 if st.session_state.lang == "ukr":
