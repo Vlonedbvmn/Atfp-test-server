@@ -1668,7 +1668,7 @@ if st.session_state.df is not None:
     with st.container():
         if st.session_state.lang == "ukr":
             st.title("Обрання та налашутвання моделі прогнозування")
-        else: st.title("Selection and configuration of the forecasting model.")
+        else: st.title("Selection and configuration of the forecasting model")
     if st.session_state.lang == "ukr":
          model = option_menu("Оберіть модель для передбачення",
                            ["KAN", "TimesNet", "NBEATSx", "TimeMixer", "PatchTST", "SNN", "Авто-вибір"],
