@@ -25,7 +25,7 @@ from streamlit_pills import pills
 import io
 import random
 
-
+conn = st.connection('mysql', type='sql')
 
 means = {"Місяць": "M",
          "Година": "h",
