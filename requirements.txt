@@ -12,3 +12,4 @@ snntorch==0.9.1
 requests==2.32.3
 streamlit-pills==0.3.0
 torch==2.6.0
+SQLAlchemy==2.0.34

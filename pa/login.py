@@ -1,12 +1,9 @@
-login.py
 import streamlit as st
 from sqlalchemy import text
 
-# 1) Initialize a single page-flag in session_state
 if "page" not in st.session_state:
     st.session_state.page = "login"
 
-# Initialize connection - much simpler approach
 conn = st.connection('mysql', type='sql')
 
 
@@ -14,9 +11,8 @@ def check_credentials(username: str, password: str) -> bool:
     """
     Returns True if there's a row in users with exactly this username & password.
     """
-    # Simple query approach as shown in the example
+
     df = conn.query(f"SELECT 1 FROM atfp WHERE username = '{username}' AND password = '{password}' LIMIT 1;")
-    # If there's at least one row, the credentials are valid
     return not df.empty
 
 
@@ -49,10 +45,10 @@ def register_user(username: str, password: str) -> bool:
 
 def go_to(page_name):
     st.session_state.page = page_name
-    st.rerun()  # force an immediate re-run so Streamlit re-evaluates from the top
+    st.rerun()  
 
 
-# 2) Two "navigation" buttons at the top
+
 col1, col2 = st.columns([1, 1])
 with col1:
     if st.button("Увійти"):
@@ -61,7 +57,7 @@ with col2:
     if st.button("Реєстрація"):
         go_to("register")
 
-# 3) Show only the selected form
+
 if st.session_state.page == "login":
     with st.form("login_form"):
         st.title("Ввійдіть у свій акаунт")
