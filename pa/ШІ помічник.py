@@ -34,10 +34,15 @@ client = Groq(api_key="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"
 
 
 
-if "messages1" not in st.session_state:
+if st.session_state.lang == "ukr":
     st.session_state.messages1 = [{"role": "user", "content": "Здійсни прогнозування на наступні 7 днів"},
                                   {"role": "user", "content": "Здійсни тестування датасету на аномалії"},
                                   {"role": "user", "content": "Здійсни прогнозування на 2 тижні за допомогою моделі TimeMixer"}]
+else:
+    st.session_state.messages1 = [{"role": "user", "content": "Make forecast for next 7 days"},
+                                  {"role": "user", "content": "Do the anomaly analyzing"},
+                                  {"role": "user", "content": "Make forecast on next 2 weeks using TimeMixer model"}]
+
 
 if "no_d" not in st.session_state:
     st.session_state.no_d = None
