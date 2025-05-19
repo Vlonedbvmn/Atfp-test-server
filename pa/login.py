@@ -50,48 +50,94 @@ def go_to(page_name):
 
 
 col1, col2 = st.columns([1, 1])
-with col1:
-    if st.button("Увійти"):
-        go_to("login")
-with col2:
-    if st.button("Реєстрація"):
-        go_to("register")
+if st.session_state.lang == "ukr":
+    with col1:
+        if st.button("Увійти"):
+            go_to("login")
+    with col2:
+        if st.button("Реєстрація"):
+            go_to("register")
+else:
+    with col1:
+        if st.button("Log in"):
+            go_to("login")
+    with col2:
+        if st.button("Register"):
+            go_to("register")
 
 
 if st.session_state.page == "login":
-    with st.form("login_form"):
-        st.title("Ввійдіть у свій акаунт")
-        username = st.text_input("Ім'я користувача")
-        password = st.text_input("Пароль", type="password")
-        if st.form_submit_button("Ввійти"):
-            if check_credentials(username, password):
-                st.session_state.user = username
-                st.success(f"Вітаємо, {username}!")
-                go_to("home")
-            else:
-                st.warning("Невірний логін або пароль")
+    if st.session_state.lang == "ukr":
+        with st.form("login_form"):
+            st.title("Ввійдіть у свій акаунт")
+            username = st.text_input("Ім'я користувача")
+            password = st.text_input("Пароль", type="password")
+            if st.form_submit_button("Ввійти"):
+                if check_credentials(username, password):
+                    st.session_state.user = username
+                    st.success(f"Вітаємо, {username}!")
+                    go_to("home")
+                else:
+                    st.warning("Невірний логін або пароль")
+    else:
+        with st.form("login_form"):
+            st.title("Log in to your account")
+            username = st.text_input("Username")
+            password = st.text_input("Password", type="password")
+            if st.form_submit_button("Log in"):
+                if check_credentials(username, password):
+                    st.session_state.user = username
+                    st.success(f"Welcome, {username}!")
+                    go_to("home")
+                else:
+                    st.warning("Incorrect username or password")
 
 elif st.session_state.page == "register":
-    with st.form("register_form"):
-        st.title("Реєструйтесь")
-        username = st.text_input("Ім'я користувача")
-        password = st.text_input("Пароль", type="password")
-        confirm_password = st.text_input("Підтвердіть пароль", type="password")
+    if st.session_state.lang == "ukr":
+        with st.form("register_form"):
+            st.title("Реєструйтесь")
+            username = st.text_input("Ім'я користувача")
+            password = st.text_input("Пароль", type="password")
+            confirm_password = st.text_input("Підтвердіть пароль", type="password")
 
-        if st.form_submit_button("Зареєструватися"):
-            if not username or not password:
-                st.warning("Заповніть усі поля!")
-            elif password != confirm_password:
-                st.warning("Паролі не співпадають!")
-            else:
-                if register_user(username, password):
-                    st.success("Реєстрація успішна!")
-                    go_to("login")
+            if st.form_submit_button("Зареєструватися"):
+                if not username or not password:
+                    st.warning("Заповніть усі поля!")
+                elif password != confirm_password:
+                    st.warning("Паролі не співпадають!")
                 else:
-                    st.warning("Користувач з таким ім'ям вже існує!")
+                    if register_user(username, password):
+                        st.success("Реєстрація успішна!")
+                        go_to("login")
+                    else:
+                        st.warning("Користувач з таким ім'ям вже існує!")
+    else:
+        with st.form("register_form"):
+                st.title("Register")
+                username = st.text_input("Username")
+                password = st.text_input("Password", type="password")
+                confirm_password = st.text_input("Repeat Password", type="password")
+
+                if st.form_submit_button("Register"):
+                    if not username or not password:
+                        st.warning("Fill all the fields")
+                    elif password != confirm_password:
+                        st.warning("Passwords don't match!")
+                    else:
+                        if register_user(username, password):
+                            st.success("Registration successful!")
+                            go_to("login")
+                        else:
+                            st.warning("User with same username already exists!")
 
 elif st.session_state.page == "home":
-    st.write(f"Ви в системі як {st.session_state.user}")
-    if st.button("Вийти"):
-        st.session_state.user = None
-        go_to("login")
+    if st.session_state.lang == "ukr":
+        st.write(f"Ви в системі як {st.session_state.user}")
+        if st.button("Вийти"):
+            st.session_state.user = None
+            go_to("login")
+    else:
+        st.write(f"You are logged in as {st.session_state.user}")
+        if st.button("Log out"):
+            st.session_state.user = None
+            go_to("login")
