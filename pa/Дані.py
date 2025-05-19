@@ -227,7 +227,7 @@ if st.session_state.clicked:
                   args=(dataframe, "date", "target", "Тестовий набір даних 1", "День"))
         else:
             st.button(label="Submit", key="submit1", on_click=submit_data,
-                  args=(dataframe, "date", "target", "Тестовий набір даних 1", "День"))
+                  args=(dataframe, "date", "target", "Test dataset 1", "День"))
 
     if t2:
         dataframe = pd.read_csv("Weather_dataset.csv")
@@ -277,7 +277,7 @@ if st.session_state.clicked:
                   args=(dataframe, "date", "target", "Тестовий набір даних 2", "Година"))
         else:
             st.button(label="Submit", key="submit2", on_click=submit_data,
-                  args=(dataframe, "date", "target", "Тестовий набір даних 2", "Година"))
+                  args=(dataframe, "date", "target", "Test dataset 2", "Година"))
         
 
 
@@ -332,7 +332,7 @@ if st.session_state.clicked:
                   args=(dataframe, "date", "target", "Тестовий набір даних 3", "Година"))
         else:
             st.button(label="Submit", key="submit3", on_click=submit_data,
-                  args=(dataframe, "date", "target", "Тестовий набір даних 3", "Година"))
+                  args=(dataframe, "date", "target", "Test dataset 3", "Година"))
 
     if t4:
         dataframe = pd.read_csv("anomaly.csv")
@@ -383,7 +383,7 @@ if st.session_state.clicked:
                   args=(dataframe, "date", "target", "Тестовий набір даних 4", "День"))
         else:
             st.button(label="Submit", key="submit4", on_click=submit_data,
-                  args=(dataframe, "date", "target", "Тестовий набір даних 4", "День"))
+                  args=(dataframe, "date", "target", "Test dataset 4", "День"))
 
 
 if st.session_state.clicked2:
