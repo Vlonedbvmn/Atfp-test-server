@@ -763,15 +763,17 @@ if st.session_state.df is not None:
             if selection is not None:
                 st.markdown(f"## Ви обрали плагін: {selection}")
                 try:
-                    with open(f'pa/crypto_models/{selection}_explanation_ukr.txt', 'r') as filee:
-                        content = filee.read()
-                        print(content)
-                        st.write(content)
-                except:
-                    with open(f'pa/crypto_models/{selection}-USD_explanation_ukr.txt', 'r') as filee:
-                        content = filee.read()
-                        print(content)
-                        st.write(content)
+                    try:
+                        with open(f'pa/crypto_models/{selection}_explanation_ukr.txt', 'r') as filee:
+                            content = filee.read()
+                            print(content)
+                            st.write(content)
+                    except:
+                        with open(f'pa/crypto_models/{selection}-USD_explanation_ukr.txt', 'r') as filee:
+                            content = filee.read()
+                            print(content)
+                            st.write(content)
+                except: pass
                 horizon = st.select_slider(
                     "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
                     options=[i for i in range(1, 31)],
@@ -942,15 +944,17 @@ if st.session_state.df is not None:
             if selection is not None:
                 st.markdown(f"## You have choosen plugin: {selection}")
                 try:
-                    with open(f'pa/crypto_models/{selection}_explanation_eng.txt', 'r') as filee:
-                        content = filee.read()
-                        print(content)
-                        st.write(content)
-                except:
-                    with open(f'pa/crypto_models/{selection}-USD_explanation_eng.txt', 'r') as filee:
-                        content = filee.read()
-                        print(content)
-                        st.write(content)
+                    try:
+                        with open(f'pa/crypto_models/{selection}_explanation_eng.txt', 'r') as filee:
+                            content = filee.read()
+                            print(content)
+                            st.write(content)
+                    except:
+                        with open(f'pa/crypto_models/{selection}-USD_explanation_eng.txt', 'r') as filee:
+                            content = filee.read()
+                            print(content)
+                            st.write(content)
+                except: pass
                 horizon = st.select_slider(
                     "Select the forecasting horizon (how far ahead the prediction will be made):",
                     options=[i for i in range(1, 31)],
