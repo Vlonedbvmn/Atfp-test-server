@@ -387,7 +387,7 @@ if st.session_state.df is not None:
             st.title("Плагіни")
 
         plug = option_menu("Оберіть категорію плагінів для прогнозування",
-                            ["Stock price", "Crypto", "Ваші плагіни", "Додати нові"],
+                            ["Stock price", "Crypto", "Your plugins", "Add new"],
                             # icons=['gear', 'gear', 'gear', 'gear', 'gear', 'gear'],
                             menu_icon="no",
                             orientation="horizontal")
@@ -762,10 +762,16 @@ if st.session_state.df is not None:
             selection = pills("Тикери", sorted(ticks))
             if selection is not None:
                 st.markdown(f"## Ви обрали плагін: {selection}")
-                with open(f'pa/crypto_models/{selection}_explanation_ukr.txt', 'r') as filee:
-                    content = filee.read()
-                    print(content)
-                    st.write(content)
+                try:
+                    with open(f'pa/crypto_models/{selection}_explanation_ukr.txt', 'r') as filee:
+                        content = filee.read()
+                        print(content)
+                        st.write(content)
+                except:
+                    with open(f'pa/crypto_models/{selection}-USD_explanation_ukr.txt', 'r') as filee:
+                        content = filee.read()
+                        print(content)
+                        st.write(content)
                 horizon = st.select_slider(
                     "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
                     options=[i for i in range(1, 31)],
@@ -935,10 +941,16 @@ if st.session_state.df is not None:
             selection = pills("Tickers", sorted(ticks))
             if selection is not None:
                 st.markdown(f"## You have choosen plugin: {selection}")
-                with open(f'pa/crypto_models/{selection}_explanation_eng.txt', 'r') as filee:
-                    content = filee.read()
-                    print(content)
-                    st.write(content)
+                try:
+                    with open(f'pa/crypto_models/{selection}_explanation_eng.txt', 'r') as filee:
+                        content = filee.read()
+                        print(content)
+                        st.write(content)
+                except:
+                    with open(f'pa/crypto_models/{selection}-USD_explanation_eng.txt', 'r') as filee:
+                        content = filee.read()
+                        print(content)
+                        st.write(content)
                 horizon = st.select_slider(
                     "Select the forecasting horizon (how far ahead the prediction will be made):",
                     options=[i for i in range(1, 31)],
@@ -1097,159 +1109,314 @@ if st.session_state.df is not None:
 
         selection = st.selectbox("Your plugins", df["pluginname"].values.tolist())
         if selection is not None:
-            st.markdown(f"Ви обрали плагін: {selection}.")
-            data_row = df[(df['username'] == st.session_state.user) & (df['pluginname'] == selection)]
-            horizon = st.select_slider(
-                "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
-                options=[i for i in range(1, data_row["horizon"].tolist()[0])],
-                key="one11"
-            )
-            st.button(label="Зробити прогноз", key="kan", on_click=mk_fcst_plug,
-                      args=(
-                      ds_for_pred, data_row["inp"].tolist()[0], data_row["horizon"].tolist()[0], data_row["scaler_y"].tolist()[0], data_row["scaler_x"].tolist()[0], data_row["model_state"].tolist()[0]))
-            st.divider()
-            st.markdown(f"### Результати прогнозу")
-            if st.session_state.predicted4 is not None:
-                col3, col4 = st.columns(2)
-                with col3:
-                    with st.expander("Подивитись прогнозні значення:"):
-                        st.write(st.session_state.predicted4)
-                with col4:
-
-                    st.download_button(
-                        label="Завантажити прогноз як файл .csv",
-                        data=st.session_state.predicted4.to_csv().encode("utf-8"),
-                        file_name="prediction.csv",
-                        mime="text/csv"
-                    )
-                    st.download_button(
-                        label="Завантажити прогноз як файл .xlsx",
-                        data=to_excel(st.session_state.predicted4),
-                        file_name="prediction.xlsx",
-                        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                    )
+            if st.session_state.lang == "ukr":
+                st.markdown(f"Ви обрали плагін: {selection}.")
+                data_row = df[(df['username'] == st.session_state.user) & (df['pluginname'] == selection)]
+                horizon = st.select_slider(
+                    "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
+                    options=[i for i in range(1, data_row["horizon"].tolist()[0])],
+                    key="one11"
+                )
+                st.button(label="Зробити прогноз", key="kan", on_click=mk_fcst_plug,
+                        args=(
+                        ds_for_pred, data_row["inp"].tolist()[0], data_row["horizon"].tolist()[0], data_row["scaler_y"].tolist()[0], data_row["scaler_x"].tolist()[0], data_row["model_state"].tolist()[0]))
                 st.divider()
+                st.markdown(f"### Результати прогнозу")
+                if st.session_state.predicted4 is not None:
+                    col3, col4 = st.columns(2)
+                    with col3:
+                        with st.expander("Подивитись прогнозні значення:"):
+                            st.write(st.session_state.predicted4)
+                    with col4:
 
-                st.markdown(f"### Дашборд прогнозу")
-                st.markdown("# ")
-                if st.session_state.date_not_n == True:
-                    st.session_state.predicted[st.session_state.date] = [i for i in
-                                                                         range(1, len(st.session_state.predicted3) + 1)]
-                else:
-                    pass
-                last_days = st.session_state.predicted3.tail(horizon)
-                rest_of_data = st.session_state.predicted3.iloc[:-horizon]
+                        st.download_button(
+                            label="Завантажити прогноз як файл .csv",
+                            data=st.session_state.predicted4.to_csv().encode("utf-8"),
+                            file_name="prediction.csv",
+                            mime="text/csv"
+                        )
+                        st.download_button(
+                            label="Завантажити прогноз як файл .xlsx",
+                            data=to_excel(st.session_state.predicted4),
+                            file_name="prediction.xlsx",
+                            mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                        )
+                    st.divider()
 
-                val = len(last_days)
-
-                cool1, cool2 = st.columns([2, 5])
-
-                # Create the plotly figure
-                with cool1:
-                    st.markdown("##### Вибір горизонту прогнозу ")
+                    st.markdown(f"### Дашборд прогнозу")
                     st.markdown("# ")
+                    if st.session_state.date_not_n == True:
+                        st.session_state.predicted[st.session_state.date] = [i for i in
+                                                                            range(1, len(st.session_state.predicted3) + 1)]
+                    else:
+                        pass
+                    last_days = st.session_state.predicted3.tail(horizon)
+                    rest_of_data = st.session_state.predicted3.iloc[:-horizon]
+
+                    val = len(last_days)
+
+                    cool1, cool2 = st.columns([2, 5])
+
+                    # Create the plotly figure
+                    with cool1:
+                        st.markdown("##### Вибір горизонту прогнозу ")
+                        st.markdown("# ")
+                        st.markdown("# ")
+                        slid = st.select_slider(
+                            "Горизонт прогнозу:",
+                            options=[i for i in range(1, val + 1)])
+                        st.markdown("# ")
+                        st.markdown("# ")
+                        st.markdown("##### Статистика прогнозу ")
+
+                        st.write(last_days[:(slid)].describe().head(7), use_container_width=True)
+                        # else:
+                        #     st.write(last_days[:(slid)].describe().drop(["unique_id"], axis=1).head(7),
+                        #              use_container_width=True)
+
+                    with cool2:
+
+                        st.session_state.plotp2 = go.Figure()
+                        st.session_state.plotp2.add_trace(go.Scatter(
+                            x=rest_of_data[st.session_state.date],
+                            y=rest_of_data[st.session_state.target],
+                            mode='lines',
+                            name='Дані',
+                            line=dict(color='blue')
+                        ))
+
+                        # Plot the last seven days in a different color
+                        # st.session_state.plotp.add_trace(go.Scatter(
+                        #     x=last_days[st.session_state.date][:(slid)],
+                        #     y=last_days[st.session_state.target][:(slid)],
+                        #     mode='lines',
+                        #     name='Прогноз',
+                        #     line=dict(color='green')
+                        # ))
+                        q50 = last_days[st.session_state.target][:(slid)]
+                        lower_forecast = q50 / 1.2  # q1: median divided by 1.5
+                        upper_forecast = q50 * 1.2  # q99: median multiplied by 1.5
+                        if lower_forecast is not None:
+                            max_value = max(upper_forecast.tolist()) + 100
+                            min_value = min(lower_forecast.tolist()) - 100
+                        # First, add the upper bound trace (invisible line) to serve as the fill ceiling.
+                        st.session_state.plotp2.add_trace(go.Scatter(
+                            x=last_days[st.session_state.date][:(slid)],
+                            y=upper_forecast,
+                            mode='lines',
+                            line=dict(color='rgba(0,128,0,0)'),  # fully transparent line
+                            showlegend=False,
+                            hoverinfo='skip'
+                        ))
+
+                        # Next, add the lower bound trace that fills the area up to the previous (upper bound) trace.
+                        st.session_state.plotp2.add_trace(go.Scatter(
+                            x=last_days[st.session_state.date][:(slid)],
+                            y=lower_forecast,
+                            mode='lines',
+                            fill='tonexty',  # fills the area between this trace and the one above
+                            fillcolor='rgba(0,128,0,0.2)',  # adjust the color and transparency as needed
+                            line=dict(color='rgba(0,128,0,0)'),  # transparent line to keep the focus on the fill
+                            name='Range of possible forecast values'
+                        ))
+
+                        # Finally, add the median (50% quantile) forecast line on top.
+                        st.session_state.plotp2.add_trace(go.Scatter(
+                            x=last_days[st.session_state.date][:(slid)],
+                            y=q50,
+                            mode='lines',
+                            name='Прогноз',
+                            line=dict(color='green')
+                        ))
+                        # Update layout (optional)
+                        st.session_state.plotp2.update_layout(
+                            xaxis_title='Дата',
+                            # yaxis_title='Значення',
+                            yaxis=dict(
+                                # range=[min_value, max_value],
+                                title='Спрогнозовані значення'  # Optional: add a title for clarity
+                            ),
+                            title="Графік прогнозу",  # Increase the overall height
+                        )
+
+                        # Show the plot
+                        st.plotly_chart(st.session_state.plotp2, use_container_width=True)
+
+                        # Plot the data except the last seven days
+
+                        st.session_state.bp2 = go.Figure()
+
+                        st.session_state.bp2.add_trace(go.Bar(
+                            x=last_days[st.session_state.date][:(slid)],
+                            y=last_days[st.session_state.target][:(slid)],
+                            name='Прогноз',
+                            marker_color='green'
+                        ))
+
+                        # Customize layout
+                        st.session_state.bp2.update_layout(
+                            title='Барплот прогнозу',
+                            xaxis_title='Дата',
+                            yaxis_title='Значення',
+                            template='plotly_white'
+                        )
+
+                        # Display the Plotly chart in Streamlit
+                        st.plotly_chart(st.session_state.bp2, use_container_width=True)
+            else:
+                st.markdown(f"You chose plugin: {selection}.")
+                data_row = df[(df['username'] == st.session_state.user) & (df['pluginname'] == selection)]
+                horizon = st.select_slider(
+                    "Select the forecasting horizon (how far ahead the prediction will be made):",
+                    options=[i for i in range(1, data_row["horizon"].tolist()[0])],
+                    key="one11"
+                )
+                st.button(label="Forecast", key="kan", on_click=mk_fcst_plug,
+                        args=(
+                        ds_for_pred, data_row["inp"].tolist()[0], data_row["horizon"].tolist()[0], data_row["scaler_y"].tolist()[0], data_row["scaler_x"].tolist()[0], data_row["model_state"].tolist()[0]))
+                st.divider()
+                st.markdown(f"### Forecast results")
+                if st.session_state.predicted4 is not None:
+                    col3, col4 = st.columns(2)
+                    with col3:
+                        with st.expander("Check forcasted values:"):
+                            st.write(st.session_state.predicted4)
+                    with col4:
+
+                        st.download_button(
+                            label="Download file as .csv",
+                            data=st.session_state.predicted4.to_csv().encode("utf-8"),
+                            file_name="prediction.csv",
+                            mime="text/csv"
+                        )
+                        st.download_button(
+                            label="Download file as .xlsx",
+                            data=to_excel(st.session_state.predicted4),
+                            file_name="prediction.xlsx",
+                            mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                        )
+                    st.divider()
+
+                    st.markdown(f"### Forecast dashboard")
                     st.markdown("# ")
-                    slid = st.select_slider(
-                        "Горизонт прогнозу:",
-                        options=[i for i in range(1, val + 1)])
-                    st.markdown("# ")
-                    st.markdown("# ")
-                    st.markdown("##### Статистика прогнозу ")
+                    if st.session_state.date_not_n == True:
+                        st.session_state.predicted[st.session_state.date] = [i for i in
+                                                                            range(1, len(st.session_state.predicted3) + 1)]
+                    else:
+                        pass
+                    last_days = st.session_state.predicted3.tail(horizon)
+                    rest_of_data = st.session_state.predicted3.iloc[:-horizon]
 
-                    st.write(last_days[:(slid)].describe().head(7), use_container_width=True)
-                    # else:
-                    #     st.write(last_days[:(slid)].describe().drop(["unique_id"], axis=1).head(7),
-                    #              use_container_width=True)
+                    val = len(last_days)
 
-                with cool2:
+                    cool1, cool2 = st.columns([2, 5])
 
-                    st.session_state.plotp2 = go.Figure()
-                    st.session_state.plotp2.add_trace(go.Scatter(
-                        x=rest_of_data[st.session_state.date],
-                        y=rest_of_data[st.session_state.target],
-                        mode='lines',
-                        name='Дані',
-                        line=dict(color='blue')
-                    ))
+                    # Create the plotly figure
+                    with cool1:
+                        st.markdown("##### Choose forecast horizon ")
+                        st.markdown("# ")
+                        st.markdown("# ")
+                        slid = st.select_slider(
+                            "Forecast horizon:",
+                            options=[i for i in range(1, val + 1)])
+                        st.markdown("# ")
+                        st.markdown("# ")
+                        st.markdown("##### Forecast statistics ")
 
-                    # Plot the last seven days in a different color
-                    # st.session_state.plotp.add_trace(go.Scatter(
-                    #     x=last_days[st.session_state.date][:(slid)],
-                    #     y=last_days[st.session_state.target][:(slid)],
-                    #     mode='lines',
-                    #     name='Прогноз',
-                    #     line=dict(color='green')
-                    # ))
-                    q50 = last_days[st.session_state.target][:(slid)]
-                    lower_forecast = q50 / 1.2  # q1: median divided by 1.5
-                    upper_forecast = q50 * 1.2  # q99: median multiplied by 1.5
-                    if lower_forecast is not None:
-                        max_value = max(upper_forecast.tolist()) + 100
-                        min_value = min(lower_forecast.tolist()) - 100
-                    # First, add the upper bound trace (invisible line) to serve as the fill ceiling.
-                    st.session_state.plotp2.add_trace(go.Scatter(
-                        x=last_days[st.session_state.date][:(slid)],
-                        y=upper_forecast,
-                        mode='lines',
-                        line=dict(color='rgba(0,128,0,0)'),  # fully transparent line
-                        showlegend=False,
-                        hoverinfo='skip'
-                    ))
+                        st.write(last_days[:(slid)].describe().head(7), use_container_width=True)
+                        # else:
+                        #     st.write(last_days[:(slid)].describe().drop(["unique_id"], axis=1).head(7),
+                        #              use_container_width=True)
 
-                    # Next, add the lower bound trace that fills the area up to the previous (upper bound) trace.
-                    st.session_state.plotp2.add_trace(go.Scatter(
-                        x=last_days[st.session_state.date][:(slid)],
-                        y=lower_forecast,
-                        mode='lines',
-                        fill='tonexty',  # fills the area between this trace and the one above
-                        fillcolor='rgba(0,128,0,0.2)',  # adjust the color and transparency as needed
-                        line=dict(color='rgba(0,128,0,0)'),  # transparent line to keep the focus on the fill
-                        name='Діапазон можливих значень прогнозу'
-                    ))
+                    with cool2:
 
-                    # Finally, add the median (50% quantile) forecast line on top.
-                    st.session_state.plotp2.add_trace(go.Scatter(
-                        x=last_days[st.session_state.date][:(slid)],
-                        y=q50,
-                        mode='lines',
-                        name='Прогноз',
-                        line=dict(color='green')
-                    ))
-                    # Update layout (optional)
-                    st.session_state.plotp2.update_layout(
-                        xaxis_title='Дата',
-                        # yaxis_title='Значення',
-                        yaxis=dict(
-                            # range=[min_value, max_value],
-                            title='Спрогнозовані значення'  # Optional: add a title for clarity
-                        ),
-                        title="Графік прогнозу",  # Increase the overall height
-                    )
+                        st.session_state.plotp2 = go.Figure()
+                        st.session_state.plotp2.add_trace(go.Scatter(
+                            x=rest_of_data[st.session_state.date],
+                            y=rest_of_data[st.session_state.target],
+                            mode='lines',
+                            name='Data',
+                            line=dict(color='blue')
+                        ))
 
-                    # Show the plot
-                    st.plotly_chart(st.session_state.plotp2, use_container_width=True)
+                        # Plot the last seven days in a different color
+                        # st.session_state.plotp.add_trace(go.Scatter(
+                        #     x=last_days[st.session_state.date][:(slid)],
+                        #     y=last_days[st.session_state.target][:(slid)],
+                        #     mode='lines',
+                        #     name='Прогноз',
+                        #     line=dict(color='green')
+                        # ))
+                        q50 = last_days[st.session_state.target][:(slid)]
+                        lower_forecast = q50 / 1.2  # q1: median divided by 1.5
+                        upper_forecast = q50 * 1.2  # q99: median multiplied by 1.5
+                        if lower_forecast is not None:
+                            max_value = max(upper_forecast.tolist()) + 100
+                            min_value = min(lower_forecast.tolist()) - 100
+                        # First, add the upper bound trace (invisible line) to serve as the fill ceiling.
+                        st.session_state.plotp2.add_trace(go.Scatter(
+                            x=last_days[st.session_state.date][:(slid)],
+                            y=upper_forecast,
+                            mode='lines',
+                            line=dict(color='rgba(0,128,0,0)'),  # fully transparent line
+                            showlegend=False,
+                            hoverinfo='skip'
+                        ))
 
-                    # Plot the data except the last seven days
+                        # Next, add the lower bound trace that fills the area up to the previous (upper bound) trace.
+                        st.session_state.plotp2.add_trace(go.Scatter(
+                            x=last_days[st.session_state.date][:(slid)],
+                            y=lower_forecast,
+                            mode='lines',
+                            fill='tonexty',  # fills the area between this trace and the one above
+                            fillcolor='rgba(0,128,0,0.2)',  # adjust the color and transparency as needed
+                            line=dict(color='rgba(0,128,0,0)'),  # transparent line to keep the focus on the fill
+                            name='Діапазон можливих значень прогнозу'
+                        ))
 
-                    st.session_state.bp2 = go.Figure()
+                        # Finally, add the median (50% quantile) forecast line on top.
+                        st.session_state.plotp2.add_trace(go.Scatter(
+                            x=last_days[st.session_state.date][:(slid)],
+                            y=q50,
+                            mode='lines',
+                            name='Forecast',
+                            line=dict(color='green')
+                        ))
+                        # Update layout (optional)
+                        st.session_state.plotp2.update_layout(
+                            xaxis_title='Date',
+                            # yaxis_title='Значення',
+                            yaxis=dict(
+                                # range=[min_value, max_value],
+                                title='Forecasted values'  # Optional: add a title for clarity
+                            ),
+                            title="Forecast plot",  # Increase the overall height
+                        )
 
-                    st.session_state.bp2.add_trace(go.Bar(
-                        x=last_days[st.session_state.date][:(slid)],
-                        y=last_days[st.session_state.target][:(slid)],
-                        name='Прогноз',
-                        marker_color='green'
-                    ))
+                        # Show the plot
+                        st.plotly_chart(st.session_state.plotp2, use_container_width=True)
 
-                    # Customize layout
-                    st.session_state.bp2.update_layout(
-                        title='Барплот прогнозу',
-                        xaxis_title='Дата',
-                        yaxis_title='Значення',
-                        template='plotly_white'
-                    )
+                        # Plot the data except the last seven days
 
-                    # Display the Plotly chart in Streamlit
-                    st.plotly_chart(st.session_state.bp2, use_container_width=True)
+                        st.session_state.bp2 = go.Figure()
+
+                        st.session_state.bp2.add_trace(go.Bar(
+                            x=last_days[st.session_state.date][:(slid)],
+                            y=last_days[st.session_state.target][:(slid)],
+                            name='Forecast',
+                            marker_color='green'
+                        ))
+
+                        # Customize layout
+                        st.session_state.bp2.update_layout(
+                            title='Forecast barplot',
+                            xaxis_title='Date',
+                            yaxis_title='Value',
+                            template='plotly_white'
+                        )
+
+                        # Display the Plotly chart in Streamlit
+                        st.plotly_chart(st.session_state.bp2, use_container_width=True)
     if plug == "Add new":
 
         import pandas as pd
@@ -1408,12 +1575,10 @@ if st.session_state.df is not None:
 
 
         if st.session_state.lang == "ukr":
-            st.markdown("## Ви обрали модель SNN")
-            st.markdown(
-                "### SNN — це розроблена ШНМ, призначена для прогнозування часових рядів з використанням спайкових нейронних мереж та резервуарних обчислень.")
-            st.divider()
-            st.warning(
-                "Зауважте, зараз інстанс моделі SNN не розгорнуто на сервері з більш потужним gpu. Нажаль, пришвидшене навчання не доступне.")
+            st.markdown("## Тренуйте Ваш плагін тут")
+
+            plname = st.text_input("Впишіть назву Вашого плагіну тут:", placeholder="Пишіть тут...")
+
             horizon = st.select_slider(
                 "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
                 options=[i for i in range(1, 151)]
@@ -1425,8 +1590,17 @@ if st.session_state.df is not None:
             inp = st.number_input("Оберіть к-ть попередніх значень з ряду для кроку прогнозу:", step=1, min_value=5,
                                   max_value=150)
 
-            st.button(label="Підтвердити", key="kan", on_click=train_snn,
-                      args=(ds_for_pred, iter, horizon, means[st.session_state.freq], inp))
+            st.button(label="Підтвердити", on_click=train_snn,
+                      args=(ds_for_pred, iter, horizon, "D", inp))
+
+            if st.session_state.trained is not None:
+                labe = st.markdown(f"## Середньоквадратичне відхилення моделі: {st.session_state.er}")
+                if st.button("Save"):
+                    with conn.session as session:
+                        session.execute(text("INSERT INTO pluginsss (username, pluginname, scaler_x, scaler_y, model_state, horizon, inp) VALUES (:usrn, :pl, :scx, :scy, :mdl_st, :hor, :inpt)"),
+                                        {"usrn": st.session_state.user, "pl": plname, "scx": st.session_state.sclx, "scy": st.session_state.scly, "mdl_st": st.session_state.mdst, "hor": st.session_state.horp, "inpt": st.session_state.inppp})
+                        session.commit()
+                        print("saved")
         else:
             st.markdown("## Train your plugin here")
 
@@ -1456,4 +1630,7 @@ if st.session_state.df is not None:
                         session.commit()
                         print("saved")
 else:
-    st.warning('Для початки роботи з моделями, оберіть дані', icon="⚠️")
+    if st.session_state.lang == "ukr":
+        st.warning('Для початки роботи з моделями, оберіть дані', icon="⚠️")
+    else:
+        st.warning('To start working with the models, select the data.', icon="⚠️")
