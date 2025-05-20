@@ -123,332 +123,401 @@ def windowed_df_to_date_X_y(windowed_dataframe, hor):
     return dates, X.astype(np.float32), Y.astype(np.float32)
 
 
-def anomal(datafra, freqs):
-    with st.spinner('Проводимо тестування...'):
-        if st.session_state.date_not_n:
-            start_date = pd.to_datetime('2024-01-01')
-            freqs = "D"
-            datafra['ds'] = start_date + pd.to_timedelta(datafra['ds'] - 1, freqs)
+# def anomal(datafra, freqs):
+#     with st.spinner('Проводимо тестування...'):
+#         if st.session_state.date_not_n:
+#             start_date = pd.to_datetime('2024-01-01')
+#             freqs = "D"
+#             datafra['ds'] = start_date + pd.to_timedelta(datafra['ds'] - 1, freqs)
 
-        dafaf = datafra
-        datafra['ds'] = pd.to_datetime(datafra['ds'])
-        datafra = datafra.drop_duplicates(subset=['ds'])
-        datafra = datafra.set_index('ds').asfreq(freqs)
-        datafra = datafra.reset_index()
-        datafra['y'] = datafra['y'].interpolate()
-        datafra["unique_id"] = [0 for i in range(1, len(datafra) + 1)]
-        print("s;kgfoshdisdifsdf")
+#         dafaf = datafra
+#         datafra['ds'] = pd.to_datetime(datafra['ds'])
+#         datafra = datafra.drop_duplicates(subset=['ds'])
+#         datafra = datafra.set_index('ds').asfreq(freqs)
+#         datafra = datafra.reset_index()
+#         datafra['y'] = datafra['y'].interpolate()
+#         datafra["unique_id"] = [0 for i in range(1, len(datafra) + 1)]
+#         print("s;kgfoshdisdifsdf")
 
-        print(datafra)
+#         print(datafra)
 
-        print(datafra)
-        print(datafra["ds"].tolist()[7])
+#         print(datafra)
+#         print(datafra["ds"].tolist()[7])
 
-        windowed_df = df_to_windowed_df(datafra,
-                                        datafra["ds"].tolist()[10],
-                                        datafra["ds"].tolist()[-2],
-                                        n=2,
-                                        hor=40)
-        print("jhgut")
-        dates, X, Y = windowed_df_to_date_X_y(windowed_df, hor=40)
+#         windowed_df = df_to_windowed_df(datafra,
+#                                         datafra["ds"].tolist()[10],
+#                                         datafra["ds"].tolist()[-2],
+#                                         n=2,
+#                                         hor=40)
+#         print("jhgut")
+#         dates, X, Y = windowed_df_to_date_X_y(windowed_df, hor=40)
 
-        q_80 = int(len(dates) * .8)
-        q_90 = int(len(dates) * .9)
+#         q_80 = int(len(dates) * .8)
+#         q_90 = int(len(dates) * .9)
 
-        dates_train, X_train, y_train = dates[:q_80], X[:q_80], Y[:q_80]
+#         dates_train, X_train, y_train = dates[:q_80], X[:q_80], Y[:q_80]
 
-        dates_val, X_val, y_val = dates[q_80:q_90], X[q_80:q_90], Y[q_80:q_90]
-        dates_test, X_test, y_test = dates[q_90:], X[q_90:], Y[q_90:]
+#         dates_val, X_val, y_val = dates[q_80:q_90], X[q_80:q_90], Y[q_80:q_90]
+#         dates_test, X_test, y_test = dates[q_90:], X[q_90:], Y[q_90:]
 
-        # scaler = RobustScaler()
-        # orig_shape = X_train.shape
-        # print(X_train.reshape(-1, X_train.shape[-1]))
-        # X_train = scaler.fit_transform(X_train.reshape(-1, X_train.shape[-1])).reshape(orig_shape)
-        # X_val = scaler.transform(X_val.reshape(-1, X_val.shape[-1])).reshape(X_val.shape)
-        # X_test = scaler.transform(X_test.reshape(-1, X_test.shape[-1])).reshape(X_test.shape)
-        # st.session_state.scaler = scaler
-        # X_train = torch.tensor(X_train, dtype=torch.float32)
-        # X_val = torch.tensor(X_val, dtype=torch.float32)
-        # X_test = torch.tensor(X_test, dtype=torch.float32)
-        # y_train = torch.tensor(y_train, dtype=torch.float32)
-        # y_val = torch.tensor(y_val, dtype=torch.float32)
-        # y_test = torch.tensor(y_test, dtype=torch.float32)
-        #
-        # if len(y_train.shape) == 1:
-        #     y_train = y_train.unsqueeze(1)
-        # if len(y_val.shape) == 1:
-        #     y_val = y_val.unsqueeze(1)
-        # if len(y_test.shape) == 1:
-        #     y_test = y_test.unsqueeze(1)
-        #
-        # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        #
-        # st.session_state.device = device
-        #
-        # def create_reservoir(input_dim, reservoir_size, spectral_radius=0.9):
-        #     W_in = torch.randn(reservoir_size, input_dim) * 0.1
-        #     W_res = torch.randn(reservoir_size, reservoir_size)
-        #
-        #     eigenvalues = torch.linalg.eigvals(W_res)
-        #     max_eigenvalue = torch.max(torch.abs(eigenvalues))
-        #     W_res = W_res * (spectral_radius / max_eigenvalue)
-        #
-        #     return W_in.to(device), W_res.to(device)
-        #
-        # input_dim = X_train.shape[1]
-        # print(input_dim)
-        # reservoir_size = 400
-        #
-        # W_in, W_res = create_reservoir(input_dim, reservoir_size)
-        # st.session_state.reser_size = reservoir_size
-        # st.session_state.win = W_in
-        # st.session_state.wres = W_res
-        # # SNN parameters
-        # beta = 0.5
-        # time_steps = 150
-        # spike_grad = surrogate.fast_sigmoid()
-        import requests
-        import json
+#         # scaler = RobustScaler()
+#         # orig_shape = X_train.shape
+#         # print(X_train.reshape(-1, X_train.shape[-1]))
+#         # X_train = scaler.fit_transform(X_train.reshape(-1, X_train.shape[-1])).reshape(orig_shape)
+#         # X_val = scaler.transform(X_val.reshape(-1, X_val.shape[-1])).reshape(X_val.shape)
+#         # X_test = scaler.transform(X_test.reshape(-1, X_test.shape[-1])).reshape(X_test.shape)
+#         # st.session_state.scaler = scaler
+#         # X_train = torch.tensor(X_train, dtype=torch.float32)
+#         # X_val = torch.tensor(X_val, dtype=torch.float32)
+#         # X_test = torch.tensor(X_test, dtype=torch.float32)
+#         # y_train = torch.tensor(y_train, dtype=torch.float32)
+#         # y_val = torch.tensor(y_val, dtype=torch.float32)
+#         # y_test = torch.tensor(y_test, dtype=torch.float32)
+#         #
+#         # if len(y_train.shape) == 1:
+#         #     y_train = y_train.unsqueeze(1)
+#         # if len(y_val.shape) == 1:
+#         #     y_val = y_val.unsqueeze(1)
+#         # if len(y_test.shape) == 1:
+#         #     y_test = y_test.unsqueeze(1)
+#         #
+#         # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+#         #
+#         # st.session_state.device = device
+#         #
+#         # def create_reservoir(input_dim, reservoir_size, spectral_radius=0.9):
+#         #     W_in = torch.randn(reservoir_size, input_dim) * 0.1
+#         #     W_res = torch.randn(reservoir_size, reservoir_size)
+#         #
+#         #     eigenvalues = torch.linalg.eigvals(W_res)
+#         #     max_eigenvalue = torch.max(torch.abs(eigenvalues))
+#         #     W_res = W_res * (spectral_radius / max_eigenvalue)
+#         #
+#         #     return W_in.to(device), W_res.to(device)
+#         #
+#         # input_dim = X_train.shape[1]
+#         # print(input_dim)
+#         # reservoir_size = 400
+#         #
+#         # W_in, W_res = create_reservoir(input_dim, reservoir_size)
+#         # st.session_state.reser_size = reservoir_size
+#         # st.session_state.win = W_in
+#         # st.session_state.wres = W_res
+#         # # SNN parameters
+#         # beta = 0.5
+#         # time_steps = 150
+#         # spike_grad = surrogate.fast_sigmoid()
+#         import requests
+#         import json
 
-        url = "https://nxwekahcj0m93m-8000.proxy.runpod.net/forecast"
+#         url = "https://nxwekahcj0m93m-8000.proxy.runpod.net/forecast"
 
-        dafaf['ds'] = dafaf['ds'].astype(str)
-        inp = 2
-        horizon = 40
-        payload = {
-            "data": dafaf.to_dict(orient='records'),
-            "inp": inp,  
-            "horiz": horizon,  
-            "iter": 45,  
-        }
+#         dafaf['ds'] = dafaf['ds'].astype(str)
+#         inp = 2
+#         horizon = 40
+#         payload = {
+#             "data": dafaf.to_dict(orient='records'),
+#             "inp": inp,  
+#             "horiz": horizon,  
+#             "iter": 45,  
+#         }
 
-        response = requests.post(url, json=payload)
+#         response = requests.post(url, json=payload)
 
-        data = ""
-        if response.status_code == 200:
-            data = response.json().get("predictions")
-            # print("Forecast predictions:", data)
-        else:
-            print("Error:", response.status_code, response.text)
-
-
-
-        model_state_serialized = data["model_state"]
-        model_state = {k: torch.tensor(v) for k, v in model_state_serialized.items()}
-
-        scaler_data = data["robust_scaler"]
-
-        robust_scaler = RobustScaler(**scaler_data["params"])
-
-        attributes = scaler_data.get("attributes", {})
-        if "center_" in attributes:
-            robust_scaler.center_ = np.array(attributes["center_"])
-        if "scale_" in attributes:
-            robust_scaler.scale_ = np.array(attributes["scale_"])
+#         data = ""
+#         if response.status_code == 200:
+#             data = response.json().get("predictions")
+#             # print("Forecast predictions:", data)
+#         else:
+#             print("Error:", response.status_code, response.text)
 
 
-        tensor_data = data["int_values"]
-        W_in = torch.tensor(tensor_data["W_in"])
-        W_res = torch.tensor(tensor_data["W_res"])
-        reservoir_size = tensor_data["reser"]  
-        beta = 0.5
-        time_steps = 150
-        spike_grad = surrogate.fast_sigmoid()
+
+#         model_state_serialized = data["model_state"]
+#         model_state = {k: torch.tensor(v) for k, v in model_state_serialized.items()}
+
+#         scaler_data = data["robust_scaler"]
+
+#         robust_scaler = RobustScaler(**scaler_data["params"])
+
+#         attributes = scaler_data.get("attributes", {})
+#         if "center_" in attributes:
+#             robust_scaler.center_ = np.array(attributes["center_"])
+#         if "scale_" in attributes:
+#             robust_scaler.scale_ = np.array(attributes["scale_"])
+
+
+#         tensor_data = data["int_values"]
+#         W_in = torch.tensor(tensor_data["W_in"])
+#         W_res = torch.tensor(tensor_data["W_res"])
+#         reservoir_size = tensor_data["reser"]  
+#         beta = 0.5
+#         time_steps = 150
+#         spike_grad = surrogate.fast_sigmoid()
 
  
-        class SNNRegression(nn.Module):
-            def __init__(self, reservoir_size, output_size):
-                super(SNNRegression, self).__init__()
-                self.lif1 = snn.Leaky(beta=beta, spike_grad=spike_grad)
-                self.bn1 = nn.BatchNorm1d(reservoir_size)
-                self.tcn1 = nn.Sequential(
-                    nn.Conv1d(in_channels=reservoir_size, out_channels=256, kernel_size=3,
-                              padding=1),
-                    nn.ReLU(),
-                    nn.BatchNorm1d(256),
-                    nn.Conv1d(in_channels=256, out_channels=128, kernel_size=3, padding=1),
-                    nn.ReLU(),
-                    nn.BatchNorm1d(128)
-                )
+#         class SNNRegression(nn.Module):
+#             def __init__(self, reservoir_size, output_size):
+#                 super(SNNRegression, self).__init__()
+#                 self.lif1 = snn.Leaky(beta=beta, spike_grad=spike_grad)
+#                 self.bn1 = nn.BatchNorm1d(reservoir_size)
+#                 self.tcn1 = nn.Sequential(
+#                     nn.Conv1d(in_channels=reservoir_size, out_channels=256, kernel_size=3,
+#                               padding=1),
+#                     nn.ReLU(),
+#                     nn.BatchNorm1d(256),
+#                     nn.Conv1d(in_channels=256, out_channels=128, kernel_size=3, padding=1),
+#                     nn.ReLU(),
+#                     nn.BatchNorm1d(128)
+#                 )
 
-                self.lif2 = snn.Leaky(beta=beta, spike_grad=spike_grad)
-                self.bn2 = nn.BatchNorm1d(128)
-                self.tcn2 = nn.Sequential(
-                    nn.Conv1d(in_channels=128, out_channels=256, kernel_size=3, padding=1),
-                    nn.ReLU(),
-                    nn.BatchNorm1d(256),
-                    nn.Conv1d(in_channels=256, out_channels=output_size, kernel_size=3, padding=1)
-                )
+#                 self.lif2 = snn.Leaky(beta=beta, spike_grad=spike_grad)
+#                 self.bn2 = nn.BatchNorm1d(128)
+#                 self.tcn2 = nn.Sequential(
+#                     nn.Conv1d(in_channels=128, out_channels=256, kernel_size=3, padding=1),
+#                     nn.ReLU(),
+#                     nn.BatchNorm1d(256),
+#                     nn.Conv1d(in_channels=256, out_channels=output_size, kernel_size=3, padding=1)
+#                 )
 
-            def forward(self, x):
-                x = x.reshape(x.size(0), -1)
+#             def forward(self, x):
+#                 x = x.reshape(x.size(0), -1)
 
-                mem1 = self.lif1.init_leaky()
-                for t in range(time_steps):
-                    spk1, mem1 = self.lif1(x, mem1)
-                mem1 = self.bn1(mem1)
+#                 mem1 = self.lif1.init_leaky()
+#                 for t in range(time_steps):
+#                     spk1, mem1 = self.lif1(x, mem1)
+#                 mem1 = self.bn1(mem1)
 
-                mem1 = mem1.unsqueeze(2)
-                mem1 = self.tcn1(mem1).squeeze(2)
+#                 mem1 = mem1.unsqueeze(2)
+#                 mem1 = self.tcn1(mem1).squeeze(2)
 
-                mem2 = self.lif2.init_leaky()
-                for t in range(time_steps):
-                    spk2, mem2 = self.lif2(mem1, mem2)
-                mem2 = self.bn2(mem2)
+#                 mem2 = self.lif2.init_leaky()
+#                 for t in range(time_steps):
+#                     spk2, mem2 = self.lif2(mem1, mem2)
+#                 mem2 = self.bn2(mem2)
 
-                mem2 = mem2.unsqueeze(2)
-                out = self.tcn2(mem2).squeeze(2)
+#                 mem2 = mem2.unsqueeze(2)
+#                 out = self.tcn2(mem2).squeeze(2)
 
-                return out
+#                 return out
 
-        output_dim = y_train.shape[1]
-        model = SNNRegression(reservoir_size, output_dim).to("cpu")
-        criterion = nn.MSELoss()
-        model.load_state_dict(model_state)
+#         output_dim = y_train.shape[1]
+#         model = SNNRegression(reservoir_size, output_dim).to("cpu")
+#         criterion = nn.MSELoss()
+#         model.load_state_dict(model_state)
 
-        st.session_state.device = "cpu"
-        st.session_state.reser_size = reservoir_size
-        st.session_state.win = W_in
-        st.session_state.wres = W_res
-        st.session_state.scaler = robust_scaler
-        # # Data loaders
-        # batch_size = 32
-        # train_dataset = TensorDataset(X_train, y_train)
-        # val_dataset = TensorDataset(X_val, y_val)
-        # train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-        # val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
-        #
-        # # Training loop
-        # epochs = 40
-        # train_losses = []
-        # val_losses = []
-        #
-        # for epoch in range(epochs):
-        #     model.train()
-        #     train_loss = 0
-        #
-        #     for X_batch, y_batch in train_loader:
-        #         X_batch, y_batch = X_batch.to(device), y_batch.to(device)
-        #
-        #         # Reservoir computation
-        #         reservoir_state = []
-        #         for x in X_batch:
-        #             x = x.unsqueeze(0)  # Ensure x has a batch dimension
-        #             res_state = torch.tanh(
-        #                 W_in @ x.T + W_res @ torch.rand(reservoir_size, 1).to(device))
-        #             reservoir_state.append(res_state.squeeze(1))
-        #         reservoir_state = torch.stack(reservoir_state).to(device)
-        #
-        #         output = model(reservoir_state)
-        #         loss = criterion(output, y_batch)
-        #
-        #         torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
-        #
-        #         optimizer.zero_grad()
-        #         loss.backward()
-        #         optimizer.step()
-        #
-        #         train_loss += loss.item()
-        #
-        #     train_loss /= len(train_loader)
-        #     train_losses.append(train_loss)
-        #
-        #     model.eval()
-        #     val_loss = 0
-        #     with torch.no_grad():
-        #         for X_batch, y_batch in val_loader:
-        #             X_batch, y_batch = X_batch.to(device), y_batch.to(device)
-        #
-        #             reservoir_state = []
-        #             for x in X_batch:
-        #                 x = x.unsqueeze(0)
-        #                 res_state = torch.tanh(
-        #                     W_in @ x.T + W_res @ torch.rand(reservoir_size, 1).to(device))
-        #                 reservoir_state.append(res_state.squeeze(1))
-        #             reservoir_state = torch.stack(reservoir_state).to(device)
-        #
-        #             output = model(reservoir_state)
-        #             loss = criterion(output, y_batch)
-        #             val_loss += loss.item()
-        #
-        #     val_loss /= len(val_loader)
-        #     val_losses.append(val_loss)
-        #     scheduler.step(val_loss)
-        #
-        #     print(
-        #         f"Epoch {epoch + 1}/{epochs}, Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}")
-        #
-        # X_test, y_test = X_test.to(device), y_test.to(device)
-        # model.eval()
-        # with torch.no_grad():
-        #     reservoir_state = []
-        #     for x in X_test:
-        #         x = x.unsqueeze(0)
-        #         res_state = torch.tanh(
-        #             W_in @ x.T + W_res @ torch.rand(reservoir_size, 1).to(device))
-        #         reservoir_state.append(res_state.squeeze(1))
-        #     reservoir_state = torch.stack(reservoir_state).to(device)
-        #
-        #     predictions = model(reservoir_state)
-        #     test_loss = criterion(predictions, y_test)
-        #     loses = []
-        #     for i in range(len(predictions)):
-        #         loses.append(criterion(predictions[i], y_test[i]))
-        #     print(f"{min(loses):.4f}")
-        #     ind = 0
-        #     for i in range(len(loses)):
-        #         if min(loses) == loses[i]: ind = i
-        #
-        # qu = int(round(len(datafra) * 0.1, 0))
-        # print(2)
-
-
-        # .reshape(orig_shape)
-        def make_prediction(input_values):
-
-            input_values = st.session_state.scaler.transform(input_values)
-            model.eval()
-            with torch.no_grad():
-                input_tensor = torch.tensor(input_values, dtype=torch.float32).to(
-                    st.session_state.device).unsqueeze(0)
-                reservoir_state = torch.tanh(
-                    st.session_state.win @ input_tensor.T + st.session_state.wres @ torch.rand(
-                        st.session_state.reser_size, 1).to(st.session_state.device))
-                reservoir_state = reservoir_state.T
-                reservoir_state = reservoir_state.unsqueeze(2)
-                prediction = model(reservoir_state).cpu().numpy()
-            return prediction
-
-        countr = (-len(datafra["y"].tolist()))
-        vals = datafra["y"].tolist()[:2]
-        for i in range(len(datafra["y"].tolist())):
-            try:
-                new_sample = datafra["y"].tolist()[countr:countr+2]
-                new_sample = np.array(new_sample).reshape(-1, 1)
-                print(new_sample)
-                result = make_prediction(new_sample)
-                print("Prediction for new sample:", result)
-                for i in result.tolist()[0]:
-                    vals.append(i)
-                countr += 40
-            except: break
-        for i in range(397):
-            vals.pop()
-        print(vals)
-        datafra['NBEATSx'] = vals
-        datafra['residuals'] = np.abs(datafra['y'] - datafra['NBEATSx'])
+#         st.session_state.device = "cpu"
+#         st.session_state.reser_size = reservoir_size
+#         st.session_state.win = W_in
+#         st.session_state.wres = W_res
+#         st.session_state.scaler = robust_scaler
+#         # # Data loaders
+#         # batch_size = 32
+#         # train_dataset = TensorDataset(X_train, y_train)
+#         # val_dataset = TensorDataset(X_val, y_val)
+#         # train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+#         # val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
+#         #
+#         # # Training loop
+#         # epochs = 40
+#         # train_losses = []
+#         # val_losses = []
+#         #
+#         # for epoch in range(epochs):
+#         #     model.train()
+#         #     train_loss = 0
+#         #
+#         #     for X_batch, y_batch in train_loader:
+#         #         X_batch, y_batch = X_batch.to(device), y_batch.to(device)
+#         #
+#         #         # Reservoir computation
+#         #         reservoir_state = []
+#         #         for x in X_batch:
+#         #             x = x.unsqueeze(0)  # Ensure x has a batch dimension
+#         #             res_state = torch.tanh(
+#         #                 W_in @ x.T + W_res @ torch.rand(reservoir_size, 1).to(device))
+#         #             reservoir_state.append(res_state.squeeze(1))
+#         #         reservoir_state = torch.stack(reservoir_state).to(device)
+#         #
+#         #         output = model(reservoir_state)
+#         #         loss = criterion(output, y_batch)
+#         #
+#         #         torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+#         #
+#         #         optimizer.zero_grad()
+#         #         loss.backward()
+#         #         optimizer.step()
+#         #
+#         #         train_loss += loss.item()
+#         #
+#         #     train_loss /= len(train_loader)
+#         #     train_losses.append(train_loss)
+#         #
+#         #     model.eval()
+#         #     val_loss = 0
+#         #     with torch.no_grad():
+#         #         for X_batch, y_batch in val_loader:
+#         #             X_batch, y_batch = X_batch.to(device), y_batch.to(device)
+#         #
+#         #             reservoir_state = []
+#         #             for x in X_batch:
+#         #                 x = x.unsqueeze(0)
+#         #                 res_state = torch.tanh(
+#         #                     W_in @ x.T + W_res @ torch.rand(reservoir_size, 1).to(device))
+#         #                 reservoir_state.append(res_state.squeeze(1))
+#         #             reservoir_state = torch.stack(reservoir_state).to(device)
+#         #
+#         #             output = model(reservoir_state)
+#         #             loss = criterion(output, y_batch)
+#         #             val_loss += loss.item()
+#         #
+#         #     val_loss /= len(val_loader)
+#         #     val_losses.append(val_loss)
+#         #     scheduler.step(val_loss)
+#         #
+#         #     print(
+#         #         f"Epoch {epoch + 1}/{epochs}, Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}")
+#         #
+#         # X_test, y_test = X_test.to(device), y_test.to(device)
+#         # model.eval()
+#         # with torch.no_grad():
+#         #     reservoir_state = []
+#         #     for x in X_test:
+#         #         x = x.unsqueeze(0)
+#         #         res_state = torch.tanh(
+#         #             W_in @ x.T + W_res @ torch.rand(reservoir_size, 1).to(device))
+#         #         reservoir_state.append(res_state.squeeze(1))
+#         #     reservoir_state = torch.stack(reservoir_state).to(device)
+#         #
+#         #     predictions = model(reservoir_state)
+#         #     test_loss = criterion(predictions, y_test)
+#         #     loses = []
+#         #     for i in range(len(predictions)):
+#         #         loses.append(criterion(predictions[i], y_test[i]))
+#         #     print(f"{min(loses):.4f}")
+#         #     ind = 0
+#         #     for i in range(len(loses)):
+#         #         if min(loses) == loses[i]: ind = i
+#         #
+#         # qu = int(round(len(datafra) * 0.1, 0))
+#         # print(2)
 
 
-        threshold = 4 * datafra['residuals'].std()
-        datafra['anomaly'] = datafra['residuals'] > threshold
+#         # .reshape(orig_shape)
+#         def make_prediction(input_values):
+
+#             input_values = st.session_state.scaler.transform(input_values)
+#             model.eval()
+#             with torch.no_grad():
+#                 input_tensor = torch.tensor(input_values, dtype=torch.float32).to(
+#                     st.session_state.device).unsqueeze(0)
+#                 reservoir_state = torch.tanh(
+#                     st.session_state.win @ input_tensor.T + st.session_state.wres @ torch.rand(
+#                         st.session_state.reser_size, 1).to(st.session_state.device))
+#                 reservoir_state = reservoir_state.T
+#                 reservoir_state = reservoir_state.unsqueeze(2)
+#                 prediction = model(reservoir_state).cpu().numpy()
+#             return prediction
+
+#         countr = (-len(datafra["y"].tolist()))
+#         vals = datafra["y"].tolist()[:2]
+#         for i in range(len(datafra["y"].tolist())):
+#             try:
+#                 new_sample = datafra["y"].tolist()[countr:countr+2]
+#                 new_sample = np.array(new_sample).reshape(-1, 1)
+#                 print(new_sample)
+#                 result = make_prediction(new_sample)
+#                 print("Prediction for new sample:", result)
+#                 for i in result.tolist()[0]:
+#                     vals.append(i)
+#                 countr += 40
+#             except: break
+#         for i in range(397):
+#             vals.pop()
+#         print(vals)
+#         datafra['NBEATSx'] = vals
+#         datafra['residuals'] = np.abs(datafra['y'] - datafra['NBEATSx'])
+
+
+#         threshold = 4 * datafra['residuals'].std()
+#         datafra['anomaly'] = datafra['residuals'] > threshold
 
 
 
-        st.session_state.datanom = datafra.drop(['unique_id', 'residuals'], axis=1)
-        if st.session_state.date_not_n == True:
-            st.session_state.datanom["ds"] = [i for i in range(1, len(st.session_state.datanom) + 1)]
-        print("preds", "-" * 100)
-        print(st.session_state.datanom)
+#         st.session_state.datanom = datafra.drop(['unique_id', 'residuals'], axis=1)
+#         if st.session_state.date_not_n == True:
+#             st.session_state.datanom["ds"] = [i for i in range(1, len(st.session_state.datanom) + 1)]
+#         print("preds", "-" * 100)
+#         print(st.session_state.datanom)
+
+
+def anomal(datafra, freqs):
+    if st.session_state.date_not_n:
+        start_date = pd.to_datetime('2024-01-01')
+        freqs = "D"
+        datafra['ds'] = start_date + pd.to_timedelta(datafra['ds'] - 1, freqs)
+
+    datafra['ds'] = pd.to_datetime(datafra['ds'])
+    datafra = datafra.drop_duplicates(subset=['ds'])
+    datafra = datafra.set_index('ds').asfreq(freqs)
+    datafra = datafra.reset_index()
+    datafra['y'] = datafra['y'].interpolate()
+    datafra["unique_id"] = [0 for i in range(1, len(datafra) + 1)]
+    print("s;kgfoshdisdifsdf")
+    print(datafra)
+
+    q = int(round(len(datafra) * 0.01, 0))
+
+    # fcst = NeuralForecast(
+    #     models=[
+    #         NBEATSx(h=len(datafra),
+    #                 input_size=14*q,
+    #                 # output_size=horizon,
+    #                 max_steps=20,
+    #                 scaler_type='standard',
+    #                 start_padding_enabled=True
+    #                 ),
+    #
+    #     ],
+    #     freq=freqs
+    # )
+
+
+    # Define and train the NBEATSx model
+    model = NeuralForecast(
+        models=[
+            NBEATSx(h=len(datafra),
+                    input_size=30 * q,
+                    # output_size=horizon,
+                    max_steps=100,
+                    scaler_type='standard',
+                    start_padding_enabled=True
+                    ),
+
+        ],
+        freq=freqs
+    )
+    model.fit(datafra)  # Use the entire dataset for training
+
+    # Generate predictions
+    predictions = model.predict(datafra.head(1))
+    print("preds", "-"*100)
+    print(predictions)
+    datafra['NBEATSx'] = predictions['NBEATSx']
+    datafra['residuals'] = np.abs(datafra['y'] - datafra['NBEATSx'])
+
+    # Set anomaly threshold (adjust based on domain knowledge)
+    threshold = 4 * datafra['residuals'].std()
+    datafra['anomaly'] = datafra['residuals'] > threshold
+
+    # # Plot actual, predicted values, and anomalies using plotly
+
+    st.session_state.datanom = datafra.drop(['unique_id', 'residuals'], axis=1)
+    if st.session_state.date_not_n == True:
+        st.session_state.datanom["ds"] = [i for i in range(1, len(st.session_state.datanom) + 1)]
+    print("preds", "-" * 100)
+    print(st.session_state.datanom)
+
 
 
 # if __name__ == "__main__":
