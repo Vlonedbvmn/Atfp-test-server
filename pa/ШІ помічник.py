@@ -1910,31 +1910,58 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        chr = go.Figure()
+                        if st.session_state.lang == "ukr":
+                            chr = go.Figure()
 
-                        chr.add_trace(go.Scatter(
-                            x=rest_of_data[st.session_state.date],
-                            y=rest_of_data[st.session_state.target],
-                            mode='lines',
-                            name='Дані',
-                            line=dict(color='blue')
-                        ))
+                            chr.add_trace(go.Scatter(
+                                x=rest_of_data[st.session_state.date],
+                                y=rest_of_data[st.session_state.target],
+                                mode='lines',
+                                name='Дані',
+                                line=dict(color='blue')
+                            ))
 
-                        chr.add_trace(go.Scatter(
-                            x=last_days[st.session_state.date],
-                            y=last_days[st.session_state.target],
-                            mode='lines',
-                            name='Прогноз',
-                            line=dict(color='red')
-                        ))
+                            chr.add_trace(go.Scatter(
+                                x=last_days[st.session_state.date],
+                                y=last_days[st.session_state.target],
+                                mode='lines',
+                                name='Прогноз',
+                                line=dict(color='red')
+                            ))
 
-                        chr.update_layout(
-                            xaxis_title='Дата',
-                            yaxis_title='Значення'
-                        )
-                        my_bar.progress(100, "Надаю відповідь")
-                        st.session_state.fig_b = chr
-                        st.session_state.dataai = pred2.rename(columns={"TimesNet": st.session_state.target}).drop(["unique_id"], axis=1)
+                            chr.update_layout(
+                                xaxis_title='Дата',
+                                yaxis_title='Значення'
+                            )
+                            st.session_state.fig_b = chr
+                            st.session_state.dataai = pred2.rename(columns={"TimesNet": st.session_state.target}).drop(["unique_id"], axis=1)
+                            my_bar.progress(100, "Надаю відповідь")
+                        else:
+                            chr = go.Figure()
+
+                            chr.add_trace(go.Scatter(
+                                x=rest_of_data[st.session_state.date],
+                                y=rest_of_data[st.session_state.target],
+                                mode='lines',
+                                name='Data',
+                                line=dict(color='blue')
+                            ))
+
+                            chr.add_trace(go.Scatter(
+                                x=last_days[st.session_state.date],
+                                y=last_days[st.session_state.target],
+                                mode='lines',
+                                name='Forecast',
+                                line=dict(color='red')
+                            ))
+
+                            chr.update_layout(
+                                xaxis_title='Date',
+                                yaxis_title='Value'
+                            )
+                            st.session_state.fig_b = chr
+                            st.session_state.dataai = pred2.rename(columns={"TimesNet": st.session_state.target}).drop(["unique_id"], axis=1)
+                            my_bar.progress(100, "Giving the answer")
                     if key_with_min_value == "TimeMixer":
                         fcst = NeuralForecast(
                             models=[
@@ -1981,31 +2008,58 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        chr = go.Figure()
+                       if st.session_state.lang == "ukr":
+                            chr = go.Figure()
 
-                        chr.add_trace(go.Scatter(
-                            x=rest_of_data[st.session_state.date],
-                            y=rest_of_data[st.session_state.target],
-                            mode='lines',
-                            name='Дані',
-                            line=dict(color='blue')
-                        ))
+                            chr.add_trace(go.Scatter(
+                                x=rest_of_data[st.session_state.date],
+                                y=rest_of_data[st.session_state.target],
+                                mode='lines',
+                                name='Дані',
+                                line=dict(color='blue')
+                            ))
 
-                        chr.add_trace(go.Scatter(
-                            x=last_days[st.session_state.date],
-                            y=last_days[st.session_state.target],
-                            mode='lines',
-                            name='Прогноз',
-                            line=dict(color='red')
-                        ))
+                            chr.add_trace(go.Scatter(
+                                x=last_days[st.session_state.date],
+                                y=last_days[st.session_state.target],
+                                mode='lines',
+                                name='Прогноз',
+                                line=dict(color='red')
+                            ))
 
-                        chr.update_layout(
-                            xaxis_title='Дата',
-                            yaxis_title='Значення'
-                        )
-                        my_bar.progress(100, "Надаю відповідь")
-                        st.session_state.fig_b = chr
-                        st.session_state.dataai = pred2.rename(columns={"TimeMixer": st.session_state.target}).drop(["unique_id"], axis=1)
+                            chr.update_layout(
+                                xaxis_title='Дата',
+                                yaxis_title='Значення'
+                            )
+                            st.session_state.fig_b = chr
+                            st.session_state.dataai = pred2.rename(columns={"TimeMixer": st.session_state.target}).drop(["unique_id"], axis=1)
+                            my_bar.progress(100, "Надаю відповідь")
+                        else:
+                            chr = go.Figure()
+
+                            chr.add_trace(go.Scatter(
+                                x=rest_of_data[st.session_state.date],
+                                y=rest_of_data[st.session_state.target],
+                                mode='lines',
+                                name='Data',
+                                line=dict(color='blue')
+                            ))
+
+                            chr.add_trace(go.Scatter(
+                                x=last_days[st.session_state.date],
+                                y=last_days[st.session_state.target],
+                                mode='lines',
+                                name='Forecast',
+                                line=dict(color='red')
+                            ))
+
+                            chr.update_layout(
+                                xaxis_title='Date',
+                                yaxis_title='Value'
+                            )
+                            st.session_state.fig_b = chr
+                            st.session_state.dataai = pred2.rename(columns={"TimeMixer": st.session_state.target}).drop(["unique_id"], axis=1)
+                            my_bar.progress(100, "Giving the answer")
             if mdl == "None":
                 if hrz == "None":
                     if st.session_state.lang == "ukr":
