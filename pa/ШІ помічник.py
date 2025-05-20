@@ -133,8 +133,12 @@ def response_1(chr):
 
 
 def response_generator(datafra, res):
-    my_bar = st.progress(0, text="Статус відповіді")
-    my_bar.progress(33, "Запит отримано")
+    if st.session_state.lang == "ukr":
+        my_bar = st.progress(0, text="Статус відповіді")
+        my_bar.progress(33, "Запит отримано")
+    else:
+        my_bar = st.progress(0, text="Answer status")
+        my_bar.progress(33, "Got your prompt")
     frd = st.session_state.freq
     st.session_state.fig_b = None
     st.session_state.dataai = None
@@ -230,13 +234,22 @@ def response_generator(datafra, res):
         q = int(round(len(datafra) * 0.01, 0))
 
         if tsk == "Forecasting":
-            my_bar.progress(50, "Модель навчається")
-            st.session_state.m1 = "Ось табличка з данми Вашого прогнозу"
-            st.session_state.m2 = "Та також графік Вашого прогнозу. Синім зображені дані до, а червоним зображено сам прогноз"
-            response = "Дякую за Ваш запит, ось результати прогнозування"
+            if st.session_state.lang == "ukr":
+                my_bar.progress(50, "Модель навчається")
+                st.session_state.m1 = "Ось табличка з данми Вашого прогнозу"
+                st.session_state.m2 = "Та також графік Вашого прогнозу. Синім зображені дані до, а червоним зображено сам прогноз"
+                response = "Дякую за Ваш запит, ось результати прогнозування"
+            else:
+                my_bar.progress(50, "Model is training")
+                st.session_state.m1 = "Here is the table with your forecast results"
+                st.session_state.m2 = "And also a plot of your forecast. Blue shows the data before, and red shows the forecast itself"
+                response = "Thank you for your prompt, here are the forecast results"
             if mdl == "KAN":
                 if hrz == "None":
-                    response = "Уточніть на скільки вперед робити прогноз"
+                    if st.session_state.lang == "ukr":
+                        response = "Уточніть на скільки вперед робити прогноз"
+                    else:
+                        response = "Specify how far in advance to make the forecast"
                 else:
                     if inp_sz == "None":
                         fcst = NeuralForecast(
@@ -387,7 +400,10 @@ def response_generator(datafra, res):
                         st.session_state.dataai = pred2.rename(columns={"KAN": st.session_state.target}).drop(["unique_id"], axis=1)
             if mdl == "NBEATSx":
                 if hrz == "None":
-                    response = "Уточніть на скільки вперед робити прогноз"
+                    if st.session_state.lang == "ukr":
+                        response = "Уточніть на скільки вперед робити прогноз"
+                    else:
+                        response = "Specify how far in advance to make the forecast"
                 else:
                     if inp_sz == "None":
                         fcst = NeuralForecast(
@@ -536,7 +552,10 @@ def response_generator(datafra, res):
                         st.session_state.dataai = pred2.rename(columns={"NBEATSx": st.session_state.target}).drop(["unique_id"], axis=1)
             if mdl == "TimesNet":
                 if hrz == "None":
-                    response = "Уточніть на скільки вперед робити прогноз"
+                    if st.session_state.lang == "ukr":
+                        response = "Уточніть на скільки вперед робити прогноз"
+                    else:
+                        response = "Specify how far in advance to make the forecast"
                 else:
                     if inp_sz == "None":
                         fcst = NeuralForecast(
@@ -687,7 +706,10 @@ def response_generator(datafra, res):
                         st.session_state.dataai = pred2.rename(columns={"TimesNet": st.session_state.target}).drop(["unique_id"], axis=1)
             if mdl == "TimeMixer":
                 if hrz == "None":
-                    response = "Уточніть на скільки вперед робити прогноз"
+                    if st.session_state.lang == "ukr":
+                        response = "Уточніть на скільки вперед робити прогноз"
+                    else:
+                        response = "Specify how far in advance to make the forecast"
                 else:
                     if inp_sz == "None":
                         fcst = NeuralForecast(
@@ -837,7 +859,10 @@ def response_generator(datafra, res):
                         st.session_state.dataai = pred2.rename(columns={"TimeMixer": st.session_state.target}).drop(["unique_id"], axis=1)
             if mdl == "SNN":
                 if hrz == "None":
-                    response = "Уточніть на скільки вперед робити прогноз"
+                    if st.session_state.lang == "ukr":
+                        response = "Уточніть на скільки вперед робити прогноз"
+                    else:
+                        response = "Specify how far in advance to make the forecast"
                 else:
                     if inp_sz == "None":
                         print("jhgut")
@@ -1983,7 +2008,11 @@ def response_generator(datafra, res):
                         st.session_state.dataai = pred2.rename(columns={"TimeMixer": st.session_state.target}).drop(["unique_id"], axis=1)
             if mdl == "None":
                 if hrz == "None":
-                    response = "Уточніть на скільки вперед робити прогноз"
+                    if st.session_state.lang == "ukr":
+                        response = "Уточніть на скільки вперед робити прогноз"
+                    else:
+                        response = "Specify how far in advance to make the forecast"
+                        
                 else:
                     if inp_sz == "None":
                         fcst = NeuralForecast(
@@ -2030,32 +2059,58 @@ def response_generator(datafra, res):
                         last_days = predis.tail(int(hrz))
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
+                        if st.session_state.lang == "ukr":
+                            chr = go.Figure()
 
-                        chr = go.Figure()
+                            chr.add_trace(go.Scatter(
+                                x=rest_of_data[st.session_state.date],
+                                y=rest_of_data[st.session_state.target],
+                                mode='lines',
+                                name='Дані',
+                                line=dict(color='blue')
+                            ))
 
-                        chr.add_trace(go.Scatter(
-                            x=rest_of_data[st.session_state.date],
-                            y=rest_of_data[st.session_state.target],
-                            mode='lines',
-                            name='Дані',
-                            line=dict(color='blue')
-                        ))
+                            chr.add_trace(go.Scatter(
+                                x=last_days[st.session_state.date],
+                                y=last_days[st.session_state.target],
+                                mode='lines',
+                                name='Прогноз',
+                                line=dict(color='red')
+                            ))
 
-                        chr.add_trace(go.Scatter(
-                            x=last_days[st.session_state.date],
-                            y=last_days[st.session_state.target],
-                            mode='lines',
-                            name='Прогноз',
-                            line=dict(color='red')
-                        ))
+                            chr.update_layout(
+                                xaxis_title='Дата',
+                                yaxis_title='Значення'
+                            )
+                            st.session_state.fig_b = chr
+                            st.session_state.dataai = pred2.rename(columns={"NBEATSx": st.session_state.target}).drop(["unique_id"], axis=1)
+                            my_bar.progress(100, "Надаю відповідь")
+                        else:
+                            chr = go.Figure()
 
-                        chr.update_layout(
-                            xaxis_title='Дата',
-                            yaxis_title='Значення'
-                        )
-                        st.session_state.fig_b = chr
-                        st.session_state.dataai = pred2.rename(columns={"NBEATSx": st.session_state.target}).drop(["unique_id"], axis=1)
-                        my_bar.progress(100, "Надаю відповідь")
+                            chr.add_trace(go.Scatter(
+                                x=rest_of_data[st.session_state.date],
+                                y=rest_of_data[st.session_state.target],
+                                mode='lines',
+                                name='Data',
+                                line=dict(color='blue')
+                            ))
+
+                            chr.add_trace(go.Scatter(
+                                x=last_days[st.session_state.date],
+                                y=last_days[st.session_state.target],
+                                mode='lines',
+                                name='Forecast',
+                                line=dict(color='red')
+                            ))
+
+                            chr.update_layout(
+                                xaxis_title='Date',
+                                yaxis_title='Value'
+                            )
+                            st.session_state.fig_b = chr
+                            st.session_state.dataai = pred2.rename(columns={"NBEATSx": st.session_state.target}).drop(["unique_id"], axis=1)
+                            my_bar.progress(100, "Giving the answer")
                     else:
                         fcst = NeuralForecast(
                             models=[
@@ -2099,36 +2154,69 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                        chr = go.Figure()
+                        if st.session_state.lang == "ukr":
+                            chr = go.Figure()
 
-                        chr.add_trace(go.Scatter(
-                            x=rest_of_data[st.session_state.date],
-                            y=rest_of_data[st.session_state.target],
-                            mode='lines',
-                            name='Дані',
-                            line=dict(color='blue')
-                        ))
+                            chr.add_trace(go.Scatter(
+                                x=rest_of_data[st.session_state.date],
+                                y=rest_of_data[st.session_state.target],
+                                mode='lines',
+                                name='Дані',
+                                line=dict(color='blue')
+                            ))
 
-                        chr.add_trace(go.Scatter(
-                            x=last_days[st.session_state.date],
-                            y=last_days[st.session_state.target],
-                            mode='lines',
-                            name='Прогноз',
-                            line=dict(color='red')
-                        ))
+                            chr.add_trace(go.Scatter(
+                                x=last_days[st.session_state.date],
+                                y=last_days[st.session_state.target],
+                                mode='lines',
+                                name='Прогноз',
+                                line=dict(color='red')
+                            ))
 
-                        chr.update_layout(
-                            xaxis_title='Дата',
-                            yaxis_title='Значення'
-                        )
-                        my_bar.progress(100, "Надаю відповідь")
-                        st.session_state.fig_b = chr
-                        st.session_state.dataai = pred2.rename.rename(columns={"NBEATSx": st.session_state.target}).drop(["unique_id"], axis=1)
+                            chr.update_layout(
+                                xaxis_title='Дата',
+                                yaxis_title='Значення'
+                            )
+                            st.session_state.fig_b = chr
+                            st.session_state.dataai = pred2.rename(columns={"NBEATSx": st.session_state.target}).drop(["unique_id"], axis=1)
+                            my_bar.progress(100, "Надаю відповідь")
+                        else:
+                            chr = go.Figure()
+
+                            chr.add_trace(go.Scatter(
+                                x=rest_of_data[st.session_state.date],
+                                y=rest_of_data[st.session_state.target],
+                                mode='lines',
+                                name='Data',
+                                line=dict(color='blue')
+                            ))
+
+                            chr.add_trace(go.Scatter(
+                                x=last_days[st.session_state.date],
+                                y=last_days[st.session_state.target],
+                                mode='lines',
+                                name='Forecast',
+                                line=dict(color='red')
+                            ))
+
+                            chr.update_layout(
+                                xaxis_title='Date',
+                                yaxis_title='Value'
+                            )
+                            st.session_state.fig_b = chr
+                            st.session_state.dataai = pred2.rename(columns={"NBEATSx": st.session_state.target}).drop(["unique_id"], axis=1)
+                            my_bar.progress(100, "Giving the answer")
         elif tsk == "Anomaly":
-            my_bar.progress(50, "Модель навчається проведенню тестів на аномалії")
-            st.session_state.m1 = "Ось табличка з даними після проведення тестування на аномалії"
-            st.session_state.m2 = "Та також графік Вашого прогнозу. Синім зображені Ваші дані, зеленим - прогнозовані а червоним крапками місця з аномаліями"
-            response = "Дякую за Ваш запит, ось резульати проведення тестування на аномалії"
+            if st.session_state.lang == "ukr":
+                my_bar.progress(50, "Модель навчається проведенню тестів на аномалії")
+                st.session_state.m1 = "Ось табличка з даними після проведення тестування на аномалії"
+                st.session_state.m2 = "Та також графік Вашого прогнозу. Синім зображені Ваші дані, зеленим - прогнозовані а червоним крапками місця з аномаліями"
+                response = "Дякую за Ваш запит, ось резульати проведення тестування на аномалії"
+            else:
+                my_bar.progress(50, "Model is analyzing on anomalies")
+                st.session_state.m1 = "Here is the data table after testing for anomalies"
+                st.session_state.m2 = "And also a graph of your forecast. Blue shows your data, green shows the forecast, and red dots show areas with anomalies."
+                response = "Thanks for your prompt, here is the result"
             model = NeuralForecast(
                 models=[
                     NBEATSx(h=len(datafra),
@@ -2153,30 +2241,56 @@ def response_generator(datafra, res):
             datafra['anomaly'] = datafra['residuals'] > threshold
             if st.session_state.date_not_n == True:
                 datafra["ds"] = [i for i in range(1, len(datafra) + 1)]
-            fig = go.Figure()
+            if st.session_state.lang == "ukr":
+                fig = go.Figure()
 
-            fig.add_trace(go.Scatter(x=datafra['ds'], y=datafra['y'], mode='lines', name='Дані', line=dict(color='blue')))
+                fig.add_trace(go.Scatter(x=datafra['ds'], y=datafra['y'], mode='lines', name='Дані', line=dict(color='blue')))
 
-            fig.add_trace(go.Scatter(x=datafra['ds'], y=datafra['NBEATSx'], mode='lines', name='Прогнозовано',
-                                     line=dict(color='green')))
-
-
-            anomalies = datafra[datafra['anomaly'] == True]
-            fig.add_trace(go.Scatter(x=anomalies['ds'], y=anomalies['y'], mode='markers', name='Аномалія',
-                                     marker=dict(color='red', size=8)))
+                fig.add_trace(go.Scatter(x=datafra['ds'], y=datafra['NBEATSx'], mode='lines', name='Прогнозовано',
+                                        line=dict(color='green')))
 
 
-            fig.update_layout(
-                title='Графік аномалій',
-                xaxis_title='Дата',
-                yaxis_title='Значення',
-                template='plotly_white'
-            )
-            my_bar.progress(100, "Надаю відповідь")
-            datafra = datafra.rename(columns={"NBEATSx": "preds"})
-            # Show the plot
-            st.session_state.fig_b = fig
-            st.session_state.dataai = datafra.drop(['unique_id', 'residuals'], axis=1)
+                anomalies = datafra[datafra['anomaly'] == True]
+                fig.add_trace(go.Scatter(x=anomalies['ds'], y=anomalies['y'], mode='markers', name='Аномалія',
+                                        marker=dict(color='red', size=8)))
+
+                
+                fig.update_layout(
+                    title='Графік аномалій',
+                    xaxis_title='Дата',
+                    yaxis_title='Значення',
+                    template='plotly_white'
+                )
+                my_bar.progress(100, "Надаю відповідь")
+                datafra = datafra.rename(columns={"NBEATSx": "preds"})
+                # Show the plot
+                st.session_state.fig_b = fig
+                st.session_state.dataai = datafra.drop(['unique_id', 'residuals'], axis=1)
+            else:
+                fig = go.Figure()
+
+                fig.add_trace(go.Scatter(x=datafra['ds'], y=datafra['y'], mode='lines', name='Data', line=dict(color='blue')))
+
+                fig.add_trace(go.Scatter(x=datafra['ds'], y=datafra['NBEATSx'], mode='lines', name='Forecasted',
+                                        line=dict(color='green')))
+
+
+                anomalies = datafra[datafra['anomaly'] == True]
+                fig.add_trace(go.Scatter(x=anomalies['ds'], y=anomalies['y'], mode='markers', name='Anomaly',
+                                        marker=dict(color='red', size=8)))
+
+                
+                fig.update_layout(
+                    title='Anomaly plot',
+                    xaxis_title='Date',
+                    yaxis_title='Value',
+                    template='plotly_white'
+                )
+                my_bar.progress(100, "Giving the answer")
+                datafra = datafra.rename(columns={"NBEATSx": "preds"})
+                # Show the plot
+                st.session_state.fig_b = fig
+                st.session_state.dataai = datafra.drop(['unique_id', 'residuals'], axis=1)
         elif tsk == "None":
             # chatco = client.chat.completions.create(
             #     messages=[
@@ -2188,10 +2302,16 @@ def response_generator(datafra, res):
             #     model="llama-3.1-70b-versatile"
             # )
             # response = chatco.choices[0].message.content
-            response = "Вибачте, але здається що Ви не вказали, що конкретно хочете робити"
+            if st.session_state.lang == "ukr":
+                response = "Вибачте, але здається що Ви не вказали, що конкретно хочете робити"
+            else:
+                response = "Sorry, but it seems like, you didn't really mention what you want to do"
 
     except: pass
-    my_bar.progress(100, "Надаю відповідь")
+    if st.session_state.lang == "ukr":
+        my_bar.progress(100, "Надаю відповідь")
+    else:
+        my_bar.progress(100, "Giving the answer")
     my_bar.empty()
     for word in response.split():
                 yield word + " "
