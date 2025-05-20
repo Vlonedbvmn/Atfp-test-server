@@ -648,7 +648,7 @@ if st.session_state.df is not None:
             print(datafra)
             col3, col4 = st.columns(2)
             with col3:
-                with st.expander("Подивитись тест даних на аномалії:"):
+                with st.expander("Check forecast results:"):
                     st.write(st.session_state.datanom)
             with col4:
                 st.download_button(
@@ -690,7 +690,7 @@ if st.session_state.df is not None:
 
 
             fig.update_layout(
-                title='Графік аномалій',
+                title='Anomaly plot',
                 xaxis_title='Date',
                 yaxis_title='Values',
                 template='plotly_white'
