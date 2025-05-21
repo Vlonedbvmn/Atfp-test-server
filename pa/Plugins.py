@@ -319,7 +319,7 @@ def mk_fcst(datafre, ticker, models_dir, horizon, tsk="stock"):
         for i in result.tolist()[0]:
             if counterr < horizon:
                 pr.append(datafre["y"].tolist()[-(horizon - counterr + 1)])
-                h.append(datafre[-horizon + counterr]["y"].tolist()[-(horizon - counterr + 1)])
+                h.append(datafre["y"].tolist()[-(horizon - counterr + 1)])
                 counterr += 1
             else:
                 break
