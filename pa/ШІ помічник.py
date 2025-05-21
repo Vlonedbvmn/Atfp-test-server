@@ -2008,7 +2008,7 @@ def response_generator(datafra, res):
                         rest_of_data = predis.iloc[:-int(hrz)]
                         print(last_days)
 
-                       if st.session_state.lang == "ukr":
+                        if st.session_state.lang == "ukr":
                             chr = go.Figure()
 
                             chr.add_trace(go.Scatter(
