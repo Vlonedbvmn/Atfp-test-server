@@ -24,6 +24,7 @@ import os
 from streamlit_pills import pills
 import io
 import random
+import requests
 
 conn = st.connection('mysql', type='sql')
 
@@ -95,7 +96,6 @@ def to_excel(df):
     return processed_data
 
 
-
 def mk_fcst_plug(datafre, inp, horizon, sclx, scly, model_st):
     WINDOW_SIZE = inp
     HORIZON = horizon
@@ -113,9 +113,9 @@ def mk_fcst_plug(datafre, inp, horizon, sclx, scly, model_st):
     dates = df['ds'].values
     N = len(series)
 
-
     scaler_X = pickle.loads(scly)
     scaler_y = pickle.loads(sclx)
+
     # Xtr_s = scaler_X.transform(X_tr)
     # Xvl_s = scaler_X.transform(X_vl)
     # ytr_s = scaler_y.transform(y_tr)
@@ -168,7 +168,6 @@ def mk_fcst_plug(datafre, inp, horizon, sclx, scly, model_st):
     model = SNNRegression(WINDOW_SIZE, HORIZON).to(DEVICE)
     model.load_state_dict(state_dict)
 
-
     def make_prediction(input_values):
         print("Start")
         input_values = scaler_X.transform(input_values)
@@ -211,15 +210,6 @@ def mk_fcst_plug(datafre, inp, horizon, sclx, scly, model_st):
     })
 
 
-
-
-
-
-
-
-
-
-
 def mk_fcst(datafre, ticker, models_dir, horizon, tsk="stock"):
     class SNNRegression(nn.Module):
         def __init__(self, reservoir_size, output_size):
@@ -260,34 +250,44 @@ def mk_fcst(datafre, ticker, models_dir, horizon, tsk="stock"):
             out = self.tcn2(mem2).squeeze(2)
             return out
 
-
     if tsk == "cryp":
-        model_filename = os.path.join(models_dir, f"{ticker}-USD_intraday_model.pth")
-        reservoir_filename = os.path.join(models_dir, f"{ticker}-USD_intraday_reservoir.pth")
-        scaler_filename = os.path.join(models_dir, f"{ticker}-USD_intraday_scaler.pkl")
+        model_stat = requests.get(f'https://sbss.com.ua/strmlt/crypto_models/{ticker}-USD_intraday_model.pth')
+        reserv = requests.get(f'https://sbss.com.ua/strmlt/crypto_models/{ticker}-USD_intraday_reservoir.pth')
+        scaled = requests.get(f'https://sbss.com.ua/strmlt/crypto_models/{ticker}-USD_intraday_scaler.pkl')
+
     else:
-        model_filename = os.path.join(models_dir, f"{ticker}_daily_model.pth")
-        reservoir_filename = os.path.join(models_dir, f"{ticker}_daily_reservoir.pth")
-        scaler_filename = os.path.join(models_dir, f"{ticker}_daily_scaler.pkl")
+        model_stat = requests.get(f'https://sbss.com.ua/strmlt/models/{ticker}_daily_model.pth')
+        reserv = requests.get(f'https://sbss.com.ua/strmlt/models/{ticker}_daily_reservoir.pth')
+        scaled = requests.get(f'https://sbss.com.ua/strmlt/models/{ticker}_daily_scaler.pkl')
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-
-    reservoir_data = torch.load(reservoir_filename, map_location=device)
+    buffer = io.BytesIO(reserv.content)
+    buffer.seek(0)
+    reservoir_data = torch.load(buffer, map_location=device)
     W_in = reservoir_data["W_in"]
     W_res = reservoir_data["W_res"]
     reservoir_size = reservoir_data["reservoir_size"]
 
 
+
+    buffer = io.BytesIO(model_stat.content)  # wrap in a BytesIO again
+    buffer.seek(0)
+
+    state_dict = torch.load(buffer, map_location=device)
+
     output_dim = 30
-
-
     model = SNNRegression(reservoir_size, output_dim).to(device)
-    model_state = torch.load(model_filename, map_location=device)
-    model.load_state_dict(model_state)
+    # model_state = torch.load(model_stat.content, map_location=device)
+    model.load_state_dict(state_dict)
 
 
-    with open(scaler_filename, "rb") as f:
-        scaler = pickle.load(f)
+
+
+
+
+
+    scaler = pickle.load(io.BytesIO(scaled.content))
 
     print("Model, reservoir parameters, and scaler loaded successfully.")
 
@@ -306,7 +306,7 @@ def mk_fcst(datafre, ticker, models_dir, horizon, tsk="stock"):
 
     print(datafre)
     qu = int(round(len(datafre) * 0.1, 0))
-    h = datafre[-(qu+horizon):]["y"].tolist()
+    h = datafre[-(qu + horizon):]["y"].tolist()
     new_sample = datafre["y"].tolist()[-50:]
     new_sample = np.array(new_sample).reshape(-1, 1)
 
@@ -318,11 +318,13 @@ def mk_fcst(datafre, ticker, models_dir, horizon, tsk="stock"):
     try:
         for i in result.tolist()[0]:
             if counterr < horizon:
-                pr.append(datafre["y"].tolist()[-(horizon-counterr+1)])
-                h.append(datafre[-horizon+counterr]["y"].tolist()[-(horizon-counterr+1)])
+                pr.append(datafre["y"].tolist()[-(horizon - counterr + 1)])
+                h.append(datafre[-horizon + counterr]["y"].tolist()[-(horizon - counterr + 1)])
                 counterr += 1
-            else: break
-    except: pass
+            else:
+                break
+    except:
+        pass
     # qu = int(round(len(datafre) * 0.1, 0))
     # h = datafre[-qu:]["y"].tolist()
     # new_sample = datafre["y"].tolist()[-50:]
@@ -387,52 +389,44 @@ if st.session_state.df is not None:
             st.title("Плагіни")
 
         plug = option_menu("Оберіть категорію плагінів для прогнозування",
-                            ["Stock price", "Crypto", "Your plugins", "Add new"],
-                            # icons=['gear', 'gear', 'gear', 'gear', 'gear', 'gear'],
-                            menu_icon="no",
-                            orientation="horizontal")
+                           ["Stock price", "Crypto", "Your plugins", "Add new"],
+                           # icons=['gear', 'gear', 'gear', 'gear', 'gear', 'gear'],
+                           menu_icon="no",
+                           orientation="horizontal")
     else:
         with st.container():
             st.title("Plugins")
 
         plug = option_menu("Choose forecasting plugin category",
-                            ["Stock price", "Crypto", "Your plugins", "Add new"],
-                            # icons=['gear', 'gear', 'gear', 'gear', 'gear', 'gear'],
-                            menu_icon="no",
-                            orientation="horizontal")
+                           ["Stock price", "Crypto", "Your plugins", "Add new"],
+                           # icons=['gear', 'gear', 'gear', 'gear', 'gear', 'gear'],
+                           menu_icon="no",
+                           orientation="horizontal")
 
     # try:
     if plug == "Stock price":
         if st.session_state.lang == "ukr":
             st.markdown("## Плагіни stock price")
-            folder_path = 'pa/models/'
-
-            pth_files = glob.glob(os.path.join(folder_path, '*.pth'))
-            print(f"Found {len(pth_files)} CSV files.")
+            # folder_path = 'pa/models/'
+            #
+            # pth_files = glob.glob(os.path.join(folder_path, '*.pth'))
+            # print(f"Found {len(pth_files)} CSV files.")
             # file_list = file_list[:5]
-            ticks = []
-            for file in pth_files:
-                # Extract ticker symbol from filename (assuming filename like TICKER.csv)
-                # print(file.replace("\\", "/"))
-                # # fi = pd.read_csv(file.replace("\\", "/"))
-                # # fi['Date'] = [i for i in range(1, len(fi) + 1)]
-                # ticker = os.path.splitext(os.path.basename(file.replace("\\", "/")))[0]
-                if file.split("_")[0].split("/")[-1] not in ticks:
-                    ticks.append(file.split("_")[0].split("/")[-1])
+            ticks = ['AAPL', 'ABBV', 'ABT', 'ACN', 'ADBE', 'ADP', 'AMGN', 'AMZN', 'AON', 'AVGO', 'BAC', 'BA', 'BKNG', 'BK', 'BLK', 'BRK', 'BRK', 'CAT', 'CB', 'CI', 'CMCSA', 'COP', 'COST', 'CRM', 'CSCO', 'CVS', 'CVX', 'C', 'DD', 'DE', 'DHR', 'DIS', 'D', 'ECL', 'EMR', 'EQIX', 'FIS', 'FMC', 'GD', 'GILD', 'GOOGL', 'GOOG', 'GS', 'HD', 'HON', 'IBM', 'ICE', 'INTC', 'ITW', 'JNJ', 'JPM', 'KHC', 'KO', 'LIN', 'LLY', 'LOW', 'LUV', 'MA', 'MCD', 'MDT', 'META', 'MET', 'MMM', 'MO', 'MRK', 'MSFT', 'NEE', 'NFLX', 'NKE', 'NOW', 'NVDA', 'ORCL', 'PFE', 'PGR', 'PG', 'PLD', 'PSA', 'PYPL', 'QCOM', 'RTX', 'SBUX', 'SCHW', 'SLB', 'SPGI', 'SYF', 'SYK', 'TGT', 'TMO', 'TXN', 'T', 'UNH', 'UNP', 'UPS', 'USB', 'VLO', 'VZ', 'V', 'WBA', 'WMT', 'XOM', 'ZTS']
+
             selection = pills("Тикери", sorted(ticks))
             if selection is not None:
                 st.markdown(f"## Ви обрали плагін: {selection}")
-                with open(f'pa/models/{selection}_explanation_ukr.txt', 'r') as filee:
-                    content = filee.read()
-                    print(content)
-                    st.write(content)
+                r = requests.get(f'https://sbss.com.ua/strmlt/models/{selection}_explanation_eng.txt')
+                text = r.text
+                st.write(text)
                 horizon = st.select_slider(
                     "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
                     options=[i for i in range(1, 31)],
                     key="one11"
                 )
                 st.button(label="Зробити прогноз", key="kan", on_click=mk_fcst,
-                        args=(ds_for_pred, selection, "pa/models", horizon))
+                          args=(ds_for_pred, selection, "pa/models", horizon))
                 st.divider()
                 st.markdown(f"### Результати прогнозу")
                 if st.session_state.predicted4 is not None:
@@ -460,11 +454,13 @@ if st.session_state.df is not None:
                     st.markdown("# ")
                     if st.session_state.date_not_n == True:
                         st.session_state.predicted[st.session_state.date] = [i for i in
-                                                                            range(1, len(st.session_state.predicted3) + 1)]
+                                                                             range(1,
+                                                                                   len(st.session_state.predicted3) + 1)]
                     else:
                         pass
                     last_days = st.session_state.predicted3.tail(horizon)
-                    last_days[st.session_state.target] = [x * random.uniform(0.9, 1.1) for x in last_days[st.session_state.target].tolist()]
+                    last_days[st.session_state.target] = [x * random.uniform(0.9, 1.1) for x in
+                                                          last_days[st.session_state.target].tolist()]
                     rest_of_data = st.session_state.predicted3.iloc[:-horizon]
 
                     val = len(last_days)
@@ -507,8 +503,8 @@ if st.session_state.df is not None:
                         #     line=dict(color='green')
                         # ))
                         q50 = last_days[st.session_state.target][:(slid)]
-                        lower_forecast = q50 / 1.2 
-                        upper_forecast = q50 * 1.2  
+                        lower_forecast = q50 / 1.2
+                        upper_forecast = q50 * 1.2
                         if lower_forecast is not None:
                             max_value = max(upper_forecast.tolist()) + 100
                             min_value = min(lower_forecast.tolist()) - 100
@@ -517,22 +513,20 @@ if st.session_state.df is not None:
                             x=last_days[st.session_state.date][:(slid)],
                             y=upper_forecast,
                             mode='lines',
-                            line=dict(color='rgba(0,128,0,0)'), 
+                            line=dict(color='rgba(0,128,0,0)'),
                             showlegend=False,
                             hoverinfo='skip'
                         ))
-
 
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
                             y=lower_forecast,
                             mode='lines',
-                            fill='tonexty',  
-                            fillcolor='rgba(0,128,0,0.2)',  
-                            line=dict(color='rgba(0,128,0,0)'),  
+                            fill='tonexty',
+                            fillcolor='rgba(0,128,0,0.2)',
+                            line=dict(color='rgba(0,128,0,0)'),
                             name='Діапазон можливих значень прогнозу'
                         ))
-
 
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
@@ -547,15 +541,12 @@ if st.session_state.df is not None:
                             # yaxis_title='Значення',
                             yaxis=dict(
                                 # range=[min_value, max_value],
-                                title='Спрогнозовані значення' 
+                                title='Спрогнозовані значення'
                             ),
-                            title="Графік прогнозу",  
+                            title="Графік прогнозу",
                         )
 
-
                         st.plotly_chart(st.session_state.plotp2, use_container_width=True)
-
-
 
                         st.session_state.bp2 = go.Figure()
 
@@ -566,7 +557,6 @@ if st.session_state.df is not None:
                             marker_color='green'
                         ))
 
-
                         st.session_state.bp2.update_layout(
                             title='Барплот прогнозу',
                             xaxis_title='Дата',
@@ -574,39 +564,32 @@ if st.session_state.df is not None:
                             template='plotly_white'
                         )
 
-
-        
                         st.plotly_chart(st.session_state.bp2, use_container_width=True)
         else:
             st.markdown("## Stock price plugins")
-            folder_path = 'pa/models/'
-
-            pth_files = glob.glob(os.path.join(folder_path, '*.pth'))
-            print(f"Found {len(pth_files)} CSV files.")
             # file_list = file_list[:5]
-            ticks = []
-            for file in pth_files:
-                # Extract ticker symbol from filename (assuming filename like TICKER.csv)
-                # print(file.replace("\\", "/"))
-                # # fi = pd.read_csv(file.replace("\\", "/"))
-                # # fi['Date'] = [i for i in range(1, len(fi) + 1)]
-                # ticker = os.path.splitext(os.path.basename(file.replace("\\", "/")))[0]
-                if file.split("_")[0].split("/")[-1] not in ticks:
-                    ticks.append(file.split("_")[0].split("/")[-1])
+            ticks = ['AAPL', 'ABBV', 'ABT', 'ACN', 'ADBE', 'ADP', 'AMGN', 'AMZN', 'AON', 'AVGO', 'BAC', 'BA', 'BKNG',
+                     'BK', 'BLK', 'BRK', 'BRK', 'CAT', 'CB', 'CI', 'CMCSA', 'COP', 'COST', 'CRM', 'CSCO', 'CVS', 'CVX',
+                     'C', 'DD', 'DE', 'DHR', 'DIS', 'D', 'ECL', 'EMR', 'EQIX', 'FIS', 'FMC', 'GD', 'GILD', 'GOOGL',
+                     'GOOG', 'GS', 'HD', 'HON', 'IBM', 'ICE', 'INTC', 'ITW', 'JNJ', 'JPM', 'KHC', 'KO', 'LIN', 'LLY',
+                     'LOW', 'LUV', 'MA', 'MCD', 'MDT', 'META', 'MET', 'MMM', 'MO', 'MRK', 'MSFT', 'NEE', 'NFLX', 'NKE',
+                     'NOW', 'NVDA', 'ORCL', 'PFE', 'PGR', 'PG', 'PLD', 'PSA', 'PYPL', 'QCOM', 'RTX', 'SBUX', 'SCHW',
+                     'SLB', 'SPGI', 'SYF', 'SYK', 'TGT', 'TMO', 'TXN', 'T', 'UNH', 'UNP', 'UPS', 'USB', 'VLO', 'VZ',
+                     'V', 'WBA', 'WMT', 'XOM', 'ZTS']
+
             selection = pills("Tickers", sorted(ticks))
             if selection is not None:
                 st.markdown(f"## You have choosen plugin: {selection}")
-                with open(f'pa/models/{selection}_explanation_eng.txt', 'r') as filee:
-                    content = filee.read()
-                    print(content)
-                    st.write(content)
+                r = requests.get(f'https://sbss.com.ua/strmlt/models/{selection}_explanation_eng.txt')
+                text = r.text
+                st.write(text)
                 horizon = st.select_slider(
                     "Select the forecasting horizon (how far ahead the prediction will be made):",
                     options=[i for i in range(1, 31)],
                     key="one11"
                 )
                 st.button(label="Forecast", key="kan", on_click=mk_fcst,
-                        args=(ds_for_pred, selection, "pa/models", horizon))
+                          args=(ds_for_pred, selection, "pa/models", horizon))
                 st.divider()
                 st.markdown(f"### Forecast results")
                 if st.session_state.predicted4 is not None:
@@ -634,17 +617,18 @@ if st.session_state.df is not None:
                     st.markdown("# ")
                     if st.session_state.date_not_n == True:
                         st.session_state.predicted[st.session_state.date] = [i for i in
-                                                                            range(1, len(st.session_state.predicted3) + 1)]
+                                                                             range(1,
+                                                                                   len(st.session_state.predicted3) + 1)]
                     else:
                         pass
                     last_days = st.session_state.predicted3.tail(horizon)
-                    last_days[st.session_state.target] = [x * random.uniform(0.9, 1.1) for x in last_days[st.session_state.target].tolist()]
+                    last_days[st.session_state.target] = [x * random.uniform(0.9, 1.1) for x in
+                                                          last_days[st.session_state.target].tolist()]
                     rest_of_data = st.session_state.predicted3.iloc[:-horizon]
 
                     val = len(last_days)
 
                     cool1, cool2 = st.columns([2, 5])
-
 
                     with cool1:
                         st.markdown("##### Choose forecast horizon ")
@@ -658,7 +642,6 @@ if st.session_state.df is not None:
                         st.markdown("##### Forecast statistics ")
 
                         st.write(last_days[:(slid)].describe().head(7), use_container_width=True)
-
 
                     with cool2:
 
@@ -680,8 +663,8 @@ if st.session_state.df is not None:
                         #     line=dict(color='green')
                         # ))
                         q50 = last_days[st.session_state.target][:(slid)]
-                        lower_forecast = q50 / 1.2  
-                        upper_forecast = q50 * 1.2  
+                        lower_forecast = q50 / 1.2
+                        upper_forecast = q50 * 1.2
                         if lower_forecast is not None:
                             max_value = max(upper_forecast.tolist()) + 100
                             min_value = min(lower_forecast.tolist()) - 100
@@ -689,22 +672,20 @@ if st.session_state.df is not None:
                             x=last_days[st.session_state.date][:(slid)],
                             y=upper_forecast,
                             mode='lines',
-                            line=dict(color='rgba(0,128,0,0)'),  
+                            line=dict(color='rgba(0,128,0,0)'),
                             showlegend=False,
                             hoverinfo='skip'
                         ))
-
 
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
                             y=lower_forecast,
                             mode='lines',
-                            fill='tonexty', 
-                            fillcolor='rgba(0,128,0,0.2)', 
+                            fill='tonexty',
+                            fillcolor='rgba(0,128,0,0.2)',
                             line=dict(color='rgba(0,128,0,0)'),
                             name='Range of possible forecast values'
                         ))
-
 
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
@@ -719,15 +700,12 @@ if st.session_state.df is not None:
                             # yaxis_title='Значення',
                             yaxis=dict(
                                 # range=[min_value, max_value],
-                                title='Forecasted values'  
+                                title='Forecasted values'
                             ),
-                            title="Forecast plot",  
+                            title="Forecast plot",
                         )
 
-
                         st.plotly_chart(st.session_state.plotp2, use_container_width=True)
-
-
 
                         st.session_state.bp2 = go.Figure()
 
@@ -737,7 +715,6 @@ if st.session_state.df is not None:
                             name='Forecast',
                             marker_color='green'
                         ))
-
 
                         st.session_state.bp2.update_layout(
                             title='Forecast barplot',
@@ -752,35 +729,21 @@ if st.session_state.df is not None:
             st.markdown("## Плагіни crypto")
             folder_path = 'pa/crypto_models/'
 
-            pth_files = glob.glob(os.path.join(folder_path, '*.pth'))
-            print(f"Found {len(pth_files)} CSV files.")
             # file_list = file_list[:5]
-            ticks = []
-            for file in pth_files:
-                if file.split("/")[2].split("-")[0] not in ticks:
-                    ticks.append(file.split("/")[2].split("-")[0])
+            ticks = ['AAVE', 'ADA', 'ALGO', 'ANKR', 'AR', 'ARK', 'ATOM', 'AVAX', 'BAT', 'BNB', 'BNT', 'BORA', 'BTC', 'BTT', 'CELO', 'CHZ', 'COTI', 'CRV', 'CVC', 'DCR', 'DENT', 'DGB', 'DODO', 'DOGE', 'DOT', 'ENJ', 'EOS', 'ETC', 'ETH', 'FET', 'FIDA', 'FIL', 'FTT', 'GALA', 'GNO', 'HBAR', 'HIVE', 'HNT', 'HOT', 'ICP', 'ICX', 'IOTA', 'KAVA', 'KNC', 'LINK', 'LPT', 'LRC', 'LTC', 'MANA', 'MATIC', 'MKR', 'MTL', 'NEAR', 'NEXO', 'NMR', 'NZDUSD=X', 'OCEAN', 'OGN', 'OKB', 'OMG', 'OXT', 'PERP', 'QNT', 'QTUM', 'REN', 'RLC', 'RSR', 'RUNE', 'SC', 'SHIB', 'SNX', 'SOL', 'SRM', 'STEEM', 'STMX', 'STORJ', 'STX', 'SUSHI', 'SXP', 'THETA', 'TRB', 'TRX', 'UMA', 'UNI', 'VET', 'WAN', 'WOO', 'XEM', 'XLM', 'XMR', 'XRP', 'XTZ', 'ZEC', 'ZEN', 'ZIL', 'ZRX']
             selection = pills("Тикери", sorted(ticks))
             if selection is not None:
                 st.markdown(f"## Ви обрали плагін: {selection}")
-                try:
-                    try:
-                        with open(f'pa/crypto_models/{selection}_explanation_ukr.txt', 'r') as filee:
-                            content = filee.read()
-                            print(content)
-                            st.write(content)
-                    except:
-                        with open(f'pa/crypto_models/{selection}-USD_explanation_ukr.txt', 'r') as filee:
-                            content = filee.read()
-                            print(content)
-                            st.write(content)
-                except: pass
+                r = requests.get(f'https://sbss.com.ua/strmlt/crypto_models/{selection}-USD_explanation_eng.txt')
+                text = r.text
+                st.write(text)
                 horizon = st.select_slider(
                     "Оберіть горизонт передбачення (на скільки вперед буде проводитись передбачення):",
                     options=[i for i in range(1, 31)],
                     key="one11"
                 )
                 st.button(label="Зробити прогноз", key="kan", on_click=mk_fcst,
-                        args=(ds_for_pred, selection, "pa/crypto_models", horizon, "cryp"))
+                          args=(ds_for_pred, selection, "pa/crypto_models", horizon, "cryp"))
                 st.divider()
                 st.markdown(f"### Результати прогнозу")
                 if st.session_state.predicted4 is not None:
@@ -808,17 +771,18 @@ if st.session_state.df is not None:
                     st.markdown("# ")
                     if st.session_state.date_not_n == True:
                         st.session_state.predicted[st.session_state.date] = [i for i in
-                                                                            range(1, len(st.session_state.predicted3) + 1)]
+                                                                             range(1,
+                                                                                   len(st.session_state.predicted3) + 1)]
                     else:
                         pass
                     last_days = st.session_state.predicted3.tail(horizon)
-                    last_days[st.session_state.target] = [x * random.uniform(0.9, 1.1) for x in last_days[st.session_state.target].tolist()]
+                    last_days[st.session_state.target] = [x * random.uniform(0.9, 1.1) for x in
+                                                          last_days[st.session_state.target].tolist()]
                     rest_of_data = st.session_state.predicted3.iloc[:-horizon]
 
                     val = len(last_days)
 
                     cool1, cool2 = st.columns([2, 5])
-
 
                     with cool1:
                         st.markdown("##### Вибір горизонту прогнозу ")
@@ -847,7 +811,6 @@ if st.session_state.df is not None:
                             line=dict(color='blue')
                         ))
 
-
                         # st.session_state.plotp.add_trace(go.Scatter(
                         #     x=last_days[st.session_state.date][:(slid)],
                         #     y=last_days[st.session_state.target][:(slid)],
@@ -856,8 +819,8 @@ if st.session_state.df is not None:
                         #     line=dict(color='green')
                         # ))
                         q50 = last_days[st.session_state.target][:(slid)]
-                        lower_forecast = q50 / 1.2 
-                        upper_forecast = q50 * 1.2 
+                        lower_forecast = q50 / 1.2
+                        upper_forecast = q50 * 1.2
                         if lower_forecast is not None:
                             max_value = max(upper_forecast.tolist()) + 100
                             min_value = min(lower_forecast.tolist()) - 100
@@ -866,22 +829,20 @@ if st.session_state.df is not None:
                             x=last_days[st.session_state.date][:(slid)],
                             y=upper_forecast,
                             mode='lines',
-                            line=dict(color='rgba(0,128,0,0)'),  
+                            line=dict(color='rgba(0,128,0,0)'),
                             showlegend=False,
                             hoverinfo='skip'
                         ))
-
 
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
                             y=lower_forecast,
                             mode='lines',
-                            fill='tonexty',  
-                            fillcolor='rgba(0,128,0,0.2)',  
-                            line=dict(color='rgba(0,128,0,0)'),  
+                            fill='tonexty',
+                            fillcolor='rgba(0,128,0,0.2)',
+                            line=dict(color='rgba(0,128,0,0)'),
                             name='Діапазон можливих значень прогнозу'
                         ))
-
 
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
@@ -896,14 +857,12 @@ if st.session_state.df is not None:
                             # yaxis_title='Значення',
                             yaxis=dict(
                                 # range=[min_value, max_value],
-                                title='Спрогнозовані значення'  
+                                title='Спрогнозовані значення'
                             ),
-                            title="Графік прогнозу",  
+                            title="Графік прогнозу",
                         )
 
                         st.plotly_chart(st.session_state.plotp2, use_container_width=True)
-
-
 
                         st.session_state.bp2 = go.Figure()
 
@@ -914,7 +873,6 @@ if st.session_state.df is not None:
                             marker_color='green'
                         ))
 
-
                         st.session_state.bp2.update_layout(
                             title='Барплот прогнозу',
                             xaxis_title='Дата',
@@ -922,46 +880,34 @@ if st.session_state.df is not None:
                             template='plotly_white'
                         )
 
-
                         st.plotly_chart(st.session_state.bp2, use_container_width=True)
         else:
             st.markdown("## Сrypto plugins")
             folder_path = 'pa/crypto_models/'
 
-            pth_files = glob.glob(os.path.join(folder_path, '*.pth'))
-            print(f"Found {len(pth_files)} CSV files.")
             # file_list = file_list[:5]
-            ticks = []
-            for file in pth_files:
-                # Extract ticker symbol from filename (assuming filename like TICKER.csv)
-                # print(file.replace("\\", "/"))
-                # # fi = pd.read_csv(file.replace("\\", "/"))
-                # # fi['Date'] = [i for i in range(1, len(fi) + 1)]
-                # ticker = os.path.splitext(os.path.basename(file.replace("\\", "/")))[0]
-                if file.split("/")[2].split("-")[0] not in ticks:
-                    ticks.append(file.split("/")[2].split("-")[0])
+            ticks = ['AAVE', 'ADA', 'ALGO', 'ANKR', 'AR', 'ARK', 'ATOM', 'AVAX', 'BAT', 'BNB', 'BNT', 'BORA', 'BTC',
+                     'BTT', 'CELO', 'CHZ', 'COTI', 'CRV', 'CVC', 'DCR', 'DENT', 'DGB', 'DODO', 'DOGE', 'DOT', 'ENJ',
+                     'EOS', 'ETC', 'ETH', 'FET', 'FIDA', 'FIL', 'FTT', 'GALA', 'GNO', 'HBAR', 'HIVE', 'HNT', 'HOT',
+                     'ICP', 'ICX', 'IOTA', 'KAVA', 'KNC', 'LINK', 'LPT', 'LRC', 'LTC', 'MANA', 'MATIC', 'MKR', 'MTL',
+                     'NEAR', 'NEXO', 'NMR', 'NZDUSD=X', 'OCEAN', 'OGN', 'OKB', 'OMG', 'OXT', 'PERP', 'QNT', 'QTUM',
+                     'REN', 'RLC', 'RSR', 'RUNE', 'SC', 'SHIB', 'SNX', 'SOL', 'SRM', 'STEEM', 'STMX', 'STORJ', 'STX',
+                     'SUSHI', 'SXP', 'THETA', 'TRB', 'TRX', 'UMA', 'UNI', 'VET', 'WAN', 'WOO', 'XEM', 'XLM', 'XMR',
+                     'XRP', 'XTZ', 'ZEC', 'ZEN', 'ZIL', 'ZRX']
             selection = pills("Tickers", sorted(ticks))
             if selection is not None:
                 st.markdown(f"## You have choosen plugin: {selection}")
-                try:
-                    try:
-                        with open(f'pa/crypto_models/{selection}_explanation_eng.txt', 'r') as filee:
-                            content = filee.read()
-                            print(content)
-                            st.write(content)
-                    except:
-                        with open(f'pa/crypto_models/{selection}-USD_explanation_eng.txt', 'r') as filee:
-                            content = filee.read()
-                            print(content)
-                            st.write(content)
-                except: pass
+                st.markdown(f"## Ви обрали плагін: {selection}")
+                r = requests.get(f'https://sbss.com.ua/strmlt/crypto_models/{selection}-USD_explanation_eng.txt')
+                text = r.text
+                st.write(text)
                 horizon = st.select_slider(
                     "Select the forecasting horizon (how far ahead the prediction will be made):",
                     options=[i for i in range(1, 31)],
                     key="one11"
                 )
                 st.button(label="Forecast", key="kan", on_click=mk_fcst,
-                        args=(ds_for_pred, selection, "pa/crypto_models", horizon, "cryp"))
+                          args=(ds_for_pred, selection, "pa/crypto_models", horizon, "cryp"))
                 st.divider()
                 st.markdown(f"### Forecast results")
                 if st.session_state.predicted4 is not None:
@@ -989,17 +935,18 @@ if st.session_state.df is not None:
                     st.markdown("# ")
                     if st.session_state.date_not_n == True:
                         st.session_state.predicted[st.session_state.date] = [i for i in
-                                                                            range(1, len(st.session_state.predicted3) + 1)]
+                                                                             range(1,
+                                                                                   len(st.session_state.predicted3) + 1)]
                     else:
                         pass
                     last_days = st.session_state.predicted3.tail(horizon)
-                    last_days[st.session_state.target] = [x * random.uniform(0.9, 1.1) for x in last_days[st.session_state.target].tolist()]
+                    last_days[st.session_state.target] = [x * random.uniform(0.9, 1.1) for x in
+                                                          last_days[st.session_state.target].tolist()]
                     rest_of_data = st.session_state.predicted3.iloc[:-horizon]
 
                     val = len(last_days)
 
                     cool1, cool2 = st.columns([2, 5])
-
 
                     with cool1:
                         st.markdown("##### Choose forecast horizon ")
@@ -1028,7 +975,6 @@ if st.session_state.df is not None:
                             line=dict(color='blue')
                         ))
 
-
                         # st.session_state.plotp.add_trace(go.Scatter(
                         #     x=last_days[st.session_state.date][:(slid)],
                         #     y=last_days[st.session_state.target][:(slid)],
@@ -1042,27 +988,25 @@ if st.session_state.df is not None:
                         if lower_forecast is not None:
                             max_value = max(upper_forecast.tolist()) + 100
                             min_value = min(lower_forecast.tolist()) - 100
-                   
+
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
                             y=upper_forecast,
                             mode='lines',
-                            line=dict(color='rgba(0,128,0,0)'), 
+                            line=dict(color='rgba(0,128,0,0)'),
                             showlegend=False,
                             hoverinfo='skip'
                         ))
 
-                     
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
                             y=lower_forecast,
                             mode='lines',
-                            fill='tonexty',  
-                            fillcolor='rgba(0,128,0,0.2)',  
-                            line=dict(color='rgba(0,128,0,0)'),  
+                            fill='tonexty',
+                            fillcolor='rgba(0,128,0,0.2)',
+                            line=dict(color='rgba(0,128,0,0)'),
                             name='Range of possible forecast values'
                         ))
-
 
                         st.session_state.plotp2.add_trace(go.Scatter(
                             x=last_days[st.session_state.date][:(slid)],
@@ -1077,15 +1021,12 @@ if st.session_state.df is not None:
                             # yaxis_title='Значення',
                             yaxis=dict(
                                 # range=[min_value, max_value],
-                                title='Forecasted values'  
+                                title='Forecasted values'
                             ),
-                            title="Forecast plot",  
+                            title="Forecast plot",
                         )
 
-
                         st.plotly_chart(st.session_state.plotp2, use_container_width=True)
-
-
 
                         st.session_state.bp2 = go.Figure()
 
@@ -1096,14 +1037,12 @@ if st.session_state.df is not None:
                             marker_color='green'
                         ))
 
-
                         st.session_state.bp2.update_layout(
                             title='Forecast barplot',
                             xaxis_title='Date',
                             yaxis_title='Values',
                             template='plotly_white'
                         )
-
 
                         st.plotly_chart(st.session_state.bp2, use_container_width=True)
     if plug == "Your plugins":
@@ -1122,8 +1061,10 @@ if st.session_state.df is not None:
                     key="one11"
                 )
                 st.button(label="Зробити прогноз", key="kan", on_click=mk_fcst_plug,
-                        args=(
-                        ds_for_pred, data_row["inp"].tolist()[0], data_row["horizon"].tolist()[0], data_row["scaler_y"].tolist()[0], data_row["scaler_x"].tolist()[0], data_row["model_state"].tolist()[0]))
+                          args=(
+                              ds_for_pred, data_row["inp"].tolist()[0], data_row["horizon"].tolist()[0],
+                              data_row["scaler_y"].tolist()[0], data_row["scaler_x"].tolist()[0],
+                              data_row["model_state"].tolist()[0]))
                 st.divider()
                 st.markdown(f"### Результати прогнозу")
                 if st.session_state.predicted4 is not None:
@@ -1151,7 +1092,8 @@ if st.session_state.df is not None:
                     st.markdown("# ")
                     if st.session_state.date_not_n == True:
                         st.session_state.predicted[st.session_state.date] = [i for i in
-                                                                            range(1, len(st.session_state.predicted3) + 1)]
+                                                                             range(1,
+                                                                                   len(st.session_state.predicted3) + 1)]
                     else:
                         pass
                     last_days = st.session_state.predicted3.tail(horizon)
@@ -1276,8 +1218,10 @@ if st.session_state.df is not None:
                     key="one11"
                 )
                 st.button(label="Forecast", key="kan", on_click=mk_fcst_plug,
-                        args=(
-                        ds_for_pred, data_row["inp"].tolist()[0], data_row["horizon"].tolist()[0], data_row["scaler_y"].tolist()[0], data_row["scaler_x"].tolist()[0], data_row["model_state"].tolist()[0]))
+                          args=(
+                              ds_for_pred, data_row["inp"].tolist()[0], data_row["horizon"].tolist()[0],
+                              data_row["scaler_y"].tolist()[0], data_row["scaler_x"].tolist()[0],
+                              data_row["model_state"].tolist()[0]))
                 st.divider()
                 st.markdown(f"### Forecast results")
                 if st.session_state.predicted4 is not None:
@@ -1305,7 +1249,8 @@ if st.session_state.df is not None:
                     st.markdown("# ")
                     if st.session_state.date_not_n == True:
                         st.session_state.predicted[st.session_state.date] = [i for i in
-                                                                            range(1, len(st.session_state.predicted3) + 1)]
+                                                                             range(1,
+                                                                                   len(st.session_state.predicted3) + 1)]
                     else:
                         pass
                     last_days = st.session_state.predicted3.tail(horizon)
@@ -1575,9 +1520,6 @@ if st.session_state.df is not None:
             # pred = scaler_y.inverse_transform(ps).flatten()
 
 
-
-
-
         if st.session_state.lang == "ukr":
             st.markdown("## Тренуйте Ваш плагін тут")
 
@@ -1601,8 +1543,11 @@ if st.session_state.df is not None:
                 labe = st.markdown(f"## Середньоквадратичне відхилення моделі: {st.session_state.er}")
                 if st.button("Save"):
                     with conn.session as session:
-                        session.execute(text("INSERT INTO pluginsss (username, pluginname, scaler_x, scaler_y, model_state, horizon, inp) VALUES (:usrn, :pl, :scx, :scy, :mdl_st, :hor, :inpt)"),
-                                        {"usrn": st.session_state.user, "pl": plname, "scx": st.session_state.sclx, "scy": st.session_state.scly, "mdl_st": st.session_state.mdst, "hor": st.session_state.horp, "inpt": st.session_state.inppp})
+                        session.execute(text(
+                            "INSERT INTO pluginsss (username, pluginname, scaler_x, scaler_y, model_state, horizon, inp) VALUES (:usrn, :pl, :scx, :scy, :mdl_st, :hor, :inpt)"),
+                                        {"usrn": st.session_state.user, "pl": plname, "scx": st.session_state.sclx,
+                                         "scy": st.session_state.scly, "mdl_st": st.session_state.mdst,
+                                         "hor": st.session_state.horp, "inpt": st.session_state.inppp})
                         session.commit()
                         print("saved")
         else:
@@ -1629,8 +1574,11 @@ if st.session_state.df is not None:
                 labe = st.markdown(f"## MSE: {st.session_state.er}")
                 if st.button("Save"):
                     with conn.session as session:
-                        session.execute(text("INSERT INTO pluginsss (username, pluginname, scaler_x, scaler_y, model_state, horizon, inp) VALUES (:usrn, :pl, :scx, :scy, :mdl_st, :hor, :inpt)"),
-                                        {"usrn": st.session_state.user, "pl": plname, "scx": st.session_state.sclx, "scy": st.session_state.scly, "mdl_st": st.session_state.mdst, "hor": st.session_state.horp, "inpt": st.session_state.inppp})
+                        session.execute(text(
+                            "INSERT INTO pluginsss (username, pluginname, scaler_x, scaler_y, model_state, horizon, inp) VALUES (:usrn, :pl, :scx, :scy, :mdl_st, :hor, :inpt)"),
+                                        {"usrn": st.session_state.user, "pl": plname, "scx": st.session_state.sclx,
+                                         "scy": st.session_state.scly, "mdl_st": st.session_state.mdst,
+                                         "hor": st.session_state.horp, "inpt": st.session_state.inppp})
                         session.commit()
                         print("saved")
 else:
