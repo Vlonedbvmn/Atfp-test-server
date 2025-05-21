@@ -2480,8 +2480,7 @@ if st.session_state.df is not None:
                     st.session_state.messages.append({"role": "assistant", "content": st.session_state.dataai})
                     st.session_state.messages.append({"role": "assistant", "content": r2})
                     st.session_state.messages.append({"role": "assistant", "content": st.session_state.fig_b})
-
-
+            #keofjosjgosdhlsefosjrojjfjfjos
 else:
     st.session_state.no_d = True
     if st.session_state.lang == "ukr":
