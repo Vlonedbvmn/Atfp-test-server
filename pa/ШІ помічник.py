@@ -205,8 +205,12 @@ def response_generator(datafra, res):
         ],
         model="llama3-70b-8192"
     )
+    
     respo = chatco.choices[0].message.content
-    response = "Уточніть, будь ласка, Ваш запит"
+    if st.session_state.lang == "ukr":
+        response = "Уточніть, будь ласка, Ваш запит"
+    else:
+        response = "Уточніть, будь ласка, Ваш запит"
     try:
         print(respo)
         mdl = respo.split()[1]
@@ -2397,10 +2401,16 @@ if st.session_state.df is not None:
     except:
         st.session_state.date_not_n = True
         ds_for_pred['ds'] = [i for i in range(1, len(ds_for_pred) + 1)]
-    st.title("ШІ помічник")
-    st.markdown(f"### Зараз ШІ помічник працює з набором даних: {st.session_state.name}")
-    st.write(" ")
-    st.markdown("## Приклади запитів до ШІ помічника:")
+    if st.session_state.lang == "ukr":
+        st.title("ШІ помічник")
+        st.markdown(f"### Зараз ШІ помічник працює з набором даних: {st.session_state.name}")
+        st.write(" ")
+        st.markdown("## Приклади запитів до ШІ помічника:")
+    else:
+        st.title("AI assistant")
+        st.markdown(f"### Currently AI assistant working with dataset: {st.session_state.name}")
+        st.write(" ")
+        st.markdown("## Examples of prompts to AI assistant:")
     for message in st.session_state.messages1:
         with st.chat_message(message["role"]):
             # if isinstance(message["content"],str):
@@ -2410,7 +2420,9 @@ if st.session_state.df is not None:
             # else:
             st.write(message["content"])
     st.write(" ")
-    st.markdown("## Чат")
+    if st.session_state.lang == "ukr":
+        st.markdown("## Чат")
+    else: st.markdown("## Chat")
     # Display chat messages from history on app rerun
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
@@ -2420,37 +2432,66 @@ if st.session_state.df is not None:
             #     st.plotly_chart(message["content"])
             # else:
             st.write(message["content"])
-    if prompt := st.chat_input("Напишіть свій запит і отримайте відповідь"):
+    if st.session_state.lang == "ukr":
+        if prompt := st.chat_input("Напишіть свій запит і отримайте відповідь"):
 
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            with st.chat_message("user"):
+                st.markdown(prompt)
 
-        # st.session_state.messages.append({"role": "assistant", "content": "Дякую за запитання, інтерпритую ваш запит до моделі прогнозування"})
+            # st.session_state.messages.append({"role": "assistant", "content": "Дякую за запитання, інтерпритую ваш запит до моделі прогнозування"})
 
-        with st.chat_message("assistant"):
-            gen = response_generator(ds_for_pred, prompt)
-            response = st.write_stream(gen)
-            st.session_state.messages.append({"role": "assistant", "content": response})
-            if st.session_state.dataai is not None:
-                r1 = st.write_stream(response_1(st.session_state.m1))
-                dai = st.write(st.session_state.dataai)
-                r2 = st.write_stream(response_1(st.session_state.m2))
-                chart = st.plotly_chart(st.session_state.fig_b, use_container_width=True)
-                print(dai)
-                print("-"*1000)
-                st.session_state.messages.append({"role": "assistant", "content": r1})
-                st.session_state.messages.append({"role": "assistant", "content": st.session_state.dataai})
-                st.session_state.messages.append({"role": "assistant", "content": r2})
-                st.session_state.messages.append({"role": "assistant", "content": st.session_state.fig_b})
+            with st.chat_message("assistant"):
+                gen = response_generator(ds_for_pred, prompt)
+                response = st.write_stream(gen)
+                st.session_state.messages.append({"role": "assistant", "content": response})
+                if st.session_state.dataai is not None:
+                    r1 = st.write_stream(response_1(st.session_state.m1))
+                    dai = st.write(st.session_state.dataai)
+                    r2 = st.write_stream(response_1(st.session_state.m2))
+                    chart = st.plotly_chart(st.session_state.fig_b, use_container_width=True)
+                    print(dai)
+                    print("-"*1000)
+                    st.session_state.messages.append({"role": "assistant", "content": r1})
+                    st.session_state.messages.append({"role": "assistant", "content": st.session_state.dataai})
+                    st.session_state.messages.append({"role": "assistant", "content": r2})
+                    st.session_state.messages.append({"role": "assistant", "content": st.session_state.fig_b})
+    else:
+        if prompt := st.chat_input("Type in your prompt and get an answer"):
 
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            with st.chat_message("user"):
+                st.markdown(prompt)
+
+            # st.session_state.messages.append({"role": "assistant", "content": "Дякую за запитання, інтерпритую ваш запит до моделі прогнозування"})
+
+            with st.chat_message("assistant"):
+                gen = response_generator(ds_for_pred, prompt)
+                response = st.write_stream(gen)
+                st.session_state.messages.append({"role": "assistant", "content": response})
+                if st.session_state.dataai is not None:
+                    r1 = st.write_stream(response_1(st.session_state.m1))
+                    dai = st.write(st.session_state.dataai)
+                    r2 = st.write_stream(response_1(st.session_state.m2))
+                    chart = st.plotly_chart(st.session_state.fig_b, use_container_width=True)
+                    print(dai)
+                    print("-"*1000)
+                    st.session_state.messages.append({"role": "assistant", "content": r1})
+                    st.session_state.messages.append({"role": "assistant", "content": st.session_state.dataai})
+                    st.session_state.messages.append({"role": "assistant", "content": r2})
+                    st.session_state.messages.append({"role": "assistant", "content": st.session_state.fig_b})
 
 
 else:
     st.session_state.no_d = True
-    st.title("ШІ помічник")
-    st.write(" ")
-    st.markdown("## Приклади запитів до ШІ помічника:")
+    if st.session_state.lang == "ukr":
+        st.title("ШІ помічник")
+        st.write(" ")
+        st.markdown("## Приклади запитів до ШІ помічника:")
+    else:
+        st.title("AI assistant")
+        st.write(" ")
+        st.markdown("## Examples of prompts to AI assistant:")
     for message in st.session_state.messages1:
         with st.chat_message(message["role"]):
             # if isinstance(message["content"],str):
@@ -2462,4 +2503,7 @@ else:
     st.write(" ")
     st.markdown("## Чат")
     with st.chat_message("assistant"):
-        st.write_stream(response_1("Перед тим як працювати зі мною, оберіть дані з якими Ви будете працювати у розділі 'Дані'"))
+        if st.session_state.lang == "ukr":
+            st.write_stream(response_1("Перед тим як працювати зі мною, оберіть дані з якими Ви будете працювати у розділі 'Дані'"))
+        else:
+            st.write_stream(response_1("Before working with me, please select the data to work with at 'Data' section "))
