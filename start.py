@@ -45,7 +45,10 @@ st.html("""
 selected_language = st.sidebar.selectbox("Choose language:", ["Українська", "English"])
 
 try:
-    st.sidebar.write(st.session_state.user)
+    if st.session_state.user is not None:
+        st.sidebar.write("Looged in as "st.session_state.user)
+    else:
+        st.sidebar.write("You are not logged in")
 except:
     pass
 
