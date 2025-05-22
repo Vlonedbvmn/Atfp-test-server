@@ -1671,7 +1671,7 @@ if st.session_state.df is not None:
         else: st.title("Selection and configuration of the forecasting model")
     if st.session_state.lang == "ukr":
          model = option_menu("Оберіть модель для передбачення",
-                           ["KAN", "TimesNet", "NBEATSx", "TimeMixer", "PatchTST", "SNN", "Авто-вибір"],
+                           ["KAN", "TimesNet", "NBEATSx", "TimeMixer", "PatchTST", "SNN", "Auto-choose"],
                            # icons=['gear', 'gear', 'gear', 'gear', 'gear', 'gear'],
                            menu_icon="no",
                            orientation="horizontal")
@@ -2000,7 +2000,7 @@ if st.session_state.df is not None:
         else:
             st.warning('Incorrect hyperparameters have been provided', icon="⚠️")
     try:
-        if model == "Авто-вибір":
+        if model == "Auto-choose":
             if st.session_state.lang == "ukr":
                 st.markdown("## Ви обрали Авто-вибір")
                 st.markdown(
