@@ -40,7 +40,7 @@ if st.session_state.lang == "ukr":
 else:
     st.subheader(
     "Welcome! You are on the page of a project that represents a platform for researchers in the field of time series forecasting using machine learning methods. To get started, go to the 'Data' section to upload your own data or choose from the available datasets for which you will make forecasts.")
-video_f = open("instruction_2.mp4", "rb")
+video_f = open("video_guide.mp4", "rb")
 video_bytes = video_f.read()
 # st.subheader(" ")
 st.divider()
